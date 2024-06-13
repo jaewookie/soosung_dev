@@ -1,0 +1,167 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="agv1">
+
+  <link name="base_footprint" />
+
+  <joint name="base_joint" type="fixed">
+    <parent link="base_footprint" />
+    <child link="base_link" />
+    <origin xyz="0 0 0" rpy="0 0 0" />
+  </joint>
+
+  <link name="base_link">
+    <inertial>
+      <mass value="2093.963" />
+      <inertia ixx="923.814" ixy="-1.466" ixz="5.030" iyy="925.290" iyz="86.517" izz="475.159" />
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="package://agv_description/meshes/BODY.stl" />
+      </geometry>
+      <material name="orange" />
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="package://agv_description/meshes/BODY.stl" />
+      </geometry>
+    </collision>
+  </link>
+
+  <joint name="mast_joint" type="fixed">
+    <parent link="base_link" />
+    <child link="mast" />
+    <origin xyz="0 0.631 1.875" rpy="0 0 0" />
+  </joint>
+
+  <link name="mast">
+    <inertial>
+      <mass value="586.306" />
+      <inertia ixx="1116.994" ixy="-0.778" ixz="-0.759" iyy="622.118" iyz="340.868" izz="579.606" />
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="package://agv_description/meshes/MAST_RE.stl" />
+      </geometry>
+      <material name="dark_grey" />
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="package://agv_description/meshes/MAST_RE.stl" />
+      </geometry>
+    </collision>
+  </link>
+
+  <joint name="front_wheel_l_joint" type="continuous">
+    <parent link="base_link" />
+    <child link="front_wheel_l" />
+    <origin xyz="-0.451 0.86 0.035" rpy="0 0 -1.571" />
+    <axis xyz="1 0 0"/>
+  </joint>
+
+  <link name="front_wheel_l">
+    <inertial>
+      <mass value="19.247" />
+      <inertia ixx="14.401" ixy="-7.39" ixz="-0.473" iyy="3.965" iyz="0.91" izz="18.142" />
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="package://agv_description/meshes/FRONT_WHEEL_RE2.stl"/>
+      </geometry>
+      <material name="green" />
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="package://agv_description/meshes/FRONT_WHEEL_RE2.stl"/>
+      </geometry>
+    </collision>
+  </link>
+
+  <joint name="front_wheel_r_joint" type="continuous">
+    <parent link="base_link" />
+    <child link="front_wheel_r" />
+    <origin xyz="0.451 0.86 0.035" rpy="0 0 1.571" />
+    <axis xyz="1 0 0"/>
+  </joint>
+
+  <link name="front_wheel_r">
+    <inertial>
+      <mass value="19.247" />
+      <inertia ixx="14.401" ixy="-7.39" ixz="-0.473" iyy="3.965" iyz="0.91" izz="18.142" />
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="package://agv_description/meshes/FRONT_WHEEL_RE2.stl"/>
+      </geometry>
+      <material name="green" />
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="package://agv_description/meshes/FRONT_WHEEL_RE2.stl"/>
+      </geometry>
+    </collision>
+  </link>
+
+  <joint name="steering_joint" type="continuous">
+    <parent link="base_link" />
+    <child link="steering_part" />
+    <origin xyz="0.0456 -0.212 0.375" rpy="0 0 0" />
+    <axis xyz="0 0 1"/>
+  </joint>
+
+
+  <link name="steering_part">
+    <inertial>
+      <mass value="85.197" />
+      <inertia ixx="2.8" ixy="0" ixz="0.11" iyy="2.84" iyz="-0.11" izz="0.93" />
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="package://agv_description/meshes/STEERING_PART_RE2.stl"/>
+      </geometry>
+      <material name="white" />
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 3.14" />
+      <geometry>
+        <mesh filename="package://agv_description/meshes/STEERING_PART_RE2.stl"/>
+      </geometry>
+    </collision>
+  </link>
+
+  <joint name="drive_wheel_joint" type="continuous">
+    <parent link="steering_part" />
+    <child link="drive_wheel" />
+    <origin xyz="-0.063 0.012 -0.285" rpy="0 0 0" />
+    <axis xyz="1 0 0"/>
+  </joint>
+
+  <link name="drive_wheel">
+    <inertial>
+      <mass value="21.755" />
+      <inertia ixx="2.03" ixy="0.02" ixz="-0.42" iyy="2.03" iyz="-0.07" izz="0.27" />
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="package://agv_description/meshes/DRIVE_WHEEL_RE2.stl"/>
+      </geometry>
+      <material name="blue" />
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="package://agv_description/meshes/DRIVE_WHEEL_RE2.stl"/>
+      </geometry>
+    </collision>
+  </link>
+
+</robot>
