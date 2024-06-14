@@ -10,21 +10,21 @@
       <inertial>
         <pose>0 0 0 0 0 0</pose>
         <inertia>
-          <ixx>923.814</ixx>
-          <ixy>-1.466</ixy>
-          <ixz>5.03</ixz>
-          <iyy>925.29</iyy>
-          <iyz>86.517</iyz>
-          <izz>475.159</izz>
+          <ixx>962.268</ixx>
+          <ixy>-2.68</ixy>
+          <ixz>13.459</ixz>
+          <iyy>963.85</iyy>
+          <iyz>81.387</iyz>
+          <izz>482.35</izz>
         </inertia>
-        <mass>2093.963</mass>
+        <mass>2129.355</mass>
       </inertial>
 
       <collision name="base_collision">
         <pose>0 0 0 0 0 0</pose>
         <geometry>
           <mesh>
-            <uri>meshes://BODY.stl</uri>
+            <uri>model://agv_common/meshes/BODY.stl</uri>
           </mesh>
         </geometry>
       </collision>
@@ -33,7 +33,7 @@
         <pose>0 0 0 0 0 0</pose>
         <geometry>
           <mesh>
-            <uri>meshes://BODY.stl</uri>
+            <uri>model://agv_common/meshes/BODY.stl</uri>
           </mesh>
         </geometry>
       </visual>
@@ -44,21 +44,21 @@
       <inertial>
         <pose>0 0.631 1.875 0 0 0</pose>
         <inertia>
-          <ixx>923.814</ixx>
-          <ixy>-1.466</ixy>
-          <ixz>5.03</ixz>
-          <iyy>925.29</iyy>
-          <iyz>86.517</iyz>
-          <izz>475.159</izz>
+          <ixx>1122.28</ixx>
+          <ixy>-0.195</ixy>
+          <ixz>1.265</ixz>
+          <iyy>1071.349</iyy>
+          <iyz>-243.104</iyz>
+          <izz>135.921</izz>
         </inertia>
-        <mass>2093.963</mass>
+        <mass>590.628</mass>
       </inertial>
 
       <collision name="mast_collision">
         <pose>0 0.631 1.875 0 0 0</pose>
         <geometry>
           <mesh>
-            <uri>meshes://MAST_RE.stl</uri>
+            <uri>model://agv_common/meshes/MAST_RE.stl</uri>
           </mesh>
         </geometry>
       </collision>
@@ -67,118 +67,7 @@
         <pose>0 0.631 1.875 0 0 0</pose>
         <geometry>
           <mesh>
-            <uri>meshes://MAST_RE.stl</uri>
-          </mesh>
-        </geometry>
-      </visual>
-    </link>
-
-    <link name="steering_part">
-
-      <inertial>
-        <pose>0.0456 -0.212 0.375 0 0 0</pose>
-        <inertia>
-          <ixx>2.8</ixx>
-          <ixy>0</ixy>
-          <ixz>0.11</ixz>
-          <iyy>2.84</iyy>
-          <iyz>-0.11</iyz>
-          <izz>0.93</izz>
-        </inertia>
-        <mass>85.197</mass>
-      </inertial>
-
-      <collision name="steering_part_collision">
-        <pose>0.0456 -0.212 0.375 0 0 0</pose>
-        <geometry>
-          <uri>meshes://STEERING_PART_RE2.stl</uri>
-        </geometry>
-        <surface>
-          <!-- This friction pamareter don't contain reliable data!! -->
-          <friction>
-            <ode>
-              <mu>100000.0</mu>
-              <mu2>100000.0</mu2>
-              <fdir1>0 0 0</fdir1>
-              <slip1>0.0</slip1>
-              <slip2>0.0</slip2>
-            </ode>
-          </friction>
-          <contact>
-            <ode>
-              <soft_cfm>0</soft_cfm>
-              <soft_erp>0.2</soft_erp>
-              <kp>1e+5</kp>
-              <kd>1</kd>
-              <max_vel>0.01</max_vel>
-              <min_depth>0.001</min_depth>
-            </ode>
-          </contact>
-        </surface>
-      </collision>
-
-      <visual name="steering_part_visual">
-        <pose>0.0456 -0.212 0.375 0 0 0</pose>
-        <geometry>
-          <mesh>
-            <uri>meshes://STEERING_PART_RE2.stl</uri>
-          </mesh>
-        </geometry>
-      </visual>
-    </link>
-
-    <link name="drive_wheel">
-
-      <inertial>
-        <pose>-0.063 0.012 -0.285 0 0 0</pose>
-        <inertia>
-          <ixx>2.03</ixx>
-          <ixy>0.02</ixy>
-          <ixz>-0.42</ixz>
-          <iyy>2.03</iyy>
-          <iyz>-0.07</iyz>
-          <izz>0.27</izz>
-        </inertia>
-        <mass>21.755</mass>
-      </inertial>
-
-      <collision name="drive_wheel_collision">
-        <pose>-0.063 0.012 -0.285 0 0 0</pose>
-        <geometry>
-          <cylinder>
-            <radius>0.033</radius>
-            <length>0.018</length>
-          </cylinder>
-        </geometry>
-        <surface>
-          <!-- This friction pamareter don't contain reliable data!! -->
-          <friction>
-            <ode>
-              <mu>100000.0</mu>
-              <mu2>100000.0</mu2>
-              <fdir1>0 0 0</fdir1>
-              <slip1>0.0</slip1>
-              <slip2>0.0</slip2>
-            </ode>
-          </friction>
-          <contact>
-            <ode>
-              <soft_cfm>0</soft_cfm>
-              <soft_erp>0.2</soft_erp>
-              <kp>1e+5</kp>
-              <kd>1</kd>
-              <max_vel>0.01</max_vel>
-              <min_depth>0.001</min_depth>
-            </ode>
-          </contact>
-        </surface>
-      </collision>
-
-      <visual name="drive_wheel_visual">
-        <pose>-0.063 0.012 -0.285 0 0 0</pose>
-        <geometry>
-          <mesh>
-            <uri>model://turtlebot3_common/meshes/tire.dae</uri>
+            <uri>model://agv_common/meshes/MAST_RE.stl</uri>
           </mesh>
         </geometry>
       </visual>
@@ -189,23 +78,23 @@
       <inertial>
         <pose>-0.451 0.86 0.035 0 0 -1.571</pose>
         <inertia>
-          <ixx>14.401</ixx>
-          <ixy>-7.39</ixy>
-          <ixz>-0.473</ixz>
-          <iyy>3.965</iyy>
-          <iyz>0.91</iyz>
-          <izz>18.142</izz>
+          <ixx>0.066</ixx>
+          <ixy>0.0</ixy>
+          <ixz>0.0</ixz>
+          <iyy>0.104</iyy>
+          <iyz>0.0</iyz>
+          <izz>0.066</izz>
         </inertia>
-        <mass>19.247</mass>
+        <mass>16.096</mass>
       </inertial>
-      <collision name='collision'>
+      <collision name='front_wheel_l_collision'>
         <pose>-0.451 0.86 0.035 0 0 -1.571</pose>
         <geometry>
           <mesh>
-            <uri>meshes://FRONT_WHEEL_RE2.stl</uri>
+            <uri>model://agv_common/meshes/FRONT_WHEEL_RE2.stl</uri>
           </mesh>
         </geometry>
-        <surface>
+        <!-- <surface>
           <contact>
             <ode>
               <soft_cfm>0</soft_cfm>
@@ -216,31 +105,39 @@
               <min_depth>0.001</min_depth>
             </ode>
           </contact>
-        </surface>
+        </surface> -->
       </collision>
+      <visual name="front_wheel_l_visual">
+        <pose>-0.451 0.86 0.035 0 0 -1.571</pose>
+        <geometry>
+          <mesh>
+            <uri>model://agv_common/meshes/FRONT_WHEEL_RE2.stl</uri>
+          </mesh>
+        </geometry>
+      </visual>
     </link>
 
     <link name='front_wheel_r'>
       <inertial>
         <pose>0.451 0.86 0.035 0 0 1.571</pose>
         <inertia>
-          <ixx>14.401</ixx>
-          <ixy>-7.39</ixy>
-          <ixz>-0.473</ixz>
-          <iyy>3.965</iyy>
-          <iyz>0.91</iyz>
-          <izz>18.142</izz>
+          <ixx>0.066</ixx>
+          <ixy>0.0</ixy>
+          <ixz>0.0</ixz>
+          <iyy>0.104</iyy>
+          <iyz>0.0</iyz>
+          <izz>0.066</izz>
         </inertia>
-        <mass>19.247</mass>
+        <mass>16.096</mass>
       </inertial>
-      <collision name='collision'>
+      <collision name='front_wheel_r_collision'>
         <pose>-0.451 0.86 0.035 0 0 -1.571</pose>
         <geometry>
           <mesh>
-            <uri>meshes://FRONT_WHEEL_RE2.stl</uri>
+            <uri>model://agv_common/meshes/FRONT_WHEEL_RE2.stl</uri>
           </mesh>
         </geometry>
-        <surface>
+        <!-- <surface>
           <contact>
             <ode>
               <soft_cfm>0</soft_cfm>
@@ -251,8 +148,16 @@
               <min_depth>0.001</min_depth>
             </ode>
           </contact>
-        </surface>
+        </surface> -->
       </collision>
+      <visual name="front_wheel_r_visual">
+        <pose>-0.451 0.86 0.035 0 0 -1.571</pose>
+        <geometry>
+          <mesh>
+            <uri>model://agv_common/meshes/FRONT_WHEEL_RE2.stl</uri>
+          </mesh>
+        </geometry>
+      </visual>
     </link>
 
     <joint name="base_joint" type="fixed">
@@ -267,79 +172,24 @@
       <pose>0 0.631 1.875 0 0 0</pose>
     </joint>
 
-    <joint name="steering_joint" type="revolute">
-      <parent>base_link</parent>
-      <child>steering_part</child>
-      <pose>0.0456 -0.212 0.375 0 0 0</pose>
-      <axis>
-        <xyz>0 0 1</xyz>
-      </axis>
-    </joint>
 
-    <joint name="drive_wheel_joint" type="revolute">
-      <parent>steering_part</parent>
-      <child>drive_wheel</child>
-      <pose>-0.063 0.012 -0.285 0 0 0</pose>
-      <axis>
-        <xyz>1 0 0</xyz>
-      </axis>
-    </joint>
 
-    <joint name='front_wheel_l_joint' type='revolute'>
+    <joint name='front_wheel_l_joint' type='fixed'>
       <parent>base_link</parent>
       <child>front_wheel_l</child>
-      <axis>
-        <xyz>1 0 0</xyz>
-      </axis>
+      <pose>-0.451 0.86 0.035 0 0 -1.571</pose>
+      <!-- <axis>
+        <xyz>0 1 0</xyz>
+      </axis> -->
     </joint>
 
-    <joint name='front_wheel_r_joint' type='revolute'>
+    <joint name='front_wheel_r_joint' type='fixed'>
       <parent>base_link</parent>
       <child>front_wheel_r</child>
-      <axis>
-        <xyz>1 0 0</xyz>
-      </axis>
+      <pose>0.451 0.86 0.035 0 0 1.571</pose>
+      <!-- <axis>
+        <xyz>0 1 0</xyz>
+      </axis> -->
     </joint>
-
-    <plugin name="turtlebot3_diff_drive" filename="libgazebo_ros_tricycle_drive.so">
-
-      <update_rate>30</update_rate>
-
-      <!-- wheels -->
-      <steering_joint>steering_joint</steering_joint>
-      <actuated_wheel_joint>drive_wheel_joint</actuated_wheel_joint>
-      <encoder_wheel_left_joint>front_wheel_l_joint</encoder_wheel_left_joint>
-      <encoder_wheel_right_joint>front_wheel_r_joint</encoder_wheel_right_joint>
-
-      <!-- kinematics -->
-      <wheel_separation>0.9</wheel_separation>
-      <encoder_wheel_diameter>0.25</encoder_wheel_diameter>
-      <actuated_wheel_diameter>0.31</actuated_wheel_diameter>
-
-      <!-- limits -->
-      <max_wheel_torque>104</max_wheel_torque>
-      <max_wheel_acceleration>5.0</max_wheel_acceleration>
-      <max_steering_speed>1.0</max_steering_speed>
-
-      <!-- output -->
-      <publish_odom>true</publish_odom>
-      <publish_wheel_tf>true</publish_wheel_tf>
-      <publish_wheel_joint_state>true</publish_wheel_joint_state>
-
-      <odometry_frame>odom</odometry_frame>
-      <robot_base_frame>base_footprint</robot_base_frame>
-
-    </plugin>
-
-    <plugin name="turtlebot3_joint_state" filename="libgazebo_ros_joint_state_publisher.so">
-      <ros>
-        <!-- <namespace>/tb3</namespace> -->
-        <remapping>~/out:=joint_states</remapping>
-      </ros>
-      <update_rate>30</update_rate>
-      <joint_name>steering_joint</joint_name>
-      <joint_name>drive_wheel_joint</joint_name>
-    </plugin>
-
   </model>
 </sdf>

@@ -47,8 +47,21 @@ set(dependencies
   "tf2"
 )
 
-install(DIRECTORY launch meshes models urdf rviz
+set(EXEC_NAME "agv_drive")
+
+add_executable(${EXEC_NAME} src/agv_drive.cpp)
+ament_target_dependencies(${EXEC_NAME} ${dependencies})
+
+install(TARGETS ${EXEC_NAME}
+  DESTINATION lib/${PROJECT_NAME}
+)
+
+install(DIRECTORY launch meshes models urdf rviz worlds
   DESTINATION share/${PROJECT_NAME}
+)
+
+install(DIRECTORY include/
+  DESTINATION include/
 )
 
 if(BUILD_TESTING)
