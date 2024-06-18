@@ -109,18 +109,45 @@
     </collision>
   </link>
 
-  <joint name="steering_joint" type="continuous">
+  <joint name="steering_motor_joint" type="continuous">
     <parent link="base_link" />
+    <child link="steering_mortor" />
+    <origin xyz="0.185 -0.2 0.466" rpy="0 0 0" />
+    <axis xyz="0 0 1"/>
+  </joint>
+
+
+  <link name="steering_motor">
+    <inertial>
+      <mass value="10"/>
+      <inertia ixx="0.462" ixy="0.0" ixz="-0.002" iyy="0.462" iyz="0.0" izz="0.033"/>
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="package://agv_description/meshes/STEERING_MOTOR.stl" scale="0.001 0.001 0.001"/>
+      </geometry>
+      <material name="white" />
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 3.14" />
+      <geometry>
+        <mesh filename="package://agv_description/meshes/STEERING_MOTOR.stl" scale="0.001 0.001 0.001"/>
+      </geometry>
+    </collision>
+  </link>
+
+  <joint name="steering_joint" type="fixed">
+    <parent link="steering_motor" />
     <child link="steering_part" />
     <origin xyz="0.0456 -0.212 0.375" rpy="0 0 0" />
-    <axis xyz="0 0 1"/>
   </joint>
 
 
   <link name="steering_part">
     <inertial>
-      <mass value="85.197"/>
-      <inertia ixx="2.8" ixy="0.0" ixz="0.11" iyy="2.84" iyz="-0.11" izz="0.93"/>
+      <mass value="85.056"/>
+      <inertia ixx="2.77" ixy="0.0" ixz="0.12" iyy="2.81" iyz="-0.11" izz="0.9"/>
     </inertial>
     <visual>
       <origin xyz="0 0 0" rpy="0 0 0" />
@@ -147,7 +174,7 @@
   <link name="drive_wheel">
     <inertial>
       <mass value="21.755"/>
-      <inertia ixx="2.03" ixy="0.02" ixz="-0.42" iyy="2.03" iyz="-0.07" izz="0.27"/>
+      <inertia ixx="0.265" ixy="0.0" ixz="0.0" iyy="0.166" iyz="0.0" izz="0.166"/>
     </inertial>
     <visual>
       <origin xyz="0 0 0" rpy="0 0 0" />
