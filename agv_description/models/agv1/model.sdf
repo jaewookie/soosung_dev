@@ -75,6 +75,7 @@
         <geometry>
           <mesh>
             <uri>model://agv_common/meshes/MAST.stl</uri>
+            <scale>0.001 0.001 0.001</scale>
           </mesh>
         </geometry>
       </collision>
@@ -92,6 +93,7 @@
         <geometry>
           <mesh>
             <uri>model://agv_common/meshes/MAST.stl</uri>
+            <scale>0.001 0.001 0.001</scale>
           </mesh>
         </geometry>
       </visual>
