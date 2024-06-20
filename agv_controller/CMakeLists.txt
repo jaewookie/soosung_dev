@@ -48,7 +48,7 @@ ament_target_dependencies(tricycle_steering_controller PUBLIC ${THIS_PACKAGE_INC
 target_compile_definitions(tricycle_steering_controller PRIVATE "ACKERMANN_STEERING_CONTROLLER_BUILDING_DLL")
 
 pluginlib_export_plugin_description_file(
-  controller_interface tricycle_steering_controller.xml
+  controller_interface ros2_control_agv.xml
   )
 
   if(BUILD_TESTING)
