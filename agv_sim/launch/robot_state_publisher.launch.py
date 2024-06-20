@@ -27,7 +27,7 @@ from launch_ros.actions import Node
 
 def generate_launch_description():
     description_path = get_package_share_directory('agv_sim')
-    xacro_file = PathJoinSubstitution([description_path, 'urdf', 'demo.urdf.xacro'])
+    xacro_file = PathJoinSubstitution([description_path, 'urdf', 'agv_description.urdf.xacro'])
     use_sim_time = LaunchConfiguration('use_sim_time', default='false')
     namespace = LaunchConfiguration('namespace')
 
