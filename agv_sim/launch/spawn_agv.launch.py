@@ -25,7 +25,7 @@ def generate_launch_description():
     # Get the urdf file
     model_folder = 'agv1'
     urdf_path = os.path.join(
-        get_package_share_directory('agv_description'),
+        get_package_share_directory('agv_sim'),
         'models',
         model_folder,
         'model.sdf'

@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.8)
-project(agv_description)
+project(agv_sim)
 
 if(NOT CMAKE_C_STANDARD)
   set(CMAKE_C_STANDARD 99)
@@ -47,21 +47,8 @@ set(dependencies
   "tf2"
 )
 
-set(EXEC_NAME "agv_drive")
-
-add_executable(${EXEC_NAME} src/agv_drive.cpp)
-ament_target_dependencies(${EXEC_NAME} ${dependencies})
-
-install(TARGETS ${EXEC_NAME}
-  DESTINATION lib/${PROJECT_NAME}
-)
-
 install(DIRECTORY launch meshes models urdf rviz worlds
   DESTINATION share/${PROJECT_NAME}
-)
-
-install(DIRECTORY include/
-  DESTINATION include/
 )
 
 if(BUILD_TESTING)
@@ -69,7 +56,6 @@ if(BUILD_TESTING)
   ament_lint_auto_find_test_dependencies()
 endif()
 
-ament_export_include_directories(include)
 ament_export_dependencies(gazebo_ros_pkgs)
 ament_export_dependencies(geometry_msgs)
 ament_export_dependencies(nav_msgs)

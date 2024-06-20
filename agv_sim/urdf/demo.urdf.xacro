@@ -19,7 +19,7 @@
   </material>
 
   <!-- this include provides the macro definition used below -->
- <xacro:include filename="$(find agv_description)/urdf/agv.urdf.xacro"/>
+ <xacro:include filename="$(find agv_sim)/urdf/agv.urdf.xacro"/>
 
  <xacro:property name="model" value="(arg model)"/>
 

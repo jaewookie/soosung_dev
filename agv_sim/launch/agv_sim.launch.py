@@ -28,7 +28,7 @@ from launch.conditions import IfCondition
 
 
 def generate_launch_description():
-    launch_file_dir = os.path.join(get_package_share_directory('agv_description'), 'launch')
+    launch_file_dir = os.path.join(get_package_share_directory('agv_sim'), 'launch')
     pkg_gazebo_ros = get_package_share_directory('gazebo_ros')
 
     use_sim_time = LaunchConfiguration('use_sim_time', default='true')
@@ -36,7 +36,7 @@ def generate_launch_description():
     y_pose = LaunchConfiguration('y_pose', default='0.0')
 
     world = os.path.join(
-        get_package_share_directory('agv_description'),
+        get_package_share_directory('agv_sim'),
         'worlds',
         'empty_world.world'
     )
