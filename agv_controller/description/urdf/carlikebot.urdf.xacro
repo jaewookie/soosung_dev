@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<!-- 4 Wheel Robot with front steering and rear drive -->
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="carlikebot_robot">
+  <xacro:arg name="prefix" default="" />
+
+  <xacro:include filename="$(find agv_sim)/urdf/demo.urdf.xacro" />
+
+  <!-- Import carlikebot ros2_control description -->
+  <xacro:include filename="$(find agv_controller)/ros2_control/agv.ros2_control.xacro" />
+
+  <xacro:carlikebot prefix="$(arg prefix)" />
+
+  <xacro:carlikebot_ros2_control
+    name="agv" prefix="$(arg prefix)" />
+
+</robot>
