@@ -25,7 +25,6 @@ find_package(gazebo_ros_pkgs REQUIRED)
 find_package(geometry_msgs REQUIRED)
 find_package(nav_msgs REQUIRED)
 find_package(rclcpp REQUIRED)
-find_package(sensor_msgs REQUIRED)
 find_package(tf2 REQUIRED)
 find_package(urdf REQUIRED)
 find_package(xacro REQUIRED)
@@ -43,7 +42,6 @@ set(dependencies
   "geometry_msgs"
   "nav_msgs"
   "rclcpp"
-  "sensor_msgs"
   "tf2"
 )
 
@@ -60,6 +58,5 @@ ament_export_dependencies(gazebo_ros_pkgs)
 ament_export_dependencies(geometry_msgs)
 ament_export_dependencies(nav_msgs)
 ament_export_dependencies(rclcpp)
-ament_export_dependencies(sensor_msgs)
 ament_export_dependencies(tf2)
 ament_package()

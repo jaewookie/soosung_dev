@@ -1,0 +1,56 @@
+[0.056s] DEBUG:colcon:Command line arguments: ['/usr/bin/colcon', 'list', '-p', '--base-paths', '/home/jw/jw_soosung_ws/src/soosung_dev']
+[0.057s] DEBUG:colcon:Parsed command line arguments: Namespace(log_base=None, log_level=None, verb_name='list', build_base='build', ignore_user_meta=False, metas=['./colcon.meta'], base_paths=['/home/jw/jw_soosung_ws/src/soosung_dev'], packages_ignore=None, packages_ignore_regex=None, paths=None, packages_up_to=None, packages_up_to_regex=None, packages_above=None, packages_above_and_dependencies=None, packages_above_depth=None, packages_select_by_dep=None, packages_skip_by_dep=None, packages_skip_up_to=None, packages_select_build_failed=False, packages_skip_build_finished=False, packages_select_test_failures=False, packages_skip_test_passed=False, packages_select=None, packages_skip=None, packages_select_regex=None, packages_skip_regex=None, packages_start=None, packages_end=None, allow_overriding=[], topological_order=False, names_only=False, paths_only=True, topological_graph=False, topological_graph_dot=False, topological_graph_density=False, topological_graph_legend=False, topological_graph_dot_cluster=False, topological_graph_dot_include_skipped=False, verb_parser=<colcon_defaults.argument_parser.defaults.DefaultArgumentsDecorator object at 0x7ecfc7a4abc0>, verb_extension=<colcon_package_information.verb.list.ListVerb object at 0x7ecfc7a49990>, main=<bound method ListVerb.main of <colcon_package_information.verb.list.ListVerb object at 0x7ecfc7a49990>>)
+[0.169s] Level 1:colcon.colcon_core.package_discovery:discover_packages(colcon_meta) check parameters
+[0.169s] Level 1:colcon.colcon_core.package_discovery:discover_packages(recursive) check parameters
+[0.169s] Level 1:colcon.colcon_core.package_discovery:discover_packages(ignore) check parameters
+[0.169s] Level 1:colcon.colcon_core.package_discovery:discover_packages(path) check parameters
+[0.169s] Level 1:colcon.colcon_core.package_discovery:discover_packages(recursive) discover
+[0.169s] INFO:colcon.colcon_core.package_discovery:Crawling recursively for packages in '/home/jw/jw_soosung_ws/src/soosung_dev'
+[0.169s] Level 1:colcon.colcon_core.package_identification:_identify(/home/jw/jw_soosung_ws/src/soosung_dev) by extensions ['ignore', 'ignore_ament_install']
+[0.169s] Level 1:colcon.colcon_core.package_identification:_identify(/home/jw/jw_soosung_ws/src/soosung_dev) by extension 'ignore'
+[0.169s] Level 1:colcon.colcon_core.package_identification:_identify(/home/jw/jw_soosung_ws/src/soosung_dev) by extension 'ignore_ament_install'
+[0.169s] Level 1:colcon.colcon_core.package_identification:_identify(/home/jw/jw_soosung_ws/src/soosung_dev) by extensions ['colcon_pkg']
+[0.169s] Level 1:colcon.colcon_core.package_identification:_identify(/home/jw/jw_soosung_ws/src/soosung_dev) by extension 'colcon_pkg'
+[0.169s] Level 1:colcon.colcon_core.package_identification:_identify(/home/jw/jw_soosung_ws/src/soosung_dev) by extensions ['colcon_meta']
+[0.169s] Level 1:colcon.colcon_core.package_identification:_identify(/home/jw/jw_soosung_ws/src/soosung_dev) by extension 'colcon_meta'
+[0.169s] Level 1:colcon.colcon_core.package_identification:_identify(/home/jw/jw_soosung_ws/src/soosung_dev) by extensions ['ros']
+[0.169s] Level 1:colcon.colcon_core.package_identification:_identify(/home/jw/jw_soosung_ws/src/soosung_dev) by extension 'ros'
+[0.182s] Level 1:colcon.colcon_core.package_identification:_identify(/home/jw/jw_soosung_ws/src/soosung_dev) by extensions ['cmake', 'python']
+[0.182s] Level 1:colcon.colcon_core.package_identification:_identify(/home/jw/jw_soosung_ws/src/soosung_dev) by extension 'cmake'
+[0.182s] Level 1:colcon.colcon_core.package_identification:_identify(/home/jw/jw_soosung_ws/src/soosung_dev) by extension 'python'
+[0.182s] Level 1:colcon.colcon_core.package_identification:_identify(/home/jw/jw_soosung_ws/src/soosung_dev) by extensions ['python_setup_py']
+[0.182s] Level 1:colcon.colcon_core.package_identification:_identify(/home/jw/jw_soosung_ws/src/soosung_dev) by extension 'python_setup_py'
+[0.182s] Level 1:colcon.colcon_core.package_identification:_identify(/home/jw/jw_soosung_ws/src/soosung_dev/agv_controller) by extensions ['ignore', 'ignore_ament_install']
+[0.182s] Level 1:colcon.colcon_core.package_identification:_identify(/home/jw/jw_soosung_ws/src/soosung_dev/agv_controller) by extension 'ignore'
+[0.182s] Level 1:colcon.colcon_core.package_identification:_identify(/home/jw/jw_soosung_ws/src/soosung_dev/agv_controller) by extension 'ignore_ament_install'
+[0.182s] Level 1:colcon.colcon_core.package_identification:_identify(/home/jw/jw_soosung_ws/src/soosung_dev/agv_controller) by extensions ['colcon_pkg']
+[0.182s] Level 1:colcon.colcon_core.package_identification:_identify(/home/jw/jw_soosung_ws/src/soosung_dev/agv_controller) by extension 'colcon_pkg'
+[0.182s] Level 1:colcon.colcon_core.package_identification:_identify(/home/jw/jw_soosung_ws/src/soosung_dev/agv_controller) by extensions ['colcon_meta']
+[0.182s] Level 1:colcon.colcon_core.package_identification:_identify(/home/jw/jw_soosung_ws/src/soosung_dev/agv_controller) by extension 'colcon_meta'
+[0.182s] Level 1:colcon.colcon_core.package_identification:_identify(/home/jw/jw_soosung_ws/src/soosung_dev/agv_controller) by extensions ['ros']
+[0.182s] Level 1:colcon.colcon_core.package_identification:_identify(/home/jw/jw_soosung_ws/src/soosung_dev/agv_controller) by extension 'ros'
+[0.184s] DEBUG:colcon.colcon_core.package_identification:Package '/home/jw/jw_soosung_ws/src/soosung_dev/agv_controller' with type 'ros.ament_cmake' and name 'agv_controller'
+[0.184s] Level 1:colcon.colcon_core.package_identification:_identify(/home/jw/jw_soosung_ws/src/soosung_dev/agv_sim) by extensions ['ignore', 'ignore_ament_install']
+[0.184s] Level 1:colcon.colcon_core.package_identification:_identify(/home/jw/jw_soosung_ws/src/soosung_dev/agv_sim) by extension 'ignore'
+[0.184s] Level 1:colcon.colcon_core.package_identification:_identify(/home/jw/jw_soosung_ws/src/soosung_dev/agv_sim) by extension 'ignore_ament_install'
+[0.184s] Level 1:colcon.colcon_core.package_identification:_identify(/home/jw/jw_soosung_ws/src/soosung_dev/agv_sim) by extensions ['colcon_pkg']
+[0.184s] Level 1:colcon.colcon_core.package_identification:_identify(/home/jw/jw_soosung_ws/src/soosung_dev/agv_sim) by extension 'colcon_pkg'
+[0.184s] Level 1:colcon.colcon_core.package_identification:_identify(/home/jw/jw_soosung_ws/src/soosung_dev/agv_sim) by extensions ['colcon_meta']
+[0.184s] Level 1:colcon.colcon_core.package_identification:_identify(/home/jw/jw_soosung_ws/src/soosung_dev/agv_sim) by extension 'colcon_meta'
+[0.184s] Level 1:colcon.colcon_core.package_identification:_identify(/home/jw/jw_soosung_ws/src/soosung_dev/agv_sim) by extensions ['ros']
+[0.184s] Level 1:colcon.colcon_core.package_identification:_identify(/home/jw/jw_soosung_ws/src/soosung_dev/agv_sim) by extension 'ros'
+[0.185s] DEBUG:colcon.colcon_core.package_identification:Package '/home/jw/jw_soosung_ws/src/soosung_dev/agv_sim' with type 'ros.ament_cmake' and name 'agv_sim'
+[0.185s] Level 1:colcon.colcon_core.package_identification:_identify(/home/jw/jw_soosung_ws/src/soosung_dev/agv_teleop) by extensions ['ignore', 'ignore_ament_install']
+[0.185s] Level 1:colcon.colcon_core.package_identification:_identify(/home/jw/jw_soosung_ws/src/soosung_dev/agv_teleop) by extension 'ignore'
+[0.185s] Level 1:colcon.colcon_core.package_identification:_identify(/home/jw/jw_soosung_ws/src/soosung_dev/agv_teleop) by extension 'ignore_ament_install'
+[0.185s] Level 1:colcon.colcon_core.package_identification:_identify(/home/jw/jw_soosung_ws/src/soosung_dev/agv_teleop) by extensions ['colcon_pkg']
+[0.185s] Level 1:colcon.colcon_core.package_identification:_identify(/home/jw/jw_soosung_ws/src/soosung_dev/agv_teleop) by extension 'colcon_pkg'
+[0.185s] Level 1:colcon.colcon_core.package_identification:_identify(/home/jw/jw_soosung_ws/src/soosung_dev/agv_teleop) by extensions ['colcon_meta']
+[0.185s] Level 1:colcon.colcon_core.package_identification:_identify(/home/jw/jw_soosung_ws/src/soosung_dev/agv_teleop) by extension 'colcon_meta'
+[0.185s] Level 1:colcon.colcon_core.package_identification:_identify(/home/jw/jw_soosung_ws/src/soosung_dev/agv_teleop) by extensions ['ros']
+[0.185s] Level 1:colcon.colcon_core.package_identification:_identify(/home/jw/jw_soosung_ws/src/soosung_dev/agv_teleop) by extension 'ros'
+[0.185s] DEBUG:colcon.colcon_core.package_identification:Package '/home/jw/jw_soosung_ws/src/soosung_dev/agv_teleop' with type 'ros.ament_python' and name 'agv_teleop'
+[0.185s] Level 1:colcon.colcon_core.package_identification:_identify(/home/jw/jw_soosung_ws/src/soosung_dev/log) by extensions ['ignore', 'ignore_ament_install']
+[0.185s] Level 1:colcon.colcon_core.package_identification:_identify(/home/jw/jw_soosung_ws/src/soosung_dev/log) by extension 'ignore'
+[0.185s] Level 1:colcon.colcon_core.package_identification:_identify(/home/jw/jw_soosung_ws/src/soosung_dev/log) ignored
+[0.185s] Level 1:colcon.colcon_core.package_discovery:discover_packages(recursive) using defaults

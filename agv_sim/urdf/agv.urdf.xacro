@@ -43,14 +43,14 @@
     <visual>
       <origin xyz="0 0 0" rpy="0 0 0" />
       <geometry>
-        <mesh filename="package://agv_sim/meshes/MAST_RE.stl" />
+        <mesh filename="package://agv_sim/meshes/MAST.stl" scale = "0.001 0.001 0.001" />
       </geometry>
       <material name="dark_grey" />
     </visual>
     <collision>
       <origin xyz="0 0 0" rpy="0 0 0" />
       <geometry>
-        <mesh filename="package://agv_sim/meshes/MAST_RE.stl" />
+        <mesh filename="package://agv_sim/meshes/MAST.stl" scale = "0.001 0.001 0.001" />
       </geometry>
     </collision>
   </link>
@@ -109,7 +109,7 @@
     </collision>
   </link>
 
-  <!-- <joint name="steering_joint" type="continuous">
+  <joint name="steering_joint" type="continuous">
     <parent link="base_link" />
     <child link="steering_part" />
     <origin xyz="-0.0456 -0.212 0.375" rpy="0 0 0" />
@@ -162,6 +162,6 @@
         <mesh filename="package://agv_sim/meshes/DRIVE_WHEEL_RE2.stl"/>
       </geometry>
     </collision>
-  </link> -->
+  </link>
 
 </robot>

@@ -44,7 +44,7 @@ ARGUMENTS = [
 
 def generate_launch_description():
     test_description = get_package_share_directory('agv_sim')
-    xacro_file = PathJoinSubstitution([test_description, 'urdf', 'demo.urdf.xacro'])
+    xacro_file = PathJoinSubstitution([test_description, 'urdf', 'agv_description.urdf.xacro'])
     namespace = LaunchConfiguration('namespace')
     robot_state_publisher = Node(
         package='robot_state_publisher',
@@ -66,7 +66,7 @@ def generate_launch_description():
     rviz_display_config_file = os.path.join(
         get_package_share_directory('agv_sim'),
         'rviz',
-        'agv_demo.rviz')
+        'agv.rviz')
 
     joint_state_publisher = Node(
         package='joint_state_publisher',
