@@ -8,18 +8,31 @@ endif()
 # find dependencies
 find_package(ament_cmake REQUIRED)
 find_package(rclcpp_action REQUIRED)
+find_package(std_srvs REQUIRED)
 find_package(std_msgs REQUIRED)
+find_package(nav_msgs REQUIRED)
 find_package(geometry_msgs REQUIRED)
+find_package(sensor_msgs REQUIRED)
+find_package(tf2 REQUIRED)
+find_package(tf2_ros REQUIRED)
+find_package(tf2_geometry_msgs REQUIRED)
+
 
 include_directories(
   include
 )
 
-add_executable(agv_drive src/agv_drive.cpp)
-ament_target_dependencies(agv_drive rclcpp geometry_msgs std_msgs)
+add_executable(agv_drive src/main.cpp src/agv_drive.cpp)
+
+ament_target_dependencies(agv_drive rclcpp geometry_msgs std_msgs nav_msgs sensor_msgs std_srvs tf2 tf2_ros tf2_geometry_msgs)
+
+add_executable(agv_drive_by_gpt src/agv_drive_by_gpt.cpp)
+
+ament_target_dependencies(agv_drive_by_gpt rclcpp geometry_msgs std_msgs nav_msgs sensor_msgs std_srvs tf2 tf2_ros tf2_geometry_msgs)
 
 install(TARGETS
   agv_drive
+  agv_drive_by_gpt
   DESTINATION lib/${PROJECT_NAME}
 )
 

@@ -56,14 +56,14 @@ def generate_launch_description():
 
     robot_state_publisher_cmd = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
-            os.path.join(launch_file_dir, 'robot_state_publisher.launch.py')
+            os.path.join(launch_file_dir, 'robot_state_publisher_plug.launch.py')
         ),
         launch_arguments={'use_sim_time': use_sim_time}.items()
     )
 
     spawn_agv_cmd = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
-            os.path.join(launch_file_dir, 'spawn_agv.launch.py')
+            os.path.join(launch_file_dir, 'spawn_agv_plug.launch.py')
         ),
         launch_arguments={
             'x_pose': x_pose,

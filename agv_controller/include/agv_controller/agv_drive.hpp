@@ -15,6 +15,7 @@
 #ifndef AgvDrive__AgvDrive_HPP_
 #define AgvDrive__AgvDrive_HPP_
 
+#include <cmath>
 #include <chrono>
 #include <memory>
 #include <sstream>
@@ -22,36 +23,58 @@
 #include <utility>
 #include <vector>
 #include <stdexcept>
+#include <string>
+
+#include "geometry_msgs/msg/transform_stamped.hpp"
+#include "tf2/LinearMath/Quaternion.h"
+#include "tf2_ros/transform_broadcaster.h"
 
 #include "rclcpp/rclcpp.hpp"
 #include "geometry_msgs/msg/twist.hpp"
 #include "std_msgs/msg/string.hpp"
+#include "sensor_msgs/msg/joint_state.hpp"
 
 #define DRIVE_WHEEL_RADIUS 0.155 // mm
+#define MAX_WHEEL_ACCEL 0
+#define MAX_WHEEL_DECEL 0
+#define MAX_WHEEL_SPEED_TOL 0.01
 
 class AgvDrive : public rclcpp::Node
 {
 public:
   using DrivingMotorRPM = std_msgs::msg::String;
+  using JointState = sensor_msgs::msg::JointState;
 
   explicit AgvDrive(const rclcpp::NodeOptions &node_options = rclcpp::NodeOptions());
   virtual ~AgvDrive();
 
-  float agv_drive_motor_formula(const float &a, const float &b, const float &c);
+  float agv_drive_motor_formula(const float &a, const float &c);
 
 private:
   void publish_drive_rpm();
+
   rclcpp::Subscription<geometry_msgs::msg::Twist>::SharedPtr
       cmdvel_subscriber_;
-  rclcpp::Publisher<std_msgs::msg::String>::SharedPtr drive_rpm_publisher_;
+  rclcpp::Publisher<sensor_msgs::msg::JointState>::SharedPtr agv_joint_publisher_;
   rclcpp::TimerBase::SharedPtr timer_;
+
+  std::string drive_joint_ = "drive_wheel_joint";
+  std::vector<std::string> joint_name_;
+
+  // tf
+  std::shared_ptr<tf2_ros::TransformBroadcaster> tf_broadcaster_;
+  std::vector<geometry_msgs::msg::TransformStamped> tf_stamped_list_;
+
+  // cmd_vel to Drive_motor_RPM
 
   float lin_vel_;
   float ang_vel_;
 
   float drive_rpm_;
 
-  std::string argument_formula_;
-  std::vector<std::string> operator_;
+  float current_pose_;
+
+  // std::string argument_formula_;
+  // std::vector<std::string> operator_;
 };
 #endif // AgvDrive__AgvDrive_HPP_

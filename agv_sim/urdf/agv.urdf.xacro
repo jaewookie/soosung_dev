@@ -109,7 +109,7 @@
     </collision>
   </link>
 
-  <joint name="steering_joint" type="continuous">
+  <!-- <joint name="steering_joint" type="continuous">
     <parent link="base_link" />
     <child link="steering_part" />
     <origin xyz="-0.0456 -0.212 0.375" rpy="0 0 0" />
@@ -141,6 +141,33 @@
     <parent link="steering_part" />
     <child link="drive_wheel" />
     <origin xyz="0.063 0.012 -0.285" rpy="0 0 0" />
+    <axis xyz="1 0 0"/>
+  </joint>
+
+  <link name="drive_wheel">
+    <inertial>
+      <mass value="21.755"/>
+      <inertia ixx="0.265" ixy="0.0" ixz="0.0" iyy="0.166" iyz="0.0" izz="0.166"/>
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="package://agv_sim/meshes/DRIVE_WHEEL_RE2.stl"/>
+      </geometry>
+      <material name="blue" />
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="package://agv_sim/meshes/DRIVE_WHEEL_RE2.stl"/>
+      </geometry>
+    </collision>
+  </link> -->
+
+  <joint name="drive_wheel_joint" type="continuous">
+    <parent link="base_link" />
+    <child link="drive_wheel" />
+    <origin xyz="0.0174 -0.2 0.09" rpy="0 0 0" />
     <axis xyz="1 0 0"/>
   </joint>
 

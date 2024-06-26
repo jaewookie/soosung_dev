@@ -99,7 +99,7 @@
       </visual>
     </link>
 
-    <!-- <joint name="steering_joint" type="revolute">
+    <joint name="steering_joint" type="revolute">
       <parent>base_link</parent>
       <child>steering_part</child>
       <pose>0 -0.212 0.445 0 0 0</pose>
@@ -166,71 +166,6 @@
 
     <joint name="drive_wheel_joint" type="revolute">
       <parent>steering_part</parent>
-      <child>drive_wheel</child>
-      <pose>0.0175 -0.2 0.16 0 0 0</pose>
-      <axis>
-        <xyz>1 0 0</xyz>
-      </axis>
-    </joint>
-
-    <link name="drive_wheel">
-
-      <inertial>
-        <pose>0.0175 -0.2 0.16 0 0 0</pose>
-        <inertia>
-          <ixx>0.166</ixx>
-          <ixy>0.0</ixy>
-          <ixz>0.0</ixz>
-          <iyy>0.166</iyy>
-          <iyz>0.0</iyz>
-          <izz>0.166</izz>
-        </inertia>
-        <mass>21.755</mass>
-      </inertial>
-
-      <collision name="drive_wheel_collision">
-        <pose>0.0175 -0.2 0.16 0 1.571 0</pose>
-        <geometry>
-          <cylinder>
-            <radius>0.155</radius>
-            <length>0.145</length>
-          </cylinder>
-        </geometry>
-        <surface>
-          <friction>
-            <ode>
-              <mu>100000.0</mu>
-              <mu2>100000.0</mu2>
-              <fdir1>0 0 0</fdir1>
-              <slip1>0.0</slip1>
-              <slip2>0.0</slip2>
-            </ode>
-          </friction>
-          <contact>
-            <ode>
-              <soft_cfm>0</soft_cfm>
-              <soft_erp>0.2</soft_erp>
-              <kp>5e+6</kp>
-              <kd>1</kd>
-              <max_vel>0.01</max_vel>
-              <min_depth>0.0005</min_depth>
-            </ode>
-          </contact>
-        </surface>
-      </collision>
-
-      <visual name="drive_wheel_visual">
-        <pose>0.0175 -0.2 0.16 0 0 0</pose>
-        <geometry>
-          <mesh>
-            <uri>model://agv_common/meshes/DRIVE_WHEEL_RE2.stl</uri>
-          </mesh>
-        </geometry>
-      </visual>
-    </link> -->
-
-    <joint name="drive_wheel_joint" type="revolute">
-      <parent>base_link</parent>
       <child>drive_wheel</child>
       <pose>0.0175 -0.2 0.16 0 0 0</pose>
       <axis>
@@ -406,7 +341,35 @@
       </visual>
     </link>
 
-    <!-- <plugin name="agv_state" filename="libgazebo_ros_joint_state_publisher.so">
+    <plugin name="agv_drive" filename="libgazebo_ros_tricycle_drive.so">
+
+      <update_rate>30</update_rate>
+
+      <steering_joint>steering_joint</steering_joint>
+      <actuated_wheel_joint>drive_wheel_joint</actuated_wheel_joint>
+      <encoder_wheel_left_joint>front_wheel_l_joint</encoder_wheel_left_joint>
+      <encoder_wheel_right_joint>front_wheel_r_joint</encoder_wheel_right_joint>
+
+
+      <wheel_separation>0.9</wheel_separation>
+      <encoder_wheel_diameter>0.25</encoder_wheel_diameter>
+      <actuated_wheel_diameter>0.31</actuated_wheel_diameter>
+
+
+      <max_wheel_torque>100</max_wheel_torque>
+      <max_wheel_acceleration>5.0</max_wheel_acceleration>
+      <max_steering_speed>1.0</max_steering_speed>
+
+      <publish_odom>true</publish_odom>
+      <publish_wheel_tf>true</publish_wheel_tf>
+      <publish_wheel_joint_state>true</publish_wheel_joint_state>
+
+      <odometry_frame>odom</odometry_frame>
+      <robot_base_frame>base_footprint</robot_base_frame>
+
+    </plugin>
+
+    <plugin name="agv_state" filename="libgazebo_ros_joint_state_publisher.so">
       <ros>
 
         <remapping>~/out:=joint_states</remapping>
@@ -414,7 +377,7 @@
       <update_rate>30</update_rate>
       <joint_name>steering_joint</joint_name>
       <joint_name>drive_wheel_joint</joint_name>
-    </plugin> -->
+    </plugin>
 
   </model>
 </sdf>
