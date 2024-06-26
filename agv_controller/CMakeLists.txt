@@ -30,10 +30,19 @@ add_executable(agv_drive_by_gpt src/agv_drive_by_gpt.cpp)
 
 ament_target_dependencies(agv_drive_by_gpt rclcpp geometry_msgs std_msgs nav_msgs sensor_msgs std_srvs tf2 tf2_ros tf2_geometry_msgs)
 
+add_executable(agv_drive_fake src/agv_drive_fake.cpp)
+
+ament_target_dependencies(agv_drive_fake rclcpp geometry_msgs nav_msgs sensor_msgs tf2 tf2_geometry_msgs)
+
 install(TARGETS
   agv_drive
   agv_drive_by_gpt
+  agv_drive_fake
   DESTINATION lib/${PROJECT_NAME}
+)
+
+install(DIRECTORY launch
+  DESTINATION share/${PROJECT_NAME}
 )
 
 if(BUILD_TESTING)

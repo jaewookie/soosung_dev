@@ -109,7 +109,7 @@
     </collision>
   </link>
 
-  <!-- <joint name="steering_joint" type="continuous">
+  <joint name="steering_joint" type="continuous">
     <parent link="base_link" />
     <child link="steering_part" />
     <origin xyz="-0.0456 -0.212 0.375" rpy="0 0 0" />
@@ -162,33 +162,38 @@
         <mesh filename="package://agv_sim/meshes/DRIVE_WHEEL_RE2.stl"/>
       </geometry>
     </collision>
-  </link> -->
-
-  <joint name="drive_wheel_joint" type="continuous">
-    <parent link="base_link" />
-    <child link="drive_wheel" />
-    <origin xyz="0.0174 -0.2 0.09" rpy="0 0 0" />
-    <axis xyz="1 0 0"/>
-  </joint>
-
-  <link name="drive_wheel">
-    <inertial>
-      <mass value="21.755"/>
-      <inertia ixx="0.265" ixy="0.0" ixz="0.0" iyy="0.166" iyz="0.0" izz="0.166"/>
-    </inertial>
-    <visual>
-      <origin xyz="0 0 0" rpy="0 0 0" />
-      <geometry>
-        <mesh filename="package://agv_sim/meshes/DRIVE_WHEEL_RE2.stl"/>
-      </geometry>
-      <material name="blue" />
-    </visual>
-    <collision>
-      <origin xyz="0 0 0" rpy="0 0 0" />
-      <geometry>
-        <mesh filename="package://agv_sim/meshes/DRIVE_WHEEL_RE2.stl"/>
-      </geometry>
-    </collision>
   </link>
+
+  <!-- <gazebo>
+    <plugin name="agv_drive" filename="libgazebo_ros_tricycle_drive.so">
+
+      <robotNameSpace>/agv1</robotNameSpace>
+
+      <update_rate>30</update_rate>
+
+      <steering_joint>steering_joint</steering_joint>
+      <actuated_wheel_joint>drive_wheel_joint</actuated_wheel_joint>
+      <encoder_wheel_left_joint>front_wheel_l_joint</encoder_wheel_left_joint>
+      <encoder_wheel_right_joint>front_wheel_r_joint</encoder_wheel_right_joint>
+
+
+      <wheel_separation>0.9</wheel_separation>
+      <encoder_wheel_diameter>0.25</encoder_wheel_diameter>
+      <actuated_wheel_diameter>0.31</actuated_wheel_diameter>
+
+
+      <max_wheel_torque>100</max_wheel_torque>
+      <max_wheel_acceleration>5.0</max_wheel_acceleration>
+      <max_steering_speed>1.0</max_steering_speed>
+
+      <publish_odom>true</publish_odom>
+      <publish_wheel_tf>true</publish_wheel_tf>
+      <publish_wheel_joint_state>true</publish_wheel_joint_state>
+
+      <odometry_frame>odom</odometry_frame>
+      <robot_base_frame>base_footprint</robot_base_frame>
+
+    </plugin>
+  </gazebo> -->
 
 </robot>

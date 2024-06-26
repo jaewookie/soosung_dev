@@ -99,6 +99,8 @@ void AgvDrive::publish_drive_rpm()
 {
   sensor_msgs::msg::JointState joint_msg;
 
+// joint_msg.position stacking!
+
   joint_msg.header.frame_id = "";
   joint_msg.header.stamp = this->now();
   joint_msg.name.push_back(drive_joint_);

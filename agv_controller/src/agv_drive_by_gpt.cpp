@@ -51,9 +51,23 @@ void AgvDriveGPT::cmd_vel_callback(const geometry_msgs::msg::Twist::SharedPtr ms
 void AgvDriveGPT::publish_states()
 {
   rclcpp::Time now = this->now();
+  double dt = 0.01; // 시간 간격
+
+  static double wheel_position = 0.0;
+  double wheel_velocity = lin_vel_ / wheel_radius_;
+
+  wheel_position += wheel_velocity * dt;
+
+  // Joint states 퍼블리시
+  joint_state_.header.stamp = now;
+  joint_state_.name = {"steering_joint", "drive_wheel_joint"};
+  joint_state_.position = {0.0, wheel_position};
+  joint_state_.velocity = {0.0, wheel_velocity};
+
+  joint_state_publisher_->publish(joint_state_);
 
   // Odometry 퍼블리시
-  double dt = 0.01; // 시간 간격
+
   static double x = 0.0, y = 0.0, theta = 0.0;
 
   double delta_x = 0;
@@ -72,20 +86,12 @@ void AgvDriveGPT::publish_states()
   odom_.pose.pose.position.z = 0.0;
   tf2::Quaternion q;
   q.setRPY(0, 0, theta);
-  odom_.pose.pose.orientation = tf2::toMsg(q);
+  tf2::convert(q, odom_.pose.pose.orientation);
 
   odom_.twist.twist.linear.y = lin_vel_;
   odom_.twist.twist.angular.z = ang_vel_; // 각속도는 현재 사용하지 않음
 
   odom_publisher_->publish(odom_);
-
-  // Joint states 퍼블리시
-  joint_state_.header.stamp = now;
-  joint_state_.name = {"steering_joint", "drive_wheel_joint"};
-  joint_state_.position = {0.0, delta_y}; // 실제 포지션으로 업데이트 필요 시 수정
-  joint_state_.velocity = {0.0, lin_vel_ / wheel_radius_};
-
-  joint_state_publisher_->publish(joint_state_);
 
   // TF 퍼블리시
   odom_tf_.header.stamp = now;
@@ -94,7 +100,7 @@ void AgvDriveGPT::publish_states()
   odom_tf_.transform.translation.x = 0.0;
   odom_tf_.transform.translation.y = y;
   odom_tf_.transform.translation.z = 0.0;
-  odom_tf_.transform.rotation = tf2::toMsg(q);
+  tf2::convert(q, odom_.pose.pose.orientation);
 
   tf_broadcaster_->sendTransform(odom_tf_);
 }
