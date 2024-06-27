@@ -26,6 +26,7 @@ from launch.substitutions import LaunchConfiguration
 
 from launch.conditions import IfCondition
 
+from launch_ros.actions import Node
 
 def generate_launch_description():
     launch_file_dir = os.path.join(get_package_share_directory('agv_sim'), 'launch')
@@ -35,11 +36,22 @@ def generate_launch_description():
     x_pose = LaunchConfiguration('x_pose', default='0.0')
     y_pose = LaunchConfiguration('y_pose', default='0.0')
 
+    rviz_display_config_file = os.path.join(
+        get_package_share_directory('agv_sim'),
+        'rviz',
+        'agv.rviz')
+
     world = os.path.join(
         get_package_share_directory('agv_sim'),
         'worlds',
         'empty_world.world'
     )
+
+    rviz2 = Node(
+        package='rviz2',
+        executable='rviz2',
+        arguments=['-d', rviz_display_config_file],
+        output='screen')
 
     gzserver_cmd = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
@@ -77,7 +89,8 @@ def generate_launch_description():
     # ld.add_action(start_gazebo_server_cmd)
     ld.add_action(gzserver_cmd)
     ld.add_action(gzclient_cmd)
-    # ld.add_action(robot_state_publisher_cmd)
+    ld.add_action(robot_state_publisher_cmd)
     ld.add_action(spawn_agv_cmd)
+    ld.add_action(rviz2)
 
     return ld

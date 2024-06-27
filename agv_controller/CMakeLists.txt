@@ -22,13 +22,9 @@ include_directories(
   include
 )
 
-add_executable(agv_drive src/main.cpp src/agv_drive.cpp)
+add_executable(agv_drive src/agv_drive.cpp)
 
 ament_target_dependencies(agv_drive rclcpp geometry_msgs std_msgs nav_msgs sensor_msgs std_srvs tf2 tf2_ros tf2_geometry_msgs)
-
-add_executable(agv_drive_by_gpt src/agv_drive_by_gpt.cpp)
-
-ament_target_dependencies(agv_drive_by_gpt rclcpp geometry_msgs std_msgs nav_msgs sensor_msgs std_srvs tf2 tf2_ros tf2_geometry_msgs)
 
 add_executable(agv_drive_fake src/agv_drive_fake.cpp)
 
@@ -36,7 +32,6 @@ ament_target_dependencies(agv_drive_fake rclcpp geometry_msgs nav_msgs sensor_ms
 
 install(TARGETS
   agv_drive
-  agv_drive_by_gpt
   agv_drive_fake
   DESTINATION lib/${PROJECT_NAME}
 )

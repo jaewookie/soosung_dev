@@ -25,8 +25,6 @@ def generate_launch_description():
         urdf_file_name)
 
     return LaunchDescription([
-        LogInfo(msg=['Execute Turtlebot3 Fake Node!!']),
-
         IncludeLaunchDescription(
             PythonLaunchDescriptionSource([rviz_dir, '/rviz2.launch.py'])),
 

@@ -22,7 +22,7 @@ ARGUMENTS = [
 
 def generate_launch_description():
     test_description = get_package_share_directory('agv_sim')
-    xacro_file = PathJoinSubstitution([test_description, 'urdf', 'agv.urdf'])
+    xacro_file = PathJoinSubstitution([test_description, 'urdf', 'agv_description.urdf.xacro'])
     namespace = LaunchConfiguration('namespace')
     robot_state_publisher = Node(
         package='robot_state_publisher',
@@ -44,7 +44,7 @@ def generate_launch_description():
 
     agv_controller = Node(
         package='agv_controller',
-        executable='agv_drive_by_gpt',
+        executable='agv_drive',
         name='agv_controller',
         output='screen'
     )
