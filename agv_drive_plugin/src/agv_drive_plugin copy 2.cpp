@@ -110,7 +110,7 @@ namespace gazebo_ros
 
   void AgvDrivePluginPrivate::OnUpdate()
   {
-    rclcpp::Time current_time = ros_node_->get_clock()->now();
+    gazebo::common::Time current_time = _model->get_clock()->now();
     double dt = (current_time - last_time_);
     last_time_ = current_time;
 
