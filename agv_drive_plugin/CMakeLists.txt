@@ -9,6 +9,7 @@ endif()
 find_package(ament_cmake REQUIRED)
 
 find_package(gazebo_ros REQUIRED)
+find_package(gazebo_dev REQUIRED)
 find_package(gazebo REQUIRED)
 find_package(tf2 REQUIRED)
 find_package(tf2_ros REQUIRED)
@@ -24,6 +25,7 @@ add_library(${PROJECT_NAME} SHARED src/agv_drive_plugin.cpp)
 ament_target_dependencies(${PROJECT_NAME}
   "gazebo"
   "gazebo_ros"
+  "gazebo_dev"
   "rclcpp"
   "sensor_msgs"
   "nav_msgs"
@@ -35,8 +37,12 @@ ament_target_dependencies(${PROJECT_NAME}
 ament_export_libraries(${PROJECT_NAME})
 target_link_libraries(${PROJECT_NAME} ${GAZEBO_LIBRARIES} ${rclcpp_LIBRARIES} ${sensor_msgs_LIBRARIES} ${nav_msgs_LIBRARIES} ${geometry_msgs_LIBRARIES} ${tf2_ros_LIBRARIES} ${tf2_geometry_msgs_LIBRARIES})
 
+ament_environment_hooks("${CMAKE_CURRENT_SOURCE_DIR}/env-hooks/gazebo_plugins.sh.in")
+
 install(TARGETS ${PROJECT_NAME}
+  ARCHIVE DESTINATION lib
   LIBRARY DESTINATION lib
+  RUNTIME DESTINATION bin
 )
 
 if(BUILD_TESTING)

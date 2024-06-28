@@ -6,7 +6,7 @@
 
     <pose>0.0 0.0 0.0 0.0 0.0 0.0</pose>
 
-    <link name="base_footprint" />
+    <link name="belt_joint" />
 
     <joint name="base_joint" type="fixed">
       <parent>base_footprint</parent>
@@ -229,7 +229,7 @@
       </visual>
     </link>
 
-    <joint name='front_wheel_l_joint' type='revolute'>
+    <joint name='front_wheel_l_joint' type='fixed'>
       <parent>base_link</parent>
       <child>front_wheel_l</child>
       <pose>-0.451 0.86 0.135 0 0 -1.571</pose>
@@ -287,7 +287,7 @@
       </visual>
     </link>
 
-    <joint name='front_wheel_r_joint' type='revolute'>
+    <joint name='front_wheel_r_joint' type='fixed'>
       <parent>base_link</parent>
       <child>front_wheel_r</child>
       <pose>0.451 0.86 0.135 0 0 1.571</pose>
@@ -341,9 +341,17 @@
       </visual>
     </link>
 
-    <gazebo>
-      <plugin name="agv_drive" filename="libagv_drive_plugin.so"/>
-    </gazebo>
+    <!-- <plugin name="ros2_conveyorbelt_plugin" filename="libros2_conveyorbelt_plugin.so" >
+      <ros>
+          <namespace></namespace>
+      </ros>
+      <max_velocity>1.0</max_velocity>
+      <publish_rate>1000</publish_rate>
+  </plugin> -->
+
+
+    <plugin name="agv_drive" filename="libagv_drive_plugin.so" />
+
 
     <!-- <plugin name="agv_drive" filename="libgazebo_ros_tricycle_drive.so">
 

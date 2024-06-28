@@ -28,6 +28,7 @@ find_package(rclcpp REQUIRED)
 find_package(tf2 REQUIRED)
 find_package(urdf REQUIRED)
 find_package(xacro REQUIRED)
+find_package(agv_drive_plugin REQUIRED)
 
 link_directories(
   ${GAZEBO_LIBRARY_DIRS}
@@ -59,4 +60,5 @@ ament_export_dependencies(geometry_msgs)
 ament_export_dependencies(nav_msgs)
 ament_export_dependencies(rclcpp)
 ament_export_dependencies(tf2)
+ament_export_dependencies(agv_drive_plugin)
 ament_package()

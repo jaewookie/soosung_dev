@@ -23,6 +23,7 @@ namespace gazebo
 
     void Load(physics::ModelPtr model, sdf::ElementPtr sdf)
     {
+      RCLCPP_ERROR(node_->get_logger(), "aaaaaa");
       // Initialize ROS node
       node_ = gazebo_ros::Node::Get(sdf);
 
@@ -36,13 +37,23 @@ namespace gazebo
         return;
       }
 
+      RCLCPP_ERROR(node_->get_logger(), "bbbbbbbb");
+
       // ROS2 publishers and subscribers
       cmd_vel_sub_ = node_->create_subscription<geometry_msgs::msg::Twist>(
           "/cmd_vel", 10, std::bind(&AgvDrivePlugin::OnCmdVel, this, std::placeholders::_1));
 
+      RCLCPP_ERROR(node_->get_logger(), "ccccccccc");
+
       joint_state_pub_ = node_->create_publisher<sensor_msgs::msg::JointState>("/joint_states", 10);
+
+      RCLCPP_ERROR(node_->get_logger(), "ddddddd");
+
       odom_pub_ = node_->create_publisher<nav_msgs::msg::Odometry>("/odom", 10);
+
+      RCLCPP_ERROR(node_->get_logger(), "eeeeeeeeeee");
       tf_broadcaster_ = std::make_shared<tf2_ros::TransformBroadcaster>(node_);
+      RCLCPP_ERROR(node_->get_logger(), "ffffffff");
 
       update_connection_ = event::Events::ConnectWorldUpdateBegin(
           std::bind(&AgvDrivePlugin::OnUpdate, this));
@@ -91,7 +102,7 @@ namespace gazebo
       nav_msgs::msg::Odometry odom_msg;
       odom_msg.header.stamp = node_->get_clock()->now();
       odom_msg.header.frame_id = "odom";
-      odom_msg.child_frame_id = "base_link";
+      odom_msg.child_frame_id = "base_footprint";
       odom_msg.pose.pose.position.x = x_;
       odom_msg.pose.pose.position.y = y_;
       odom_msg.pose.pose.position.z = 0.0;
@@ -106,7 +117,7 @@ namespace gazebo
       geometry_msgs::msg::TransformStamped odom_tf;
       odom_tf.header.stamp = node_->get_clock()->now();
       odom_tf.header.frame_id = "odom";
-      odom_tf.child_frame_id = "base_link";
+      odom_tf.child_frame_id = "base_footprint";
       odom_tf.transform.translation.x = x_;
       odom_tf.transform.translation.y = y_;
       odom_tf.transform.translation.z = 0.0;
