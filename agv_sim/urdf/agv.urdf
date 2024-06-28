@@ -1,6 +1,22 @@
 <?xml version="1.0"?>
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="agv1">
 
+  <material name="dark_grey">
+    <color rgba="0.5 0.5 0.5 1.0" />
+  </material>
+  <material name="orange">
+    <color rgba="0.94 0.38 0.247 1.0" />
+  </material>
+  <material name="blue">
+    <color rgba="0 0 1.0 1.0" />
+  </material>
+  <material name="green">
+    <color rgba="0 1.0 0 1.0" />
+  </material>
+  <material name="white">
+    <color rgba="1.0 1.0 1.0 1.0" />
+  </material>
+
   <link name="base_footprint" />
 
   <joint name="base_joint" type="fixed">
@@ -37,20 +53,20 @@
 
   <link name="mast">
     <inertial>
-      <mass value="590.628"/>
-      <inertia ixx="1122.228" ixy="-0.195" ixz="1.265" iyy="1071.349" iyz="-243.104" izz="135.921"/>
+      <mass value="590.628" />
+      <inertia ixx="1122.228" ixy="-0.195" ixz="1.265" iyy="1071.349" iyz="-243.104" izz="135.921" />
     </inertial>
     <visual>
       <origin xyz="0 0 0" rpy="0 0 0" />
       <geometry>
-        <mesh filename="package://agv_sim/meshes/MAST.stl" scale = "0.001 0.001 0.001" />
+        <mesh filename="package://agv_sim/meshes/MAST.stl" scale="0.001 0.001 0.001" />
       </geometry>
       <material name="dark_grey" />
     </visual>
     <collision>
       <origin xyz="0 0 0" rpy="0 0 0" />
       <geometry>
-        <mesh filename="package://agv_sim/meshes/MAST.stl" scale = "0.001 0.001 0.001" />
+        <mesh filename="package://agv_sim/meshes/MAST.stl" scale="0.001 0.001 0.001" />
       </geometry>
     </collision>
   </link>
@@ -59,25 +75,25 @@
     <parent link="base_link" />
     <child link="front_wheel_l" />
     <origin xyz="-0.451 0.86 0.035" rpy="0 0 -1.571" />
-    <axis xyz="0 1 0"/>
+    <axis xyz="0 1 0" />
   </joint>
 
   <link name="front_wheel_l">
     <inertial>
-      <mass value="16.096"/>
-      <inertia ixx="0.066" ixy="0.0" ixz="0.0" iyy="0.104" iyz="0.0" izz="0.066"/>
+      <mass value="16.096" />
+      <inertia ixx="0.066" ixy="0.0" ixz="0.0" iyy="0.104" iyz="0.0" izz="0.066" />
     </inertial>
     <visual>
       <origin xyz="0 0 0" rpy="0 0 0" />
       <geometry>
-        <mesh filename="package://agv_sim/meshes/FRONT_WHEEL_RE2.stl"/>
+        <mesh filename="package://agv_sim/meshes/FRONT_WHEEL_RE2.stl" />
       </geometry>
       <material name="green" />
     </visual>
     <collision>
       <origin xyz="0 0 0" rpy="0 0 0" />
       <geometry>
-        <mesh filename="package://agv_sim/meshes/FRONT_WHEEL_RE2.stl"/>
+        <mesh filename="package://agv_sim/meshes/FRONT_WHEEL_RE2.stl" />
       </geometry>
     </collision>
   </link>
@@ -86,25 +102,25 @@
     <parent link="base_link" />
     <child link="front_wheel_r" />
     <origin xyz="0.451 0.86 0.035" rpy="0 0 1.571" />
-    <axis xyz="0 1 0"/>
+    <axis xyz="0 1 0" />
   </joint>
 
   <link name="front_wheel_r">
     <inertial>
-      <mass value="16.096"/>
-      <inertia ixx="0.066" ixy="0.0" ixz="0.0" iyy="0.104" iyz="0.0" izz="0.066"/>
+      <mass value="16.096" />
+      <inertia ixx="0.066" ixy="0.0" ixz="0.0" iyy="0.104" iyz="0.0" izz="0.066" />
     </inertial>
     <visual>
       <origin xyz="0 0 0" rpy="0 0 0" />
       <geometry>
-        <mesh filename="package://agv_sim/meshes/FRONT_WHEEL_RE2.stl"/>
+        <mesh filename="package://agv_sim/meshes/FRONT_WHEEL_RE2.stl" />
       </geometry>
       <material name="green" />
     </visual>
     <collision>
       <origin xyz="0 0 0" rpy="0 0 0" />
       <geometry>
-        <mesh filename="package://agv_sim/meshes/FRONT_WHEEL_RE2.stl"/>
+        <mesh filename="package://agv_sim/meshes/FRONT_WHEEL_RE2.stl" />
       </geometry>
     </collision>
   </link>
@@ -113,26 +129,26 @@
     <parent link="base_link" />
     <child link="steering_part" />
     <origin xyz="-0.0456 -0.212 0.375" rpy="0 0 0" />
-    <axis xyz="0 0 1"/>
+    <axis xyz="0 0 1" />
   </joint>
 
 
   <link name="steering_part">
     <inertial>
-      <mass value="85.056"/>
-      <inertia ixx="2.77" ixy="0.0" ixz="0.12" iyy="2.81" iyz="-0.11" izz="0.9"/>
+      <mass value="85.056" />
+      <inertia ixx="2.77" ixy="0.0" ixz="0.12" iyy="2.81" iyz="-0.11" izz="0.9" />
     </inertial>
     <visual>
       <origin xyz="0 0 0" rpy="0 0 0" />
       <geometry>
-        <mesh filename="package://agv_sim/meshes/STEERING_PART_RE2.stl"/>
+        <mesh filename="package://agv_sim/meshes/STEERING_PART_RE2.stl" />
       </geometry>
       <material name="white" />
     </visual>
     <collision>
       <origin xyz="0 0 0" rpy="0 0 0" />
       <geometry>
-        <mesh filename="package://agv_sim/meshes/STEERING_PART_RE2.stl"/>
+        <mesh filename="package://agv_sim/meshes/STEERING_PART_RE2.stl" />
       </geometry>
     </collision>
   </link>
@@ -141,82 +157,26 @@
     <parent link="steering_part" />
     <child link="drive_wheel" />
     <origin xyz="0.063 0.012 -0.285" rpy="0 0 0" />
-    <axis xyz="1 0 0"/>
+    <axis xyz="1 0 0" />
   </joint>
 
   <link name="drive_wheel">
     <inertial>
-      <mass value="21.755"/>
-      <inertia ixx="0.265" ixy="0.0" ixz="0.0" iyy="0.166" iyz="0.0" izz="0.166"/>
+      <mass value="21.755" />
+      <inertia ixx="0.265" ixy="0.0" ixz="0.0" iyy="0.166" iyz="0.0" izz="0.166" />
     </inertial>
     <visual>
       <origin xyz="0 0 0" rpy="0 0 0" />
       <geometry>
-        <mesh filename="package://agv_sim/meshes/DRIVE_WHEEL_RE2.stl"/>
+        <mesh filename="package://agv_sim/meshes/DRIVE_WHEEL_RE2.stl" />
       </geometry>
       <material name="blue" />
     </visual>
     <collision>
       <origin xyz="0 0 0" rpy="0 0 0" />
       <geometry>
-        <mesh filename="package://agv_sim/meshes/DRIVE_WHEEL_RE2.stl"/>
+        <mesh filename="package://agv_sim/meshes/DRIVE_WHEEL_RE2.stl" />
       </geometry>
     </collision>
   </link>
-
-  <gazebo>
-    <plugin name="gazebo_ros2_control" filename="libgazebo_ros2_control.so"/>
-  </gazebo>
-
-  <ros2_control name="MyRobotController" type="system">
-    <hardware>
-      <plugin>gazebo_ros2_control/GazeboSystem</plugin>
-      <!-- Optionally, specify additional plugin parameters -->
-    </hardware>
-    <joint>
-      <name>steering_joint</name>
-      <command_interface>position</command_interface>
-      <state_interface>position</state_interface>
-      <state_interface>velocity</state_interface>
-    </joint>
-    <joint>
-      <name>drive_wheel_joint</name>
-      <command_interface>position</command_interface>
-      <state_interface>position</state_interface>
-      <state_interface>velocity</state_interface>
-    </joint>
-  </ros2_control>
-
-  <gazebo>
-    <plugin name="agv_drive" filename="libgazebo_ros_tricycle_drive.so">
-
-      <robotNameSpace>/agv1</robotNameSpace>
-
-      <update_rate>30</update_rate>
-
-      <steering_joint>steering_joint</steering_joint>
-      <actuated_wheel_joint>drive_wheel_joint</actuated_wheel_joint>
-      <encoder_wheel_left_joint>front_wheel_l_joint</encoder_wheel_left_joint>
-      <encoder_wheel_right_joint>front_wheel_r_joint</encoder_wheel_right_joint>
-
-
-      <wheel_separation>0.9</wheel_separation>
-      <encoder_wheel_diameter>0.25</encoder_wheel_diameter>
-      <actuated_wheel_diameter>0.31</actuated_wheel_diameter>
-
-
-      <max_wheel_torque>100</max_wheel_torque>
-      <max_wheel_acceleration>5.0</max_wheel_acceleration>
-      <max_steering_speed>1.0</max_steering_speed>
-
-      <publish_odom>true</publish_odom>
-      <publish_wheel_tf>true</publish_wheel_tf>
-      <publish_wheel_joint_state>true</publish_wheel_joint_state>
-
-      <odometry_frame>odom</odometry_frame>
-      <robot_base_frame>base_footprint</robot_base_frame>
-
-    </plugin>
-  </gazebo>
-
 </robot>

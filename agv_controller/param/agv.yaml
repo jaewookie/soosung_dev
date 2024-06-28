@@ -1,0 +1,8 @@
+agv_fake_node:
+  ros__parameters:
+    wheels:
+      radius: 0.133
+
+    joint_states_frame: "base_footprint"
+    odom_frame: "odom"
+    base_frame: "base_footprint"
