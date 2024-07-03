@@ -6,7 +6,7 @@ Panels:
       Expanded:
         - /Global Options1
         - /Status1
-        - /RobotModel1/Links1
+        - /RobotModel1
       Splitter Ratio: 0.5
     Tree Height: 1147
   - Class: rviz_common/Selection
@@ -118,7 +118,7 @@ Visualization Manager:
           Color: 204; 51; 204
           Scale: 1
           Value: true
-        Value: true
+        Value: false
       Enabled: true
       Keep: 100
       Name: Odometry
@@ -219,5 +219,5 @@ Window Geometry:
   Views:
     collapsed: false
   Width: 2490
-  X: 70
+  X: 2630
   Y: 27

@@ -19,10 +19,20 @@ find_package(nav_msgs REQUIRED)
 find_package(sensor_msgs REQUIRED)
 find_package(rclcpp REQUIRED)
 
-include_directories(${GAZEBO_INCLUDE_DIRS} ${rclcpp_INCLUDE_DIRS} ${sensor_msgs_INCLUDE_DIRS} ${nav_msgs_INCLUDE_DIRS} ${geometry_msgs_INCLUDE_DIRS} ${tf2_ros_INCLUDE_DIRS} ${tf2_geometry_msgs_INCLUDE_DIRS})
+include_directories(
+    include
+    ${GAZEBO_INCLUDE_DIRS}
+    ${rclcpp_INCLUDE_DIRS}
+    ${sensor_msgs_INCLUDE_DIRS}
+    ${nav_msgs_INCLUDE_DIRS}
+    ${geometry_msgs_INCLUDE_DIRS}
+    ${tf2_ros_INCLUDE_DIRS}
+    ${tf2_geometry_msgs_INCLUDE_DIRS}
+    ${ignition-common3_INCLUDE_DIRS}
+  )
 
-add_library(${PROJECT_NAME} SHARED src/agv_drive_plugin.cpp)
-ament_target_dependencies(${PROJECT_NAME}
+add_library(agv_drive_plugin SHARED src/agv_drive_plugin.cpp)
+ament_target_dependencies(agv_drive_plugin
   "gazebo"
   "gazebo_ros"
   "gazebo_dev"
@@ -34,12 +44,41 @@ ament_target_dependencies(${PROJECT_NAME}
   "tf2_ros"
   "tf2_geometry_msgs"
 )
-ament_export_libraries(${PROJECT_NAME})
-target_link_libraries(${PROJECT_NAME} ${GAZEBO_LIBRARIES} ${rclcpp_LIBRARIES} ${sensor_msgs_LIBRARIES} ${nav_msgs_LIBRARIES} ${geometry_msgs_LIBRARIES} ${tf2_ros_LIBRARIES} ${tf2_geometry_msgs_LIBRARIES})
+ament_export_libraries(agv_drive_plugin)
+target_link_libraries(agv_drive_plugin ${GAZEBO_LIBRARIES} ${rclcpp_LIBRARIES} ${sensor_msgs_LIBRARIES} ${nav_msgs_LIBRARIES} ${geometry_msgs_LIBRARIES} ${tf2_ros_LIBRARIES} ${tf2_geometry_msgs_LIBRARIES} ${ignition-common3_LIBRARIES})
+
+
+
+
+
+add_library(tricycle_drive_plugin SHARED src/tricycle_drive_plugin.cpp)
+ament_target_dependencies(tricycle_drive_plugin
+  "gazebo_ros"
+  "rclcpp"
+  "sensor_msgs"
+  "nav_msgs"
+  "geometry_msgs"
+  "tf2"
+  "tf2_ros"
+  "tf2_geometry_msgs"
+)
+
+# Link libraries
+target_link_libraries(tricycle_drive_plugin
+  ${GAZEBO_LIBRARIES}
+  ${rclcpp_LIBRARIES}
+  ${sensor_msgs_LIBRARIES}
+  ${nav_msgs_LIBRARIES}
+  ${geometry_msgs_LIBRARIES}
+  ${tf2_LIBRARIES}
+  ${tf2_ros_LIBRARIES}
+)
 
 ament_environment_hooks("${CMAKE_CURRENT_SOURCE_DIR}/env-hooks/gazebo_plugins.sh.in")
 
-install(TARGETS ${PROJECT_NAME}
+install(TARGETS
+  tricycle_drive_plugin
+  agv_drive_plugin
   ARCHIVE DESTINATION lib
   LIBRARY DESTINATION lib
   RUNTIME DESTINATION bin

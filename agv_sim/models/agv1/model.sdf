@@ -6,7 +6,7 @@
 
     <pose>0.0 0.0 0.0 0.0 0.0 0.0</pose>
 
-    <link name="belt_joint" />
+    <link name="base_footprint" />
 
     <joint name="base_joint" type="fixed">
       <parent>base_footprint</parent>
@@ -30,11 +30,12 @@
       </inertial>
 
       <collision name="base_collision">
-        <pose>0 0.34 1.185 0 0 0</pose>
+        <pose>0 0 0.1 0 0 0</pose>
         <geometry>
-          <box>
-            <size>1.108 0.7 2.195</size>
-          </box>
+          <mesh>
+            <uri>model://agv_common/meshes/BODY_RE5.stl</uri>
+            <scale>0.001 0.001 0.001</scale>
+          </mesh>
         </geometry>
       </collision>
 
@@ -42,13 +43,14 @@
         <pose>0 0 0.1 0 0 0</pose>
         <geometry>
           <mesh>
-            <uri>model://agv_common/meshes/BODY.stl</uri>
+            <uri>model://agv_common/meshes/BODY_RE5.stl</uri>
+            <scale>0.001 0.001 0.001</scale>
           </mesh>
         </geometry>
       </visual>
     </link>
 
-    <joint name="mast_joint" type="fixed">
+    <!-- <joint name="mast_joint" type="fixed">
       <parent>base_link</parent>
       <child>mast</child>
       <pose>0 0.631 1.975 0 0 0</pose>
@@ -67,7 +69,6 @@
           <izz>135.921</izz>
         </inertia>
         <mass>590.628</mass>
-        <!-- <centerofmass>-0.003 0.283 -1.134</centerofmass> -->
       </inertial>
 
       <collision name="mast_collision">
@@ -79,14 +80,6 @@
           </mesh>
         </geometry>
       </collision>
-      <!-- <collision name="mast_collision">
-        <pose>0 1.73 0.04 0 0 0</pose>
-        <geometry>
-          <box>
-            <size>0.96 1.250 0.07</size>
-          </box>
-        </geometry>
-      </collision> -->
 
       <visual name="mast_visual">
         <pose>0 0.631 1.975 0 0 0</pose>
@@ -97,7 +90,7 @@
           </mesh>
         </geometry>
       </visual>
-    </link>
+    </link> -->
 
     <joint name="steering_joint" type="revolute">
       <parent>base_link</parent>
@@ -132,7 +125,7 @@
           </cylinder>
         </geometry>
         <surface>
-          <friction>
+          <!-- <friction>
             <ode>
               <mu>100000.0</mu>
               <mu2>100000.0</mu2>
@@ -140,7 +133,7 @@
               <slip1>0.0</slip1>
               <slip2>0.0</slip2>
             </ode>
-          </friction>
+          </friction> -->
           <contact>
             <ode>
               <soft_cfm>0</soft_cfm>
@@ -197,7 +190,7 @@
           </cylinder>
         </geometry>
         <surface>
-          <friction>
+          <!-- <friction>
             <ode>
               <mu>100000.0</mu>
               <mu2>100000.0</mu2>
@@ -205,14 +198,14 @@
               <slip1>0.0</slip1>
               <slip2>0.0</slip2>
             </ode>
-          </friction>
+          </friction> -->
           <contact>
             <ode>
               <soft_cfm>0</soft_cfm>
               <soft_erp>0.2</soft_erp>
               <kp>5e+6</kp>
               <kd>1</kd>
-              <max_vel>0.01</max_vel>
+              <max_vel>1.5</max_vel>
               <min_depth>0.0005</min_depth>
             </ode>
           </contact>
@@ -229,7 +222,7 @@
       </visual>
     </link>
 
-    <joint name='front_wheel_l_joint' type='fixed'>
+    <!-- <joint name='front_wheel_l_joint' type='revolute'>
       <parent>base_link</parent>
       <child>front_wheel_l</child>
       <pose>-0.451 0.86 0.135 0 0 -1.571</pose>
@@ -270,7 +263,7 @@
               <soft_erp>0.2</soft_erp>
               <kp>5e+6</kp>
               <kd>1</kd>
-              <max_vel>0.01</max_vel>
+              <max_vel>1.5</max_vel>
               <min_depth>0.001</min_depth>
             </ode>
           </contact>
@@ -287,7 +280,7 @@
       </visual>
     </link>
 
-    <joint name='front_wheel_r_joint' type='fixed'>
+    <joint name='front_wheel_r_joint' type='revolute'>
       <parent>base_link</parent>
       <child>front_wheel_r</child>
       <pose>0.451 0.86 0.135 0 0 1.571</pose>
@@ -324,7 +317,7 @@
               <soft_erp>0.2</soft_erp>
               <kp>5e+6</kp>
               <kd>1</kd>
-              <max_vel>0.01</max_vel>
+              <max_vel>1.5</max_vel>
               <min_depth>0.001</min_depth>
             </ode>
           </contact>
@@ -339,7 +332,7 @@
           </mesh>
         </geometry>
       </visual>
-    </link>
+    </link> -->
 
     <!-- <plugin name="ros2_conveyorbelt_plugin" filename="libros2_conveyorbelt_plugin.so">
       <ros>
@@ -349,30 +342,26 @@
       <publish_rate>1000</publish_rate>
     </plugin> -->
 
-
-    <plugin name="agv_drive" filename="libagv_drive_plugin.so">
-      <ros>
-        <namespace></namespace>
-      </ros>
+    <plugin name="agv_drive" filename="libtricycle_drive_plugin.so">
+      <max_wheel_acceleration>1.0</max_wheel_acceleration>
+      <max_wheel_deceleration>1.0</max_wheel_deceleration>
+      <!-- <max_wheel_speed_tolerance>5.0</max_wheel_speed_tolerance>
+      <wheel_separation>1.0</wheel_separation> -->
     </plugin>
 
 
-    <!-- <plugin name="agv_drive" filename="libgazebo_ros_tricycle_drive.so">
-
-      <update_rate>30</update_rate>
+    <!-- <plugin name='agv_drive' filename='libgazebo_ros_tricycle_drive.so'>
 
       <steering_joint>steering_joint</steering_joint>
       <actuated_wheel_joint>drive_wheel_joint</actuated_wheel_joint>
       <encoder_wheel_left_joint>front_wheel_l_joint</encoder_wheel_left_joint>
       <encoder_wheel_right_joint>front_wheel_r_joint</encoder_wheel_right_joint>
 
+      <wheel_separation>1.0</wheel_separation>
+      <encoder_wheel_diameter>0.3</encoder_wheel_diameter>
+      <actuated_wheel_diameter>0.3</actuated_wheel_diameter>
 
-      <wheel_separation>0.9</wheel_separation>
-      <encoder_wheel_diameter>0.25</encoder_wheel_diameter>
-      <actuated_wheel_diameter>0.31</actuated_wheel_diameter>
-
-
-      <max_wheel_torque>100</max_wheel_torque>
+      <max_wheel_torque>20</max_wheel_torque>
       <max_wheel_acceleration>5.0</max_wheel_acceleration>
       <max_steering_speed>1.0</max_steering_speed>
 

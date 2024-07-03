@@ -17,19 +17,19 @@
     <visual>
       <origin xyz="0 0 0" rpy="0 0 0" />
       <geometry>
-        <mesh filename="package://agv_sim/meshes/BODY.stl" />
+        <mesh filename="package://agv_sim/meshes/BODY_RE5.stl" scale = "0.001 0.001 0.001"/>
       </geometry>
       <material name="orange" />
     </visual>
     <collision>
       <origin xyz="0 0 0" rpy="0 0 0" />
       <geometry>
-        <mesh filename="package://agv_sim/meshes/BODY.stl" />
+        <mesh filename="package://agv_sim/meshes/BODY_RE5.stl" scale = "0.001 0.001 0.001" />
       </geometry>
     </collision>
   </link>
 
-  <joint name="mast_joint" type="fixed">
+  <!-- <joint name="mast_joint" type="fixed">
     <parent link="base_link" />
     <child link="mast" />
     <origin xyz="0 0.631 1.875" rpy="0 0 0" />
@@ -107,9 +107,9 @@
         <mesh filename="package://agv_sim/meshes/FRONT_WHEEL_RE2.stl"/>
       </geometry>
     </collision>
-  </link>
+  </link> -->
 
-  <joint name="steering_joint" type="continuous">
+  <joint name="steering_joint" type="fixed">
     <parent link="base_link" />
     <child link="steering_part" />
     <origin xyz="-0.0456 -0.212 0.375" rpy="0 0 0" />
@@ -164,14 +164,13 @@
     </collision>
   </link>
 
-  <gazebo>
+  <!-- <gazebo>
     <plugin name="gazebo_ros2_control" filename="libgazebo_ros2_control.so"/>
   </gazebo>
 
   <ros2_control name="MyRobotController" type="system">
     <hardware>
       <plugin>gazebo_ros2_control/GazeboSystem</plugin>
-      <!-- Optionally, specify additional plugin parameters -->
     </hardware>
     <joint>
       <name>steering_joint</name>
@@ -185,9 +184,9 @@
       <state_interface>position</state_interface>
       <state_interface>velocity</state_interface>
     </joint>
-  </ros2_control>
+  </ros2_control> -->
 
-  <gazebo>
+  <!-- <gazebo>
     <plugin name="agv_drive" filename="libgazebo_ros_tricycle_drive.so">
 
       <robotNameSpace>/agv1</robotNameSpace>
@@ -217,6 +216,6 @@
       <robot_base_frame>base_footprint</robot_base_frame>
 
     </plugin>
-  </gazebo>
+  </gazebo> -->
 
 </robot>
