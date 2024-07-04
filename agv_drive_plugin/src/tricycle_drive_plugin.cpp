@@ -37,9 +37,9 @@ namespace gazebo_ros
     {
       DRIVE_WHEEL,
 
-      // FRONT_WHEEL_LEFT,
+      FRONT_WHEEL_LEFT,
 
-      // FRONT_WHEEL_RIGHT
+      FRONT_WHEEL_RIGHT
     };
 
     void OnUpdate(const gazebo::common::UpdateInfo &_info);
@@ -58,11 +58,12 @@ namespace gazebo_ros
     gazebo::event::ConnectionPtr update_connection_; // Connection to world update event. Callback is called while this is alive.
 
     double drive_wheel_radius_ = 0.31;
-    // double front_wheel_radius_ = 0.25;
+    double front_wheel_radius_ = 0.25;
     double max_wheel_accel_;
     double max_wheel_decel_;
     double max_wheel_speed_tol_;
     double max_wheel_torque_;
+    double wheel_separation_;
 
     geometry_msgs::msg::Twist cmd_;
     sensor_msgs::msg::JointState joint_state_;
@@ -120,6 +121,12 @@ namespace gazebo_ros
 
     impl_->odom_source_ = TricycleDrivePluginPrivate::ENCODER;
 
+    impl_->publish_wheel_tf_ = true;
+
+    impl_->publish_wheel_joint_state_ = true;
+
+    impl_->publish_odom_ = true;
+
     // 가제보 플러그인 태그
     impl_->max_wheel_accel_ = _sdf->Get<double>("max_wheel_acceleration", 0).first;
     impl_->max_wheel_decel_ = _sdf->Get<double>(
@@ -127,14 +134,14 @@ namespace gazebo_ros
                                   .first;
     impl_->max_wheel_speed_tol_ = _sdf->Get<double>("max_wheel_speed_tolerance", 0.01).first;
 
-    // impl_->wheel_separation_ = _sdf->Get<double>("wheel_separation", 0.9).first;
+    impl_->wheel_separation_ = _sdf->Get<double>("wheel_separation", 0.9).first;
 
-    impl_->joints_.resize(1); // 조향 추가시 4로 변경
+    impl_->joints_.resize(3); // 조향 추가시 4로 변경
 
     // OBTAIN -> JOINTS:
     impl_->joints_[TricycleDrivePluginPrivate::DRIVE_WHEEL] = _model->GetJoint("drive_wheel_joint");
-    // impl_->joints_[TricycleDrivePluginPrivate::FRONT_WHEEL_LEFT] = _model->GetJoint("front_wheel_l_joint");
-    // impl_->joints_[TricycleDrivePluginPrivate::FRONT_WHEEL_RIGHT] = _model->GetJoint("front_wheel_r_joint");
+    impl_->joints_[TricycleDrivePluginPrivate::FRONT_WHEEL_LEFT] = _model->GetJoint("front_wheel_l_joint");
+    impl_->joints_[TricycleDrivePluginPrivate::FRONT_WHEEL_RIGHT] = _model->GetJoint("front_wheel_r_joint");
     // impl_->joints_[3] = _model->GetJoint("steering_joint");
 
     impl_->max_wheel_torque_ = 25;
@@ -213,7 +220,6 @@ namespace gazebo_ros
   void TricycleDrivePluginPrivate::PublishWheelJointState(
       const gazebo::common::Time &_current_time)
   {
-    RCLCPP_INFO(ros_node_->get_logger(), "aaaaa");
     joint_state_.header.stamp = gazebo_ros::Convert<builtin_interfaces::msg::Time>(_current_time);
 
     for (std::size_t i = 0; i < joints_.size(); i++)
@@ -224,9 +230,7 @@ namespace gazebo_ros
       joint_state_.velocity[i] = joints_[i]->GetVelocity(0);
       joint_state_.effort[i] = joints_[i]->GetForce(0);
     }
-    RCLCPP_INFO(ros_node_->get_logger(), "bbbbbb");
     joint_state_pub_->publish(joint_state_);
-    RCLCPP_INFO(ros_node_->get_logger(), "ccccc");
   }
 
   // joint와 Link 연결 TF
@@ -382,8 +386,8 @@ namespace gazebo_ros
     // double dx = (sl + sr) / 2.0 * cos(pose_encoder_.theta + (sl - sr) / (2.0 * b));
     // double dy = (sl + sr) / 2.0 * sin(pose_encoder_.theta + (sl - sr) / (2.0 * b));
 
-    double dxd = sd / 2.0 * cos(pose_encoder_.theta);
-    double dyd = sd / 2.0 * sin(pose_encoder_.theta);
+    double dxd = sd / 2.0 * sin(pose_encoder_.theta);
+    double dyd = sd / 2.0 * cos(pose_encoder_.theta);
 
     // double dtheta = (sl - sr) / b;
     double dthetad = 0.0;
