@@ -26,12 +26,17 @@ add_executable(agv_drive src/agv_drive.cpp)
 
 ament_target_dependencies(agv_drive rclcpp geometry_msgs std_msgs nav_msgs sensor_msgs std_srvs tf2 tf2_ros tf2_geometry_msgs)
 
+add_executable(tricycle_agv_drive src/tricycle_agv_drive.cpp)
+
+ament_target_dependencies(tricycle_agv_drive rclcpp geometry_msgs std_msgs nav_msgs sensor_msgs tf2 tf2_ros tf2_geometry_msgs)
+
 # add_executable(agv_drive_fake src/agv_drive_fake.cpp)
 
 # ament_target_dependencies(agv_drive_fake rclcpp geometry_msgs nav_msgs sensor_msgs tf2 tf2_geometry_msgs)
 
 install(TARGETS
   agv_drive
+  tricycle_agv_drive
   # agv_drive_fake
   DESTINATION lib/${PROJECT_NAME}
 )

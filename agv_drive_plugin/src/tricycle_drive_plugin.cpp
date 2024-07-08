@@ -43,12 +43,12 @@ namespace gazebo_ros
     };
 
     void OnUpdate(const gazebo::common::UpdateInfo &_info);
-    void OnCmdVel(const geometry_msgs::msg::Twist::ConstSharedPtr msg);
-    void UpdateOdometryEncoder(const gazebo::common::Time &_current_time);
-    void PublishOdometryMsg(const gazebo::common::Time &_current_time);
+    void OnCmdVel(const geometry_msgs::msg::Twist::ConstSharedPtr msg); // ok
+    void UpdateOdometryEncoder(const gazebo::common::Time &_current_time); // ok
+    void PublishOdometryMsg(const gazebo::common::Time &_current_time); // ok
     void PublishWheelsTf(const gazebo::common::Time &_current_time);
     void PublishWheelJointState(const gazebo::common::Time &_current_time);
-    void MotorController(double target_speed, double dt);
+    void MotorController(double target_speed, double dt); // ok
 
     // ROS node for communication, managed by gazebo_ros.
     gazebo_ros::Node::SharedPtr ros_node_;
@@ -332,6 +332,7 @@ namespace gazebo_ros
     double applied_speed = target_speed;
 
     double current_speed = joints_[DRIVE_WHEEL]->GetVelocity(0);
+
     if (max_wheel_accel_ > 0 || max_wheel_decel_ > 0)
     {
       double diff_speed = current_speed - target_speed;
