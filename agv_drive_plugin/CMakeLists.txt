@@ -47,6 +47,13 @@ ament_target_dependencies(agv_drive_plugin
 ament_export_libraries(agv_drive_plugin)
 target_link_libraries(agv_drive_plugin ${GAZEBO_LIBRARIES} ${rclcpp_LIBRARIES} ${sensor_msgs_LIBRARIES} ${nav_msgs_LIBRARIES} ${geometry_msgs_LIBRARIES} ${tf2_ros_LIBRARIES} ${tf2_geometry_msgs_LIBRARIES} ${ignition-common3_LIBRARIES})
 
+add_library(lslidar_plugin SHARED src/lslidar_plugin.cpp)
+target_link_libraries(lslidar_plugin ${GAZEBO_LIBRARIES} ${rclcpp_LIBRARIES})
+ament_target_dependencies(lslidar_plugin
+  "gazebo_ros"
+  "rclcpp"
+)
+
 
 
 
@@ -79,6 +86,7 @@ ament_environment_hooks("${CMAKE_CURRENT_SOURCE_DIR}/env-hooks/gazebo_plugins.sh
 install(TARGETS
   tricycle_drive_plugin
   agv_drive_plugin
+  lslidar_plugin
   ARCHIVE DESTINATION lib
   LIBRARY DESTINATION lib
   RUNTIME DESTINATION bin

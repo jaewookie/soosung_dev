@@ -43,5 +43,12 @@
       </ode>
     </physics>
 
+    <model name="agv_warehouse">
+      <static>1</static>
+      <include>
+        <uri>model://agv_warehouse</uri>
+      </include>
+    </model>
+
   </world>
 </sdf>

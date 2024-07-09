@@ -125,7 +125,7 @@
           </cylinder>
         </geometry>
         <surface>
-          <!-- <friction>
+          <friction>
             <ode>
               <mu>100000.0</mu>
               <mu2>100000.0</mu2>
@@ -133,7 +133,7 @@
               <slip1>0.0</slip1>
               <slip2>0.0</slip2>
             </ode>
-          </friction> -->
+          </friction>
           <contact>
             <ode>
               <soft_cfm>0</soft_cfm>
@@ -190,7 +190,7 @@
           </cylinder>
         </geometry>
         <surface>
-          <!-- <friction>
+          <friction>
             <ode>
               <mu>100000.0</mu>
               <mu2>100000.0</mu2>
@@ -198,7 +198,7 @@
               <slip1>0.0</slip1>
               <slip2>0.0</slip2>
             </ode>
-          </friction> -->
+          </friction>
           <contact>
             <ode>
               <soft_cfm>0</soft_cfm>
@@ -334,56 +334,285 @@
       </visual>
     </link>
 
-    <!-- <plugin name="ros2_conveyorbelt_plugin" filename="libros2_conveyorbelt_plugin.so">
-      <ros>
-        <namespace></namespace>
-      </ros>
-      <max_velocity>1.0</max_velocity>
-      <publish_rate>1000</publish_rate>
-    </plugin> -->
 
-    <!-- <plugin name="agv_drive" filename="libtricycle_drive_plugin.so">
+    <joint name='slam_lidar_joint' type='fixed'>
+      <parent>base_link</parent>
+      <child>slam_lidar</child>
+      <pose>0 -0.2 2.249 0 0 0</pose>
+    </joint>
+
+    <link name='slam_lidar'>
+      <inertial>
+        <pose>0 -0.2 2.249 0 0 0</pose>
+        <inertia>
+          <ixx>0.0</ixx>
+          <ixy>0.0</ixy>
+          <ixz>0.0</ixz>
+          <iyy>0.0</iyy>
+          <iyz>0.0</iyz>
+          <izz>0.0</izz>
+        </inertia>
+        <mass>0.641</mass>
+      </inertial>
+      <!-- <collision name='slam_lidar_collision'>
+        <pose>0 -0.2 2.249 0 0 0</pose>
+        <geometry>
+          <uri>model://agv_common/meshes/3D_SLAM_LIDAR.stl</uri>
+          <scale>0.001 0.001 0.001</scale>
+        </geometry>
+      </collision> -->
+
+      <visual name="slam_lidar_visual">
+        <pose>0 -0.2 2.249 0 0 0</pose>
+        <geometry>
+          <mesh>
+            <uri>model://agv_common/meshes/3D_SLAM_LIDAR.stl</uri>
+            <scale>0.001 0.001 0.001</scale>
+          </mesh>
+        </geometry>
+      </visual>
+
+      <sensor name="3d_slam_lidar" type="ray">
+        <always_on>true</always_on>
+        <visualize>false</visualize>
+        <pose>0 -0.2 2.339 0 0 0</pose>
+        <update_rate>20</update_rate>
+        <ray>
+          <scan>
+            <horizontal>
+              <samples>360</samples>
+              <resolution>1</resolution>
+              <min_angle>-3.14</min_angle>
+              <max_angle>3.14</max_angle>
+            </horizontal>
+            <vertical>
+              <samples>16</samples>
+              <resolution>1.0</resolution>
+              <min_angle>-0.2793</min_angle>
+              <max_angle>0.2443</max_angle>
+            </vertical>
+          </scan>
+          <range>
+            <min>0.1</min>
+            <max>200</max>
+            <resolution>0.03</resolution>
+          </range>
+          <noise>
+            <type>gaussian</type>
+            <mean>0.0</mean>
+            <stddev>0.01</stddev>
+          </noise>
+        </ray>
+
+        <plugin name="gazebo_ros_ray_sensor" filename="libgazebo_ros_ray_sensor.so">
+          <topicName>/scan</topicName>
+          <output_type>sensor_msgs/PointCloud2</output_type>
+          <frameName>slam_lidar</frameName>
+        </plugin>
+      </sensor>
+
+    </link>
+
+    <joint name='safety_lidar_l_joint' type='fixed'>
+      <parent>base_link</parent>
+      <child>safety_lidar_l</child>
+      <pose>-0.442 -0.332 0.104 0 0 0</pose>
+    </joint>
+
+    <link name='safety_lidar_l'>
+      <inertial>
+        <pose>-0.442 -0.332 0.104 0 0 0</pose>
+        <inertia>
+          <ixx>0.0</ixx>
+          <ixy>0.0</ixy>
+          <ixz>0.0</ixz>
+          <iyy>0.0</iyy>
+          <iyz>0.0</iyz>
+          <izz>0.0</izz>
+        </inertia>
+        <mass>0.001</mass>
+      </inertial>
+
+      <visual name="safety_lidar_l_visual">
+        <pose>-0.442 -0.332 0.104 -1.57 0 -0.7854</pose>
+        <geometry>
+          <mesh>
+            <uri>model://agv_common/meshes/2D_SAFETY_LIDAR.stl</uri>
+            <scale>0.001 0.001 0.001</scale>
+          </mesh>
+        </geometry>
+      </visual>
+
+      <sensor name="safety_lidar_l" type="ray">
+        <always_on>true</always_on>
+        <visualize>false</visualize>
+        <pose>-0.442 -0.332 0.104 0 0 -2.3562</pose>
+        <update_rate>10</update_rate>
+        <ray>
+          <scan>
+            <horizontal>
+              <samples>360</samples>
+              <resolution>0.36</resolution>
+              <min_angle>-0.7854</min_angle>
+              <max_angle>0.7854</max_angle>
+            </horizontal>
+          </scan>
+          <range>
+            <min>0.1</min>
+            <max>10</max>
+            <resolution>0.001</resolution>
+          </range>
+          <noise>
+            <type>gaussian</type>
+            <mean>0.0</mean>
+            <stddev>0.01</stddev>
+          </noise>
+        </ray>
+
+        <plugin name="safety_lidar_l" filename="libgazebo_ros_ray_sensor.so">
+          <topicName>/scan_s_l</topicName>
+          <output_type>sensor_msgs/LaserScan</output_type>
+          <frameName>safety_lidar_l</frameName>
+        </plugin>
+      </sensor>
+    </link>
+
+    <joint name='safety_lidar_r_joint' type='fixed'>
+      <parent>base_link</parent>
+      <child>safety_lidar_r</child>
+      <pose>0.442 -0.332 0.104 0 0 0</pose>
+    </joint>
+
+    <link name='safety_lidar_r'>
+      <inertial>
+        <pose>0.442 -0.332 0.104 0 0 0</pose>
+        <inertia>
+          <ixx>0.0</ixx>
+          <ixy>0.0</ixy>
+          <ixz>0.0</ixz>
+          <iyy>0.0</iyy>
+          <iyz>0.0</iyz>
+          <izz>0.0</izz>
+        </inertia>
+        <mass>0.001</mass>
+      </inertial>
+
+      <visual name="safety_lidar_r_visual">
+        <pose>0.442 -0.332 0.104 -1.57 0 0.7854</pose>
+        <geometry>
+          <mesh>
+            <uri>model://agv_common/meshes/2D_SAFETY_LIDAR.stl</uri>
+            <scale>0.001 0.001 0.001</scale>
+          </mesh>
+        </geometry>
+      </visual>
+
+      <sensor name="safety_lidar_r" type="ray">
+        <always_on>true</always_on>
+        <visualize>false</visualize>
+        <pose>0.442 -0.332 0.084 0 0 -0.7854</pose>
+        <update_rate>10</update_rate>
+        <ray>
+          <scan>
+            <horizontal>
+              <samples>360</samples>
+              <resolution>0.36</resolution>
+              <min_angle>-0.7854</min_angle>
+              <max_angle>0.7854</max_angle>
+            </horizontal>
+          </scan>
+          <range>
+            <min>0.1</min>
+            <max>10</max>
+            <resolution>0.001</resolution>
+          </range>
+          <noise>
+            <type>gaussian</type>
+            <mean>0.0</mean>
+            <stddev>0.01</stddev>
+          </noise>
+        </ray>
+
+        <plugin name="safety_lidar_r" filename="libgazebo_ros_ray_sensor.so">
+          <topicName>/scan_s_r</topicName>
+          <output_type>sensor_msgs/LaserScan</output_type>
+          <frameName>safety_lidar_r</frameName>
+        </plugin>
+      </sensor>
+    </link>
+
+    <joint name='safety_lidar_m_joint' type='fixed'>
+      <parent>base_link</parent>
+      <child>safety_lidar_m</child>
+      <pose>0 0.863 0.1 0 0 0</pose>
+    </joint>
+
+    <link name='safety_lidar_m'>
+      <inertial>
+        <pose>0 0.863 0.1 0 0 0</pose>
+        <inertia>
+          <ixx>0.0</ixx>
+          <ixy>0.0</ixy>
+          <ixz>0.0</ixz>
+          <iyy>0.0</iyy>
+          <iyz>0.0</iyz>
+          <izz>0.0</izz>
+        </inertia>
+        <mass>0.001</mass>
+      </inertial>
+
+      <visual name="safety_lidar_m_visual">
+        <pose>0 0.863 0.1 -1.57 0 3.14</pose>
+        <geometry>
+          <mesh>
+            <uri>model://agv_common/meshes/2D_SAFETY_LIDAR.stl</uri>
+            <scale>0.001 0.001 0.001</scale>
+          </mesh>
+        </geometry>
+      </visual>
+
+      <!-- sensor pose에서 원하는 만큼 회전 및 urdf파일의 joint를 이에 맞춰서 회전
+       나머지 회전량은 비쥬얼에서 회전 -->
+      <sensor name="safety_lidar_m" type="ray">
+        <always_on>true</always_on>
+        <visualize>false</visualize>
+        <pose>0 0.863 0.1 0 0 1.57</pose>
+        <update_rate>10</update_rate>
+        <ray>
+          <scan>
+            <horizontal>
+              <samples>360</samples>
+              <resolution>0.36</resolution>
+              <min_angle>-0.7854</min_angle>
+              <max_angle>0.7854</max_angle>
+            </horizontal>
+          </scan>
+          <range>
+            <min>0.1</min>
+            <max>10</max>
+            <resolution>0.001</resolution>
+          </range>
+          <noise>
+            <type>gaussian</type>
+            <mean>0.0</mean>
+            <stddev>0.01</stddev>
+          </noise>
+        </ray>
+
+        <plugin name="safety_lidar_m" filename="libgazebo_ros_ray_sensor.so">
+          <topicName>/scan_s_m</topicName>
+          <output_type>sensor_msgs/LaserScan</output_type>
+          <frameName>safety_lidar_m</frameName>
+        </plugin>
+      </sensor>
+    </link>
+
+
+    <plugin name="agv_drive" filename="libtricycle_drive_plugin.so">
       <max_wheel_acceleration>1.0</max_wheel_acceleration>
       <max_wheel_deceleration>1.0</max_wheel_deceleration>
-      <max_wheel_speed_tolerance>5.0</max_wheel_speed_tolerance>
-      <wheel_separation>1.0</wheel_separation>
-    </plugin> -->
-
-
-    <!-- <plugin name='agv_drive' filename='libgazebo_ros_tricycle_drive.so'>
-
-      <steering_joint>steering_joint</steering_joint>
-      <actuated_wheel_joint>drive_wheel_joint</actuated_wheel_joint>
-      <encoder_wheel_left_joint>front_wheel_l_joint</encoder_wheel_left_joint>
-      <encoder_wheel_right_joint>front_wheel_r_joint</encoder_wheel_right_joint>
-
-      <wheel_separation>1.0</wheel_separation>
-      <encoder_wheel_diameter>0.3</encoder_wheel_diameter>
-      <actuated_wheel_diameter>0.3</actuated_wheel_diameter>
-
-      <max_wheel_torque>20</max_wheel_torque>
-      <max_wheel_acceleration>5.0</max_wheel_acceleration>
-      <max_steering_speed>1.0</max_steering_speed>
-
-      <publish_odom>true</publish_odom>
-      <publish_wheel_tf>true</publish_wheel_tf>
-      <publish_wheel_joint_state>true</publish_wheel_joint_state>
-
-      <odometry_frame>odom</odometry_frame>
-      <robot_base_frame>base_footprint</robot_base_frame>
-
-    </plugin> -->
-
-    <plugin name="agv_state" filename="libgazebo_ros_joint_state_publisher.so">
-      <ros>
-
-        <remapping>~/out:=joint_states</remapping>
-      </ros>
-      <update_rate>30</update_rate>
-      <joint_name>drive_wheel_joint</joint_name>
-      <joint_name>front_wheel_l_joint</joint_name>
-      <joint_name>front_wheel_r_joint</joint_name>
+      <!-- <max_wheel_speed_tolerance>5.0</max_wheel_speed_tolerance>
+      <wheel_separation>1.0</wheel_separation> -->
     </plugin>
-
   </model>
 </sdf>
