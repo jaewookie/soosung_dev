@@ -614,5 +614,33 @@
       <!-- <max_wheel_speed_tolerance>5.0</max_wheel_speed_tolerance>
       <wheel_separation>1.0</wheel_separation> -->
     </plugin>
+
+    <!-- <plugin name="agv_drive" filename="libgazebo_ros_tricycle_drive.so">
+
+      <update_rate>30</update_rate>
+
+      <steering_joint>steering_joint</steering_joint>
+      <actuated_wheel_joint>drive_wheel_joint</actuated_wheel_joint>
+      <encoder_wheel_left_joint>front_wheel_l_joint</encoder_wheel_left_joint>
+      <encoder_wheel_right_joint>front_wheel_r_joint</encoder_wheel_right_joint>
+
+
+      <wheel_separation>0.9</wheel_separation>
+      <encoder_wheel_diameter>0.25</encoder_wheel_diameter>
+      <actuated_wheel_diameter>0.31</actuated_wheel_diameter>
+
+
+      <max_wheel_torque>100</max_wheel_torque>
+      <max_wheel_acceleration>5.0</max_wheel_acceleration>
+      <max_steering_speed>1.0</max_steering_speed>
+
+      <publish_odom>true</publish_odom>
+      <publish_wheel_tf>true</publish_wheel_tf>
+      <publish_wheel_joint_state>true</publish_wheel_joint_state>
+
+      <odometry_frame>odom</odometry_frame>
+      <robot_base_frame>base_footprint</robot_base_frame>
+
+    </plugin> -->
   </model>
 </sdf>

@@ -406,7 +406,7 @@ namespace gazebo_ros
     double w = dthetad / seconds_since_last_update;
 
     tf2::Vector3 vt;
-    vt = tf2::Vector3(pose_encoder_.x, pose_encoder_.y, 0);
+    vt = tf2::Vector3(pose_encoder_.x, -pose_encoder_.y, 0);
     odom_.pose.pose.position.x = vt.x();
     odom_.pose.pose.position.y = vt.y();
     odom_.pose.pose.position.z = vt.z();
