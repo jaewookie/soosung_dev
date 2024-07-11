@@ -167,7 +167,7 @@
   <joint name="slam_lidar_joint" type="fixed">
     <parent link="base_link" />
     <child link="slam_lidar" />
-    <origin xyz="0 -0.2 2.149" rpy="0 0 0" />
+    <origin xyz="0 -0.2 2.207" rpy="0 0 0" />
   </joint>
 
   <link name="slam_lidar">
@@ -178,7 +178,7 @@
     <visual>
       <origin xyz="0 0 0" rpy="0 0 0" />
       <geometry>
-        <mesh filename="package://agv_sim/meshes/3D_SLAM_LIDAR.stl" scale = "0.001 0.001 0.001"/>
+        <mesh filename="package://agv_sim/meshes/C16_3D.stl" scale = "0.001 0.001 0.001"/>
       </geometry>
     </visual>
     <!-- <collision>

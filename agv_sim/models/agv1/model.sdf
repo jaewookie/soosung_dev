@@ -338,12 +338,12 @@
     <joint name='slam_lidar_joint' type='fixed'>
       <parent>base_link</parent>
       <child>slam_lidar</child>
-      <pose>0 -0.2 2.249 0 0 0</pose>
+      <pose>0 -0.2 2.307 0 0 0</pose>
     </joint>
 
     <link name='slam_lidar'>
       <inertial>
-        <pose>0 -0.2 2.249 0 0 0</pose>
+        <pose>0 -0.2 2.307 0 0 0</pose>
         <inertia>
           <ixx>0.0</ixx>
           <ixy>0.0</ixy>
@@ -363,10 +363,10 @@
       </collision> -->
 
       <visual name="slam_lidar_visual">
-        <pose>0 -0.2 2.249 0 0 0</pose>
+        <pose>0 -0.2 2.307 0 0 0</pose>
         <geometry>
           <mesh>
-            <uri>model://agv_common/meshes/3D_SLAM_LIDAR.stl</uri>
+            <uri>model://agv_common/meshes/C16_3D.stl</uri>
             <scale>0.001 0.001 0.001</scale>
           </mesh>
         </geometry>
@@ -374,26 +374,26 @@
 
       <sensor name="3d_slam_lidar" type="ray">
         <always_on>true</always_on>
-        <visualize>false</visualize>
-        <pose>0 -0.2 2.339 0 0 0</pose>
-        <update_rate>20</update_rate>
+        <visualize>true</visualize>
+        <pose>0 -0.2 2.289 0 0 0</pose>
+        <update_rate>10</update_rate>
         <ray>
           <scan>
             <horizontal>
-              <samples>360</samples>
+              <samples>2000</samples>
               <resolution>1</resolution>
               <min_angle>-3.14</min_angle>
               <max_angle>3.14</max_angle>
             </horizontal>
             <vertical>
               <samples>16</samples>
-              <resolution>1.0</resolution>
-              <min_angle>-0.2793</min_angle>
-              <max_angle>0.2443</max_angle>
+              <resolution>1</resolution>
+              <min_angle>0.2443</min_angle>
+              <max_angle>-0.2793</max_angle>
             </vertical>
           </scan>
           <range>
-            <min>0.1</min>
+            <min>0.8</min>
             <max>200</max>
             <resolution>0.03</resolution>
           </range>
