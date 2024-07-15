@@ -7,7 +7,6 @@ Panels:
         - /Global Options1
         - /Status1
         - /RobotModel1
-        - /LaserScan3
       Splitter Ratio: 0.5
     Tree Height: 1147
   - Class: rviz_common/Selection
@@ -81,26 +80,6 @@ Visualization Manager:
           Show Trail: false
           Value: true
         front_wheel_r:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        safety_lidar_l:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        safety_lidar_m:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        safety_lidar_r:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        slam_lidar:
           Alpha: 1
           Show Axes: false
           Show Trail: false
@@ -187,7 +166,7 @@ Visualization Manager:
         Filter size: 10
         History Policy: Keep Last
         Reliability Policy: Reliable
-        Value: /gazebo_ros_ray_sensor/out
+        Value: /points2
       Use Fixed Frame: true
       Use rainbow: true
       Value: true
@@ -293,6 +272,63 @@ Visualization Manager:
       Use Fixed Frame: true
       Use rainbow: true
       Value: true
+    - Class: rviz_default_plugins/Axes
+      Enabled: true
+      Length: 1
+      Name: Axes
+      Radius: 0.10000000149011612
+      Reference Frame: <Fixed Frame>
+      Value: true
+    - Class: rviz_default_plugins/TF
+      Enabled: true
+      Frame Timeout: 15
+      Frames:
+        All Enabled: true
+        base_footprint:
+          Value: true
+        base_link:
+          Value: true
+        drive_wheel:
+          Value: true
+        drive_wheel_joint:
+          Value: true
+        front_wheel_l:
+          Value: true
+        front_wheel_l_joint:
+          Value: true
+        front_wheel_r:
+          Value: true
+        front_wheel_r_joint:
+          Value: true
+        odom:
+          Value: true
+        steering_part:
+          Value: true
+      Marker Scale: 1
+      Name: TF
+      Show Arrows: true
+      Show Axes: true
+      Show Names: true
+      Tree:
+        base_footprint:
+          base_link:
+            front_wheel_l:
+              {}
+            front_wheel_l_joint:
+              {}
+            front_wheel_r:
+              {}
+            front_wheel_r_joint:
+              {}
+            steering_part:
+              drive_wheel:
+                {}
+              drive_wheel_joint:
+                {}
+        odom:
+          {}
+      Update Interval: 0
+      Value: true
   Enabled: true
   Global Options:
     Background Color: 48; 48; 48
@@ -337,25 +373,25 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz_default_plugins/Orbit
-      Distance: 10.842384338378906
+      Distance: 9.003477096557617
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.05999999865889549
         Stereo Focal Distance: 1
         Swap Stereo Eyes: false
         Value: false
       Focal Point:
-        X: 0.7567958235740662
-        Y: -2.783555507659912
-        Z: 0.38047564029693604
+        X: 0.047438353300094604
+        Y: -1.439854383468628
+        Z: 0.8150118589401245
       Focal Shape Fixed Size: true
       Focal Shape Size: 0.05000000074505806
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.009999999776482582
-      Pitch: 0.5553980469703674
+      Pitch: 0.3203980326652527
       Target Frame: odom
       Value: Orbit (rviz_default_plugins)
-      Yaw: 1.4104005098342896
+      Yaw: 1.2304003238677979
     Saved: ~
 Window Geometry:
   Displays:

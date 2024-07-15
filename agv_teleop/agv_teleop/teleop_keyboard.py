@@ -12,7 +12,7 @@ else:
     import termios
     import tty
 
-LIN_VEL = 1.0
+LIN_VEL = 0.5
 ANG_VEL = 0.2
 
 msg = """

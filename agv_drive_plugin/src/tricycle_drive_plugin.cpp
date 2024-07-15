@@ -43,9 +43,9 @@ namespace gazebo_ros
     };
 
     void OnUpdate(const gazebo::common::UpdateInfo &_info);
-    void OnCmdVel(const geometry_msgs::msg::Twist::ConstSharedPtr msg); // ok
+    void OnCmdVel(const geometry_msgs::msg::Twist::ConstSharedPtr msg);    // ok
     void UpdateOdometryEncoder(const gazebo::common::Time &_current_time); // ok
-    void PublishOdometryMsg(const gazebo::common::Time &_current_time); // ok
+    void PublishOdometryMsg(const gazebo::common::Time &_current_time);    // ok
     void PublishWheelsTf(const gazebo::common::Time &_current_time);
     void PublishWheelJointState(const gazebo::common::Time &_current_time);
     void MotorController(double target_speed, double dt); // ok
@@ -57,8 +57,8 @@ namespace gazebo_ros
     rclcpp::Publisher<sensor_msgs::msg::JointState>::SharedPtr joint_state_pub_;
     gazebo::event::ConnectionPtr update_connection_; // Connection to world update event. Callback is called while this is alive.
 
-    double drive_wheel_radius_ = 0.31;
-    double front_wheel_radius_ = 0.25;
+    double drive_wheel_radius_ = 0.16;
+    double front_wheel_radius_ = 0.125;
     double max_wheel_accel_;
     double max_wheel_decel_;
     double max_wheel_speed_tol_;
@@ -110,7 +110,6 @@ namespace gazebo_ros
     // Create ROS2 node:
     impl_->ros_node_ = gazebo_ros::Node::Get(_sdf);
 
-
     RCLCPP_INFO(impl_->ros_node_->get_logger(), "Operate TricycleDrivePlugin");
 
     const gazebo_ros::QoS &qos = impl_->ros_node_->get_qos();
@@ -144,7 +143,7 @@ namespace gazebo_ros
     impl_->joints_[TricycleDrivePluginPrivate::FRONT_WHEEL_RIGHT] = _model->GetJoint("front_wheel_r_joint");
     // impl_->joints_[3] = _model->GetJoint("steering_joint");
 
-    impl_->max_wheel_torque_ = 25;
+    impl_->max_wheel_torque_ = 104;
     impl_->joints_[TricycleDrivePluginPrivate::DRIVE_WHEEL]->SetParam(
         "fmax", 0, impl_->max_wheel_torque_);
 
@@ -331,7 +330,7 @@ namespace gazebo_ros
   {
     double applied_speed = target_speed;
 
-    double current_speed = joints_[DRIVE_WHEEL]->GetVelocity(0);
+    double current_speed = joints_[DRIVE_WHEEL]->GetVelocity(0) * drive_wheel_radius_;
 
     if (max_wheel_accel_ > 0 || max_wheel_decel_ > 0)
     {
@@ -350,9 +349,12 @@ namespace gazebo_ros
       }
     }
 
+    // RCLCPP_INFO(ros_node_->get_logger(), "applied_speed : [%f]", applied_speed);
+    // RCLCPP_INFO(ros_node_->get_logger(), "applied_speed / wheel_rad : [%f]", applied_speed/drive_wheel_radius_);
+
     // SetParam으로 주행 바퀴의 현재 속도 입력
     // (실제에서는 모터 드라이브 혹은 컨트롤러와 통신하는 것과 같음)
-    joints_[DRIVE_WHEEL]->SetParam("vel", 0, applied_speed);
+    joints_[DRIVE_WHEEL]->SetParam("vel", 0, applied_speed / drive_wheel_radius_);
   }
 
   void TricycleDrivePluginPrivate::OnCmdVel(
@@ -367,46 +369,30 @@ namespace gazebo_ros
       const gazebo::common::Time &_current_time)
   {
     // 마치 앞바퀴에 엔코더가 달려 해당 속도를 받아오는 것과 같이 속도를 읽어오는 부분
-    // double vl = joints_[FRONT_WHEEL_LEFT]->GetVelocity(0);
-    // RCLCPP_INFO(ros_node_->get_logger(), "%f", vl);
-    // double vr = joints_[FRONT_WHEEL_RIGHT]->GetVelocity(0);
 
     double vd = joints_[DRIVE_WHEEL]->GetVelocity(0);
 
     double seconds_since_last_update = (_current_time - last_odom_update_).Double();
     last_odom_update_ = _current_time;
 
-    // double b = wheel_separation_;
-
-    // Book: Sigwart 2011 Autonomous Mobile Robots page:337
-    // double sl = vl * (front_wheel_radius_)*seconds_since_last_update;
-    // double sr = vr * (front_wheel_radius_)*seconds_since_last_update;
-
     double sd = vd * (drive_wheel_radius_)*seconds_since_last_update;
 
-    // double dx = (sl + sr) / 2.0 * cos(pose_encoder_.theta + (sl - sr) / (2.0 * b));
-    // double dy = (sl + sr) / 2.0 * sin(pose_encoder_.theta + (sl - sr) / (2.0 * b));
+    // double dxd = sd * sin(pose_encoder_.theta);
+    // double dxd = sd * cos(pose_encoder_.theta);
+    // 7/15 x축으로 변경
+    // double dxd = sd;
+    double dxd = sd;
 
-    double dxd = sd / 2.0 * sin(pose_encoder_.theta);
-    double dyd = sd / 2.0 * cos(pose_encoder_.theta);
-
-    // double dtheta = (sl - sr) / b;
-    double dthetad = 0.0;
-
-    // pose_encoder_.x += dx;
-    // pose_encoder_.y += dy;
-    // pose_encoder_.theta += dtheta;
+    // double dthetad = 0.0;
 
     pose_encoder_.x += dxd;
-    pose_encoder_.y += dyd;
-    pose_encoder_.theta += dthetad;
+    pose_encoder_.y = 0;
+    pose_encoder_.theta = 0.0;
 
-    // double w = dtheta / seconds_since_last_update;
-
-    double w = dthetad / seconds_since_last_update;
+    // double w = dthetad / seconds_since_last_update;
 
     tf2::Vector3 vt;
-    vt = tf2::Vector3(pose_encoder_.x, -pose_encoder_.y, 0);
+    vt = tf2::Vector3(pose_encoder_.x, pose_encoder_.y, 0);
     odom_.pose.pose.position.x = vt.x();
     odom_.pose.pose.position.y = vt.y();
     odom_.pose.pose.position.z = vt.z();
@@ -415,9 +401,9 @@ namespace gazebo_ros
     qt.setRPY(0, 0, pose_encoder_.theta);
     odom_.pose.pose.orientation = tf2::toMsg(qt);
 
-    odom_.twist.twist.angular.z = w;
+    odom_.twist.twist.angular.z = 0;
     odom_.twist.twist.linear.x = dxd / seconds_since_last_update;
-    odom_.twist.twist.linear.y = dyd / seconds_since_last_update;
+    odom_.twist.twist.linear.y = 0;
   }
 
   void TricycleDrivePluginPrivate::PublishOdometryMsg(const gazebo::common::Time &_current_time)

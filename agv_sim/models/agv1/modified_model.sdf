@@ -17,20 +17,20 @@
     <link name="base_link">
 
       <inertial>
-        <pose>0.005 0.1475 0.492 0 0 0</pose>
+        <pose>0 0 1 0 0 1.574</pose>
         <inertia>
-          <ixx>962.268</ixx>
-          <ixy>-2.68</ixy>
-          <ixz>13.459</ixz>
-          <iyy>963.85</iyy>
-          <iyz>81.387</iyz>
-          <izz>482.35</izz>
+          <ixx>990</ixx>
+          <ixy>0</ixy>
+          <ixz>0</ixz>
+          <iyy>990</iyy>
+          <iyz>0</iyz>
+          <izz>990</izz>
         </inertia>
         <mass>2129.36</mass>
       </inertial>
 
       <collision name="base_collision">
-        <pose>0 0 0.1 0 0 0</pose>
+        <pose>0 0 0.1 0 0 1.574</pose>
         <geometry>
           <mesh>
             <uri>model://agv_common/meshes/BODY.stl</uri>
@@ -40,7 +40,7 @@
       </collision>
 
       <visual name="base_visual">
-        <pose>0 0 0.1 0 0 0</pose>
+        <pose>0 0 0.1 0 0 1.574</pose>
         <geometry>
           <mesh>
             <uri>model://agv_common/meshes/BODY.stl</uri>
@@ -95,7 +95,7 @@
     <joint name="steering_joint" type="fixed">
       <parent>base_link</parent>
       <child>steering_part</child>
-      <pose>0 -0.212 0.445 0 0 0</pose>
+      <pose>0.212 -0.0456 0.445 0 0 1.574</pose>
       <axis>
         <xyz>0 0 1</xyz>
       </axis>
@@ -104,20 +104,20 @@
     <link name="steering_part">
 
       <inertial>
-        <pose>-0.0453 -0.2 0.445 0 0 0</pose>
+        <pose>0.212 -0.0456 0.445 0 0 1.574</pose>
         <inertia>
-          <ixx>2.77</ixx>
+          <ixx>2.81</ixx>
           <ixy>0</ixy>
-          <ixz>0.12</ixz>
-          <iyy>2.81</iyy>
-          <iyz>-0.11</iyz>
+          <ixz>-0.11</ixz>
+          <iyy>2.77</iyy>
+          <iyz>0.12</iyz>
           <izz>0.92</izz>
         </inertia>
         <mass>85.056</mass>
       </inertial>
 
       <collision name="steering_part_collision">
-        <pose>-0.0106 -0.202 0.448 0 0 0</pose>
+        <pose>0.212 -0.0456 0.448 0 0 1.574</pose>
         <geometry>
           <cylinder>
             <radius>0.175</radius>
@@ -148,7 +148,7 @@
       </collision>
 
       <visual name="steering_part_visual">
-        <pose>-0.0456 -0.212 0.445 0 0 0</pose>
+        <pose>0.212 -0.0456 0.445 0 0 1.574</pose>
         <geometry>
           <mesh>
             <uri>model://agv_common/meshes/STEERING_PART_RE2.stl</uri>
@@ -160,7 +160,7 @@
     <joint name="drive_wheel_joint" type="revolute">
       <parent>steering_part</parent>
       <child>drive_wheel</child>
-      <pose>0.0175 -0.2 0.16 0 0 0</pose>
+      <pose>0.2 0.018 0.16 0 0 1.574</pose>
       <axis>
         <xyz>1 0 0</xyz>
       </axis>
@@ -169,7 +169,7 @@
     <link name="drive_wheel">
 
       <inertial>
-        <pose>0.0175 -0.2 0.16 0 0 0</pose>
+        <pose>0.2 0.018 0.16 0 0 1.574</pose>
         <inertia>
           <ixx>0.166</ixx>
           <ixy>0.0</ixy>
@@ -182,7 +182,7 @@
       </inertial>
 
       <collision name="drive_wheel_collision">
-        <pose>0.0175 -0.2 0.16 0 1.571 0</pose>
+        <pose>0.2 0.018 0.16 0 1.571 1.574</pose>
         <geometry>
           <cylinder>
             <radius>0.155</radius>
@@ -213,7 +213,7 @@
       </collision>
 
       <visual name="drive_wheel_visual">
-        <pose>0.0175 -0.2 0.16 0 0 0</pose>
+        <pose>0.2 0.018 0.16 0 0 1.574</pose>
         <geometry>
           <mesh>
             <uri>model://agv_common/meshes/DRIVE_WHEEL_RE2.stl</uri>
@@ -225,7 +225,7 @@
     <joint name='front_wheel_l_joint' type='revolute'>
       <parent>base_link</parent>
       <child>front_wheel_l</child>
-      <pose>-0.451 0.86 0.135 0 0 -1.571</pose>
+      <pose>-0.86 -0.451 0.135 0 0 0</pose>
       <axis>
         <xyz>0 -1 0</xyz>
       </axis>
@@ -234,7 +234,7 @@
     <link name="front_wheel_l">
 
       <inertial>
-        <pose>-0.451 0.86 0.135 0 0 0</pose>
+        <pose>-0.86 -0.451 0.135 0 0 0</pose>
 
         <inertia>
           <ixx>0.066</ixx>
@@ -248,7 +248,7 @@
       </inertial>
 
       <collision name='front_wheel_l_collision'>
-        <pose>-0.451 0.86 0.135 0 1.571 0</pose>
+        <pose>-0.86 -0.451 0.135 0 1.571 1.571</pose>
         <geometry>
           <cylinder>
             <radius>0.125</radius>
@@ -271,7 +271,7 @@
       </collision>
 
       <visual name="front_wheel_l_visual">
-        <pose>-0.451 0.86 0.135 0 0 -1.571</pose>
+        <pose>-0.86 -0.451 0.135 0 0 0</pose>
         <geometry>
           <mesh>
             <uri>model://agv_common/meshes/FRONT_WHEEL_RE2.stl</uri>
@@ -283,7 +283,7 @@
     <joint name='front_wheel_r_joint' type='revolute'>
       <parent>base_link</parent>
       <child>front_wheel_r</child>
-      <pose>0.451 0.86 0.135 0 0 1.571</pose>
+      <pose>-0.86 0.451 0.135 0 0 3.14</pose>
       <axis>
         <xyz>0 1 0</xyz>
       </axis>
@@ -291,7 +291,7 @@
 
     <link name='front_wheel_r'>
       <inertial>
-        <pose>0.451 0.86 0.135 0 0 0</pose>
+        <pose>-0.86 0.451 0.135 0 0 0</pose>
         <inertia>
           <ixx>0.066</ixx>
           <ixy>0.0</ixy>
@@ -303,7 +303,7 @@
         <mass>16.096</mass>
       </inertial>
       <collision name='front_wheel_r_collision'>
-        <pose>0.451 0.86 0.135 0 1.571 0</pose>
+        <pose>-0.86 0.451 0.135 0 1.571 1.571</pose>
         <geometry>
           <cylinder>
             <radius>0.125</radius>
@@ -325,7 +325,7 @@
       </collision>
 
       <visual name="front_wheel_r_visual">
-        <pose>0.451 0.86 0.135 0 0 1.571</pose>
+        <pose>-0.86 0.451 0.135 0 0 3.14</pose>
         <geometry>
           <mesh>
             <uri>model://agv_common/meshes/FRONT_WHEEL_RE2.stl</uri>
@@ -337,8 +337,7 @@
     <joint name="imu_joint" type="fixed">
       <parent>base_link</parent>
       <child>imu_link</child>
-      <pose>0.103 0.341 0.873 0 0 -1.574</pose>
-      <!-- <pose>0.103 0.341 0.873 3.142 0 1.571</pose> -->
+      <pose>-0.341 0.103 0.873 0 0 0</pose>
     </joint>
 
     <link name="imu_link">
@@ -389,7 +388,6 @@
         </imu>
         <plugin name="agv_imu" filename="libgazebo_ros_imu_sensor.so">
           <ros>
-            <!-- <namespace>/tb3</namespace> -->
             <remapping>~/out:=imu</remapping>
           </ros>
         </plugin>
@@ -473,12 +471,12 @@
     <joint name='safety_lidar_l_joint' type='fixed'>
       <parent>base_link</parent>
       <child>safety_lidar_l</child>
-      <pose>-0.442 -0.332 0.104 0 0 0</pose>
+      <pose>0.332 -0.442 0.104 0 0 1.574</pose>
     </joint>
 
     <link name='safety_lidar_l'>
       <inertial>
-        <pose>-0.442 -0.332 0.104 0 0 0</pose>
+        <pose>0.332 -0.442 0.104 0 0 1.574</pose>
         <inertia>
           <ixx>0.001</ixx>
           <ixy>0.0</ixy>
@@ -491,7 +489,7 @@
       </inertial>
 
       <visual name="safety_lidar_l_visual">
-        <pose>-0.442 -0.332 0.104 -1.57 0 -0.7854</pose>
+        <pose>0.332 -0.442 0.104 -1.57 0 0.7854</pose>
         <geometry>
           <mesh>
             <uri>model://agv_common/meshes/2D_SAFETY_LIDAR.stl</uri>
@@ -502,8 +500,8 @@
 
       <sensor name="safety_lidar_l" type="gpu_ray">
         <always_on>true</always_on>
-        <visualize>false</visualize>
-        <pose>-0.442 -0.332 0.104 0 0 -2.3562</pose>
+        <visualize>true</visualize>
+        <pose>0.332 -0.442 0.104 0 0 -0.7854</pose>
         <update_rate>10</update_rate>
         <ray>
           <scan>
@@ -537,12 +535,12 @@
     <joint name='safety_lidar_r_joint' type='fixed'>
       <parent>base_link</parent>
       <child>safety_lidar_r</child>
-      <pose>0.442 -0.332 0.104 0 0 0</pose>
+      <pose>0.332 0.442 0.104 0 0 1.54</pose>
     </joint>
 
     <link name='safety_lidar_r'>
       <inertial>
-        <pose>0.442 -0.332 0.104 0 0 0</pose>
+        <pose>0.332 0.442 0.104 0 0 1.54</pose>
         <inertia>
           <ixx>0.001</ixx>
           <ixy>0.0</ixy>
@@ -555,7 +553,7 @@
       </inertial>
 
       <visual name="safety_lidar_r_visual">
-        <pose>0.442 -0.332 0.104 -1.57 0 0.7854</pose>
+        <pose>0.332 0.442 0.104 -1.57 0 2.3562</pose>
         <geometry>
           <mesh>
             <uri>model://agv_common/meshes/2D_SAFETY_LIDAR.stl</uri>
@@ -566,8 +564,8 @@
 
       <sensor name="safety_lidar_r" type="gpu_ray">
         <always_on>true</always_on>
-        <visualize>false</visualize>
-        <pose>0.442 -0.332 0.084 0 0 -0.7854</pose>
+        <visualize>true</visualize>
+        <pose>0.332 0.442 0.084 0 0 0.7854</pose>
         <update_rate>10</update_rate>
         <ray>
           <scan>
@@ -601,12 +599,12 @@
     <joint name='safety_lidar_m_joint' type='fixed'>
       <parent>base_link</parent>
       <child>safety_lidar_m</child>
-      <pose>0 0.863 0.1 0 0 0</pose>
+      <pose>-0.863 0 0.1 0 0 1.54</pose>
     </joint>
 
     <link name='safety_lidar_m'>
       <inertial>
-        <pose>0 0.863 0.1 0 0 0</pose>
+        <pose>-0.863 0 0.1 0 0 1.54</pose>
         <inertia>
           <ixx>0.001</ixx>
           <ixy>0.0</ixy>
@@ -619,7 +617,7 @@
       </inertial>
 
       <visual name="safety_lidar_m_visual">
-        <pose>0 0.863 0.1 -1.57 0 3.14</pose>
+        <pose>-0.863 0 0.1 -1.57 0 -1.54</pose>
         <geometry>
           <mesh>
             <uri>model://agv_common/meshes/2D_SAFETY_LIDAR.stl</uri>
@@ -630,8 +628,8 @@
 
       <sensor name="safety_lidar_m" type="gpu_ray">
         <always_on>true</always_on>
-        <visualize>false</visualize>
-        <pose>0 0.863 0.1 0 0 1.57</pose>
+        <visualize>true</visualize>
+        <pose>-0.863 0 0.1 0 0 3.14</pose>
         <update_rate>10</update_rate>
         <ray>
           <scan>
