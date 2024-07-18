@@ -56,10 +56,10 @@
     </collision>
   </link> -->
 
-  <joint name="steering_joint" type="fixed">
+  <joint name="steering_joint" type="continuous">
     <parent link="base_link" />
     <child link="steering_part" />
-    <origin xyz="0.212 -0.0456 0.375" rpy="0 0 1.574" />
+    <origin xyz="0.212 -0.0456 0.344" rpy="0 0 1.574" />
     <axis xyz="0 0 1"/>
   </joint>
 
@@ -114,7 +114,7 @@
   <joint name="front_wheel_l_joint" type="continuous">
     <parent link="base_link" />
     <child link="front_wheel_l" />
-    <origin xyz="-0.86 -0.451 0.035" rpy="0 0 0" />
+    <origin xyz="-0.86 -0.451 0.025" rpy="0 0 0" />
     <axis xyz="0 1 0"/>
   </joint>
 
@@ -141,7 +141,7 @@
   <joint name="front_wheel_r_joint" type="continuous">
     <parent link="base_link" />
     <child link="front_wheel_r" />
-    <origin xyz="-0.86 0.451 0.035" rpy="0 0 3.14" />
+    <origin xyz="-0.86 0.451 0.025" rpy="0 0 3.14" />
     <axis xyz="0 1 0"/>
   </joint>
 
@@ -168,7 +168,7 @@
   <joint name="imu_joint" type="fixed">
     <parent link="base_link"/>
     <child link="imu_link"/>
-    <origin xyz="-0.341 0.103 0.873" rpy="0 0 0"/>
+    <origin xyz="-0.341 0.103 0.763" rpy="0 0 0"/>
   </joint>
 
   <link name="imu_link"/>
@@ -176,7 +176,7 @@
   <joint name="slam_lidar_joint" type="fixed">
     <parent link="base_link" />
     <child link="slam_lidar" />
-    <origin xyz="0 -0.2 2.207" rpy="0 0 0" />
+    <origin xyz="0 -0.2 2.197" rpy="0 0 0" />
   </joint>
 
   <link name="slam_lidar">
@@ -195,7 +195,7 @@
   <joint name="safety_lidar_l_joint" type="fixed">
     <parent link="base_link" />
     <child link="safety_lidar_l" />
-    <origin xyz="0.332 -0.442 0.004" rpy="0 0 -0.7854" />
+    <origin xyz="0.332 -0.442 -0.006" rpy="0 0 -0.7854" />
   </joint>
 
   <link name="safety_lidar_l">
@@ -214,7 +214,7 @@
   <joint name="safety_lidar_r_joint" type="fixed">
     <parent link="base_link" />
     <child link="safety_lidar_r" />
-    <origin xyz="0.332 0.442 0.004" rpy="0 0 0.7854" />
+    <origin xyz="0.332 0.442 -0.006" rpy="0 0 0.7854" />
   </joint>
 
   <link name="safety_lidar_r">
@@ -233,7 +233,7 @@
   <joint name="safety_lidar_m_joint" type="fixed">
     <parent link="base_link" />
     <child link="safety_lidar_m" />
-    <origin xyz="-0.863 0 0" rpy="0 0 3.14" />
+    <origin xyz="-0.863 0 -0.01" rpy="0 0 3.14" />
   </joint>
 
   <link name="safety_lidar_m">

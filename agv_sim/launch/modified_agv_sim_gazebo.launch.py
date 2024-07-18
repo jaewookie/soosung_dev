@@ -39,7 +39,7 @@ def generate_launch_description():
     world = os.path.join(
         get_package_share_directory('agv_sim'),
         'worlds',
-        'big_world.world'
+        'empty_world.world'
     )
 
     gzserver_cmd = IncludeLaunchDescription(

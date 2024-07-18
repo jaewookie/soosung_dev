@@ -330,7 +330,7 @@ namespace gazebo_ros
   {
     double applied_speed = target_speed;
 
-    double current_speed = joints_[DRIVE_WHEEL]->GetVelocity(0) * drive_wheel_radius_;
+    double current_speed = joints_[DRIVE_WHEEL]->GetVelocity(0);
 
     if (max_wheel_accel_ > 0 || max_wheel_decel_ > 0)
     {
@@ -354,7 +354,7 @@ namespace gazebo_ros
 
     // SetParam으로 주행 바퀴의 현재 속도 입력
     // (실제에서는 모터 드라이브 혹은 컨트롤러와 통신하는 것과 같음)
-    joints_[DRIVE_WHEEL]->SetParam("vel", 0, applied_speed / drive_wheel_radius_);
+    joints_[DRIVE_WHEEL]->SetParam("vel", 0, applied_speed);
   }
 
   void TricycleDrivePluginPrivate::OnCmdVel(

@@ -11,13 +11,13 @@
     <joint name="base_joint" type="fixed">
       <parent>base_footprint</parent>
       <child>base_link</child>
-      <pose>0.0 0.0 0.110 0 0 0</pose>
+      <pose>0.0 0.0 0.04 0 0 0</pose>
     </joint>
 
     <link name="base_link">
 
       <inertial>
-        <pose>0 0 1 0 0 1.574</pose>
+        <pose>0 0 0.93 0 0 1.574</pose>
         <inertia>
           <ixx>990</ixx>
           <ixy>0</ixy>
@@ -30,7 +30,7 @@
       </inertial>
 
       <collision name="base_collision">
-        <pose>0 0 0.1 0 0 1.574</pose>
+        <pose>0 0 0.0 0 0 1.574</pose>
         <geometry>
           <mesh>
             <uri>model://agv_common/meshes/BODY.stl</uri>
@@ -40,7 +40,7 @@
       </collision>
 
       <visual name="base_visual">
-        <pose>0 0 0.1 0 0 1.574</pose>
+        <pose>0 0 0.0 0 0 1.574</pose>
         <geometry>
           <mesh>
             <uri>model://agv_common/meshes/BODY.stl</uri>
@@ -53,13 +53,13 @@
     <!-- <joint name="mast_joint" type="fixed">
       <parent>base_link</parent>
       <child>mast</child>
-      <pose>0 0.631 1.975 0 0 0</pose>
+      <pose>0 0.631 1.875 0 0 0</pose>
     </joint>
 
     <link name="mast">
 
       <inertial>
-        <pose>-0.003 0.914 0.841 0 0 0</pose>
+        <pose>-0.003 0.914 0.741 0 0 0</pose>
         <inertia>
           <ixx>1122.28</ixx>
           <ixy>-0.195</ixy>
@@ -72,7 +72,7 @@
       </inertial>
 
       <collision name="mast_collision">
-        <pose>0 0.631 1.975 0 0 0</pose>
+        <pose>0 0.631 1.875 0 0 0</pose>
         <geometry>
           <mesh>
             <uri>model://agv_common/meshes/MAST.stl</uri>
@@ -82,7 +82,7 @@
       </collision>
 
       <visual name="mast_visual">
-        <pose>0 0.631 1.975 0 0 0</pose>
+        <pose>0 0.631 1.875 0 0 0</pose>
         <geometry>
           <mesh>
             <uri>model://agv_common/meshes/MAST.stl</uri>
@@ -92,10 +92,10 @@
       </visual>
     </link> -->
 
-    <joint name="steering_joint" type="fixed">
+    <joint name="steering_joint" type="revolute">
       <parent>base_link</parent>
       <child>steering_part</child>
-      <pose>0.212 -0.0456 0.445 0 0 1.574</pose>
+      <pose>0.212 -0.0456 0.375 0 0 1.574</pose>
       <axis>
         <xyz>0 0 1</xyz>
       </axis>
@@ -104,7 +104,7 @@
     <link name="steering_part">
 
       <inertial>
-        <pose>0.212 -0.0456 0.445 0 0 1.574</pose>
+        <pose>0.212 -0.0456 0.375 0 0 1.574</pose>
         <inertia>
           <ixx>2.81</ixx>
           <ixy>0</ixy>
@@ -117,7 +117,7 @@
       </inertial>
 
       <collision name="steering_part_collision">
-        <pose>0.212 -0.0456 0.448 0 0 1.574</pose>
+        <pose>0.212 -0.0456 0.378 0 0 1.574</pose>
         <geometry>
           <cylinder>
             <radius>0.175</radius>
@@ -148,7 +148,7 @@
       </collision>
 
       <visual name="steering_part_visual">
-        <pose>0.212 -0.0456 0.445 0 0 1.574</pose>
+        <pose>0.212 -0.0456 0.375 0 0 1.574</pose>
         <geometry>
           <mesh>
             <uri>model://agv_common/meshes/STEERING_PART_RE2.stl</uri>
@@ -160,7 +160,7 @@
     <joint name="drive_wheel_joint" type="revolute">
       <parent>steering_part</parent>
       <child>drive_wheel</child>
-      <pose>0.2 0.018 0.16 0 0 1.574</pose>
+      <pose>0.2 0.018 0.09 0 0 1.574</pose>
       <axis>
         <xyz>1 0 0</xyz>
       </axis>
@@ -169,7 +169,7 @@
     <link name="drive_wheel">
 
       <inertial>
-        <pose>0.2 0.018 0.16 0 0 1.574</pose>
+        <pose>0.2 0.018 0.09 0 0 1.574</pose>
         <inertia>
           <ixx>0.166</ixx>
           <ixy>0.0</ixy>
@@ -182,7 +182,7 @@
       </inertial>
 
       <collision name="drive_wheel_collision">
-        <pose>0.2 0.018 0.16 0 1.571 1.574</pose>
+        <pose>0.2 0.018 0.09 0 1.571 1.574</pose>
         <geometry>
           <cylinder>
             <radius>0.155</radius>
@@ -213,7 +213,7 @@
       </collision>
 
       <visual name="drive_wheel_visual">
-        <pose>0.2 0.018 0.16 0 0 1.574</pose>
+        <pose>0.2 0.018 0.09 0 0 1.574</pose>
         <geometry>
           <mesh>
             <uri>model://agv_common/meshes/DRIVE_WHEEL_RE2.stl</uri>
@@ -225,7 +225,7 @@
     <joint name='front_wheel_l_joint' type='revolute'>
       <parent>base_link</parent>
       <child>front_wheel_l</child>
-      <pose>-0.86 -0.451 0.135 0 0 0</pose>
+      <pose>-0.86 -0.451 0.065 0 0 0</pose>
       <axis>
         <xyz>0 -1 0</xyz>
       </axis>
@@ -234,7 +234,7 @@
     <link name="front_wheel_l">
 
       <inertial>
-        <pose>-0.86 -0.451 0.135 0 0 0</pose>
+        <pose>-0.86 -0.451 0.065 0 0 0</pose>
 
         <inertia>
           <ixx>0.066</ixx>
@@ -248,7 +248,7 @@
       </inertial>
 
       <collision name='front_wheel_l_collision'>
-        <pose>-0.86 -0.451 0.135 0 1.571 1.571</pose>
+        <pose>-0.86 -0.451 0.065 0 1.571 1.571</pose>
         <geometry>
           <cylinder>
             <radius>0.125</radius>
@@ -261,7 +261,7 @@
             <ode>
               <soft_cfm>0</soft_cfm>
               <soft_erp>0.2</soft_erp>
-              <kp>5e+6</kp>
+              <kp>1e+6</kp>
               <kd>1</kd>
               <max_vel>1.5</max_vel>
               <min_depth>0.001</min_depth>
@@ -271,7 +271,7 @@
       </collision>
 
       <visual name="front_wheel_l_visual">
-        <pose>-0.86 -0.451 0.135 0 0 0</pose>
+        <pose>-0.86 -0.451 0.065 0 0 0</pose>
         <geometry>
           <mesh>
             <uri>model://agv_common/meshes/FRONT_WHEEL_RE2.stl</uri>
@@ -283,7 +283,7 @@
     <joint name='front_wheel_r_joint' type='revolute'>
       <parent>base_link</parent>
       <child>front_wheel_r</child>
-      <pose>-0.86 0.451 0.135 0 0 3.14</pose>
+      <pose>-0.86 0.451 0.065 0 0 3.14</pose>
       <axis>
         <xyz>0 1 0</xyz>
       </axis>
@@ -291,7 +291,7 @@
 
     <link name='front_wheel_r'>
       <inertial>
-        <pose>-0.86 0.451 0.135 0 0 0</pose>
+        <pose>-0.86 0.451 0.065 0 0 0</pose>
         <inertia>
           <ixx>0.066</ixx>
           <ixy>0.0</ixy>
@@ -303,7 +303,7 @@
         <mass>16.096</mass>
       </inertial>
       <collision name='front_wheel_r_collision'>
-        <pose>-0.86 0.451 0.135 0 1.571 1.571</pose>
+        <pose>-0.86 0.451 0.065 0 1.571 1.571</pose>
         <geometry>
           <cylinder>
             <radius>0.125</radius>
@@ -315,7 +315,7 @@
             <ode>
               <soft_cfm>0</soft_cfm>
               <soft_erp>0.2</soft_erp>
-              <kp>5e+6</kp>
+              <kp>1e+6</kp>
               <kd>1</kd>
               <max_vel>1.5</max_vel>
               <min_depth>0.001</min_depth>
@@ -325,7 +325,7 @@
       </collision>
 
       <visual name="front_wheel_r_visual">
-        <pose>-0.86 0.451 0.135 0 0 3.14</pose>
+        <pose>-0.86 0.451 0.065 0 0 3.14</pose>
         <geometry>
           <mesh>
             <uri>model://agv_common/meshes/FRONT_WHEEL_RE2.stl</uri>
@@ -337,13 +337,13 @@
     <joint name="imu_joint" type="fixed">
       <parent>base_link</parent>
       <child>imu_link</child>
-      <pose>-0.341 0.103 0.873 0 0 0</pose>
+      <pose>-0.341 0.103 0.803 0 0 0</pose>
     </joint>
 
     <link name="imu_link">
       <sensor name="agv_imu" type="imu">
         <always_on>true</always_on>
-        <update_rate>200</update_rate>
+        <update_rate>1000</update_rate>
         <imu>
           <angular_velocity>
             <x>
@@ -386,6 +386,21 @@
             </z>
           </linear_acceleration>
         </imu>
+        <!-- <visualize>true</visualize>
+        <topic>__default_topic__</topic>
+        <plugin filename="libgazebo_ros_imu_sensor.so" name="imu_plugin">
+          <topicName>imu</topicName>
+          <bodyName>imu_link</bodyName>
+          <updateRateHZ>200.0</updateRateHZ>
+          <gaussianNoise>2e-4</gaussianNoise>
+          <xyzOffset>0 0 0</xyzOffset>
+          <rpyOffset>0 0 0</rpyOffset>
+          <frameName>imu_link</frameName>
+          <initialOrientationAsReference>false</initialOrientationAsReference>
+          <ros>
+            <remapping>~/out:=imu</remapping>
+          </ros>
+        </plugin> -->
         <plugin name="agv_imu" filename="libgazebo_ros_imu_sensor.so">
           <ros>
             <remapping>~/out:=imu</remapping>
@@ -398,12 +413,12 @@
     <joint name='slam_lidar_joint' type='fixed'>
       <parent>base_link</parent>
       <child>slam_lidar</child>
-      <pose>0 -0.2 2.307 0 0 0</pose>
+      <pose>0.2 0 2.237 0 0 0</pose>
     </joint>
 
     <link name='slam_lidar'>
       <inertial>
-        <pose>0 -0.2 2.307 0 0 0</pose>
+        <pose>0.2 0 2.237 0 0 0</pose>
         <inertia>
           <ixx>0.001</ixx>
           <ixy>0.0</ixy>
@@ -416,7 +431,7 @@
       </inertial>
 
       <visual name="slam_lidar_visual">
-        <pose>0 -0.2 2.307 0 0 0</pose>
+        <pose>0.2 0 2.237 0 0 0</pose>
         <geometry>
           <mesh>
             <uri>model://agv_common/meshes/C16_3D.stl</uri>
@@ -428,7 +443,7 @@
       <sensor name="3d_slam_lidar" type="gpu_ray">
         <always_on>true</always_on>
         <visualize>false</visualize>
-        <pose>0 -0.2 2.289 0 0 0</pose>
+        <pose>0.2 0 2.219 0 0 0</pose>
         <update_rate>10</update_rate>
         <ray>
           <scan>
@@ -453,17 +468,28 @@
           <noise>
             <type>gaussian</type>
             <mean>0.0</mean>
-            <stddev>0.01</stddev>
+            <stddev>0.001</stddev>
           </noise>
         </ray>
 
-        <plugin name="gazebo_ros_ray_sensor" filename="libgazebo_ros_ray_sensor.so">
+        <plugin name="gazebo_ros_laser_controller" filename="libgazebo_ros_velodyne_laser.so">
+          <ros>
+            <remapping>~/out:=points2</remapping>
+          </ros>
+          <frame_name>slam_lidar</frame_name>
+          <organize_cloud>false</organize_cloud>
+          <min_range>0.8</min_range>
+          <max_range>200</max_range>
+          <gaussianNoise>0.1</gaussianNoise>
+        </plugin>
+
+        <!-- <plugin name="gazebo_ros_ray_sensor" filename="libgazebo_ros_ray_sensor.so">
           <output_type>sensor_msgs/PointCloud2</output_type>
           <frameName>slam_lidar</frameName>
           <ros>
             <remapping>~/out:=points2</remapping>
           </ros>
-        </plugin>
+        </plugin> -->
       </sensor>
 
     </link>
@@ -471,12 +497,12 @@
     <joint name='safety_lidar_l_joint' type='fixed'>
       <parent>base_link</parent>
       <child>safety_lidar_l</child>
-      <pose>0.332 -0.442 0.104 0 0 1.574</pose>
+      <pose>0.332 -0.442 0.034 0 0 1.574</pose>
     </joint>
 
     <link name='safety_lidar_l'>
       <inertial>
-        <pose>0.332 -0.442 0.104 0 0 1.574</pose>
+        <pose>0.332 -0.442 0.034 0 0 1.574</pose>
         <inertia>
           <ixx>0.001</ixx>
           <ixy>0.0</ixy>
@@ -489,7 +515,7 @@
       </inertial>
 
       <visual name="safety_lidar_l_visual">
-        <pose>0.332 -0.442 0.104 -1.57 0 0.7854</pose>
+        <pose>0.332 -0.442 0.034 -1.57 0 0.7854</pose>
         <geometry>
           <mesh>
             <uri>model://agv_common/meshes/2D_SAFETY_LIDAR.stl</uri>
@@ -501,7 +527,7 @@
       <sensor name="safety_lidar_l" type="gpu_ray">
         <always_on>true</always_on>
         <visualize>true</visualize>
-        <pose>0.332 -0.442 0.104 0 0 -0.7854</pose>
+        <pose>0.332 -0.442 0.034 0 0 -0.7854</pose>
         <update_rate>10</update_rate>
         <ray>
           <scan>
@@ -535,12 +561,12 @@
     <joint name='safety_lidar_r_joint' type='fixed'>
       <parent>base_link</parent>
       <child>safety_lidar_r</child>
-      <pose>0.332 0.442 0.104 0 0 1.54</pose>
+      <pose>0.332 0.442 0.034 0 0 1.54</pose>
     </joint>
 
     <link name='safety_lidar_r'>
       <inertial>
-        <pose>0.332 0.442 0.104 0 0 1.54</pose>
+        <pose>0.332 0.442 0.034 0 0 1.54</pose>
         <inertia>
           <ixx>0.001</ixx>
           <ixy>0.0</ixy>
@@ -553,7 +579,7 @@
       </inertial>
 
       <visual name="safety_lidar_r_visual">
-        <pose>0.332 0.442 0.104 -1.57 0 2.3562</pose>
+        <pose>0.332 0.442 0.034 -1.57 0 2.3562</pose>
         <geometry>
           <mesh>
             <uri>model://agv_common/meshes/2D_SAFETY_LIDAR.stl</uri>
@@ -565,7 +591,7 @@
       <sensor name="safety_lidar_r" type="gpu_ray">
         <always_on>true</always_on>
         <visualize>true</visualize>
-        <pose>0.332 0.442 0.084 0 0 0.7854</pose>
+        <pose>0.332 0.442 -0.016 0 0 0.7854</pose>
         <update_rate>10</update_rate>
         <ray>
           <scan>
@@ -599,12 +625,12 @@
     <joint name='safety_lidar_m_joint' type='fixed'>
       <parent>base_link</parent>
       <child>safety_lidar_m</child>
-      <pose>-0.863 0 0.1 0 0 1.54</pose>
+      <pose>-0.863 0 0.0 0 0 1.54</pose>
     </joint>
 
     <link name='safety_lidar_m'>
       <inertial>
-        <pose>-0.863 0 0.1 0 0 1.54</pose>
+        <pose>-0.863 0 0.0 0 0 1.54</pose>
         <inertia>
           <ixx>0.001</ixx>
           <ixy>0.0</ixy>
@@ -617,7 +643,7 @@
       </inertial>
 
       <visual name="safety_lidar_m_visual">
-        <pose>-0.863 0 0.1 -1.57 0 -1.54</pose>
+        <pose>-0.863 0 0.0 -1.57 0 -1.54</pose>
         <geometry>
           <mesh>
             <uri>model://agv_common/meshes/2D_SAFETY_LIDAR.stl</uri>
@@ -629,7 +655,7 @@
       <sensor name="safety_lidar_m" type="gpu_ray">
         <always_on>true</always_on>
         <visualize>true</visualize>
-        <pose>-0.863 0 0.1 0 0 3.14</pose>
+        <pose>-0.863 0 0.0 0 0 3.14</pose>
         <update_rate>10</update_rate>
         <ray>
           <scan>
@@ -661,13 +687,13 @@
     </link>
 
 
-    <plugin name="agv_drive" filename="libtricycle_drive_plugin.so">
-      <max_wheel_acceleration>1.0</max_wheel_acceleration>
-      <max_wheel_deceleration>1.0</max_wheel_deceleration>
+    <!-- <plugin name="agv_drive" filename="libtricycle_drive_plugin.so">
+      <max_wheel_acceleration>6.25</max_wheel_acceleration>
+      <max_wheel_deceleration>6.25</max_wheel_deceleration>
       <max_wheel_speed_tolerance>0.005</max_wheel_speed_tolerance>
-    </plugin>
+    </plugin> -->
 
-    <!-- <plugin name="agv_drive" filename="libgazebo_ros_tricycle_drive.so">
+    <plugin name="agv_drive" filename="libgazebo_ros_tricycle_drive.so">
 
       <update_rate>30</update_rate>
 
@@ -693,6 +719,6 @@
       <odometry_frame>odom</odometry_frame>
       <robot_base_frame>base_footprint</robot_base_frame>
 
-    </plugin> -->
+    </plugin>
   </model>
 </sdf>
