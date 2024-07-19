@@ -35,6 +35,8 @@ namespace gazebo_ros
 
     enum
     {
+      STEERING,
+
       DRIVE_WHEEL,
 
       FRONT_WHEEL_LEFT,
@@ -48,7 +50,7 @@ namespace gazebo_ros
     void PublishOdometryMsg(const gazebo::common::Time &_current_time);    // ok
     void PublishWheelsTf(const gazebo::common::Time &_current_time);
     void PublishWheelJointState(const gazebo::common::Time &_current_time);
-    void MotorController(double target_speed, double dt); // ok
+    void MotorController(double target_speed, double target_angle, double dt); // ok
 
     // ROS node for communication, managed by gazebo_ros.
     gazebo_ros::Node::SharedPtr ros_node_;
@@ -63,6 +65,8 @@ namespace gazebo_ros
     double max_wheel_decel_;
     double max_wheel_speed_tol_;
     double max_wheel_torque_;
+    double max_steering_angle_tol_;
+    double max_steering_speed_;
     double wheel_separation_;
 
     geometry_msgs::msg::Twist cmd_;
@@ -127,25 +131,26 @@ namespace gazebo_ros
     impl_->publish_odom_ = true;
 
     // 가제보 플러그인 태그
+    impl_->wheel_separation_ = _sdf->Get<double>("wheel_separation_", 0.9).first;
     impl_->max_wheel_accel_ = _sdf->Get<double>("max_wheel_acceleration", 0).first;
     impl_->max_wheel_decel_ = _sdf->Get<double>(
                                       "max_wheel_deceleration", impl_->max_wheel_accel_)
                                   .first;
     impl_->max_wheel_speed_tol_ = _sdf->Get<double>("max_wheel_speed_tolerance", 0.01).first;
+    impl_->max_steering_speed_ = _sdf->Get<double>("max_steering_speed_", 0).first;
+    impl_->max_steering_angle_tol_ = _sdf->Get<double>("max_steering_angle_tol_", 0.01).first;
 
-    impl_->wheel_separation_ = _sdf->Get<double>("wheel_separation", 0.9).first;
-
-    impl_->joints_.resize(3); // 조향 추가시 4로 변경
+    impl_->joints_.resize(4); // 조향 추가시 4로 변경
 
     // OBTAIN -> JOINTS:
+    impl_->joints_[TricycleDrivePluginPrivate::STEERING] = _model->GetJoint("steering_joint");
     impl_->joints_[TricycleDrivePluginPrivate::DRIVE_WHEEL] = _model->GetJoint("drive_wheel_joint");
     impl_->joints_[TricycleDrivePluginPrivate::FRONT_WHEEL_LEFT] = _model->GetJoint("front_wheel_l_joint");
     impl_->joints_[TricycleDrivePluginPrivate::FRONT_WHEEL_RIGHT] = _model->GetJoint("front_wheel_r_joint");
-    // impl_->joints_[3] = _model->GetJoint("steering_joint");
 
     impl_->max_wheel_torque_ = 104;
-    impl_->joints_[TricycleDrivePluginPrivate::DRIVE_WHEEL]->SetParam(
-        "fmax", 0, impl_->max_wheel_torque_);
+    impl_->joints_[TricycleDrivePluginPrivate::DRIVE_WHEEL]->SetParam("fmax", 0, impl_->max_wheel_torque_);
+    impl_->joints_[TricycleDrivePluginPrivate::STEERING]->SetParam("fmax", 0, impl_->max_wheel_torque_);
 
     auto publish_rate = 100;
 
@@ -198,13 +203,17 @@ namespace gazebo_ros
   {
     std::lock_guard<std::mutex> scoped_lock(impl_->lock_);
 
-    if (impl_->joints_[TricycleDrivePluginPrivate::DRIVE_WHEEL])
+    if (impl_->joints_[TricycleDrivePluginPrivate::DRIVE_WHEEL] && impl_->joints_[TricycleDrivePluginPrivate::STEERING])
     {
       gazebo::common::Time current_time =
           impl_->joints_[TricycleDrivePluginPrivate::DRIVE_WHEEL]->GetWorld()->SimTime();
       impl_->joints_[TricycleDrivePluginPrivate::DRIVE_WHEEL]->SetParam(
           "fmax", 0, impl_->max_wheel_torque_);
+      impl_->joints_[TricycleDrivePluginPrivate::STEERING]->SetParam(
+          "fmax", 0, impl_->max_wheel_torque_);
       impl_->joints_[TricycleDrivePluginPrivate::DRIVE_WHEEL]->SetParam("vel", 0, 0.0);
+      impl_->joints_[TricycleDrivePluginPrivate::STEERING]->SetParam("vel", 0, 0.0);
+
       impl_->last_actuator_update_ = current_time;
       impl_->last_odom_update_ = current_time;
     }
@@ -309,13 +318,14 @@ namespace gazebo_ros
     }
     std::unique_lock<std::mutex> lock(lock_);
     double target_wheel_rotation_speed = cmd_.linear.x / drive_wheel_radius_;
+    double target_steering_angle = cmd_.angular.z;
     lock.unlock();
 
 #ifdef IGN_PROFILER_ENABLE
     IGN_PROFILE_BEGIN("MotorController");
 #endif
     MotorController(
-        target_wheel_rotation_speed, seconds_since_last_update);
+        target_wheel_rotation_speed, target_steering_angle, seconds_since_last_update);
 #ifdef IGN_PROFILER_ENABLE
     IGN_PROFILE_END();
 #endif
@@ -326,9 +336,10 @@ namespace gazebo_ros
   }
 
   void TricycleDrivePluginPrivate::MotorController(
-      double target_speed, double dt)
+      double target_speed, double target_angle, double dt)
   {
     double applied_speed = target_speed;
+    double applied_angle = target_angle;
 
     double current_speed = joints_[DRIVE_WHEEL]->GetVelocity(0);
 
@@ -349,12 +360,62 @@ namespace gazebo_ros
       }
     }
 
-    // RCLCPP_INFO(ros_node_->get_logger(), "applied_speed : [%f]", applied_speed);
-    // RCLCPP_INFO(ros_node_->get_logger(), "applied_speed / wheel_rad : [%f]", applied_speed/drive_wheel_radius_);
-
     // SetParam으로 주행 바퀴의 현재 속도 입력
     // (실제에서는 모터 드라이브 혹은 컨트롤러와 통신하는 것과 같음)
     joints_[DRIVE_WHEEL]->SetParam("vel", 0, applied_speed);
+
+    double current_angle = joints_[STEERING]->Position(0);
+
+    double diff_angle = current_angle - target_angle;
+    double applied_steering_speed = 0;
+
+    if (max_steering_speed_ > 0)
+    {
+      // this means we will steer using steering speed
+      if (fabs(diff_angle) < max_steering_angle_tol_)
+      {
+        // we're withing angle tolerance
+        applied_steering_speed = 0;
+      }
+      else if (diff_angle < target_speed)
+      {
+        // steer toward target angle
+        applied_steering_speed = max_steering_speed_;
+      }
+      else
+      {
+        // steer toward target angle
+        applied_steering_speed = -max_steering_speed_;
+      }
+
+      // use speed control, not recommended, for better dynamics use force control
+      joints_[STEERING]->SetParam("vel", 0, applied_steering_speed);
+    }
+    else
+    {
+      // max_steering_speed_ is zero, use position control.
+      // This is not a good idea if we want dynamics to work.
+      if (fabs(diff_angle) < max_steering_speed_ * dt)
+      {
+        // we can take a step and still not overshoot target
+        if (diff_angle > 0)
+        {
+          applied_angle = current_angle - max_steering_speed_ * dt;
+        }
+        else
+        {
+          applied_angle = current_angle + max_steering_speed_ * dt;
+        }
+      }
+      else
+      {
+        applied_angle = target_angle;
+      }
+
+      joints_[STEERING]->SetPosition(0, applied_angle, true);
+    }
+    // RCLCPP_INFO(ros_node_->get_logger(), "applied_speed : [%f]", applied_speed);
+    // RCLCPP_INFO(ros_node_->get_logger(), "applied_speed / wheel_rad : [%f]", applied_speed/drive_wheel_radius_);
   }
 
   void TricycleDrivePluginPrivate::OnCmdVel(
@@ -405,6 +466,46 @@ namespace gazebo_ros
     odom_.twist.twist.linear.x = dxd / seconds_since_last_update;
     odom_.twist.twist.linear.y = 0;
   }
+
+  // void TricycleDrivePluginPrivate::UpdateOdometryEncoder(
+  //     const gazebo::common::Time &_current_time)
+  // {
+  //   double vl = joints_[FRONT_WHEEL_LEFT]->GetVelocity(0);
+  //   double vr = joints_[FRONT_WHEEL_RIGHT]->GetVelocity(0);
+
+  //   double seconds_since_last_update = (_current_time - last_odom_update_).Double();
+  //   last_odom_update_ = _current_time;
+
+  //   double b = wheel_separation_;
+
+  //   // Book: Sigwart 2011 Autonomous Mobile Robots page:337
+  //   double sl = vl * (front_wheel_radius_) * seconds_since_last_update;
+  //   double sr = vr * (front_wheel_radius_) * seconds_since_last_update;
+
+  //   double dx = (sl + sr) / 2.0 * cos(pose_encoder_.theta + (sl - sr) / (2.0 * b));
+  //   double dy = (sl + sr) / 2.0 * sin(pose_encoder_.theta + (sl - sr) / (2.0 * b));
+  //   double dtheta = (sl - sr) / b;
+
+  //   pose_encoder_.x += dx;
+  //   pose_encoder_.y += dy;
+  //   pose_encoder_.theta += dtheta;
+
+  //   double w = dtheta / seconds_since_last_update;
+
+  //   tf2::Vector3 vt;
+  //   vt = tf2::Vector3(pose_encoder_.x, pose_encoder_.y, 0);
+  //   odom_.pose.pose.position.x = vt.x();
+  //   odom_.pose.pose.position.y = vt.y();
+  //   odom_.pose.pose.position.z = vt.z();
+
+  //   tf2::Quaternion qt;
+  //   qt.setRPY(0, 0, pose_encoder_.theta);
+  //   odom_.pose.pose.orientation = tf2::toMsg(qt);
+
+  //   odom_.twist.twist.angular.z = w;
+  //   odom_.twist.twist.linear.x = dx / seconds_since_last_update;
+  //   odom_.twist.twist.linear.y = dy / seconds_since_last_update;
+  // }
 
   void TricycleDrivePluginPrivate::PublishOdometryMsg(const gazebo::common::Time &_current_time)
   {
