@@ -12,8 +12,8 @@ else:
     import termios
     import tty
 
-LIN_VEL = 1.0
-ANG_VEL = 0.2
+LIN_VEL = 0.3
+ANG_VEL = 0.7854
 
 msg = """
 ---------------------------
@@ -64,12 +64,22 @@ def main():
             key = get_key(settings)
             if key == 'w':
                 target_linear_velocity = LIN_VEL
+                target_angular_velocity = 0.0
                 status = status + 1
                 print('전진!!!')
             elif key == 'x':
                 target_linear_velocity = -LIN_VEL
+                target_angular_velocity = 0.0
                 status = status + 1
                 print('후진!!!')
+            elif key == 'a':
+                target_angular_velocity = ANG_VEL
+                status = status + 1
+                print('좌회전!!!')
+            elif key == 'd':
+                target_angular_velocity = -ANG_VEL
+                status = status + 1
+                print('우회전!!!')
             elif key == ' ' or key == 's':
                 target_linear_velocity = 0.0
                 target_angular_velocity = 0.0
@@ -90,7 +100,7 @@ def main():
 
             twist.angular.x = 0.0
             twist.angular.y = 0.0
-            twist.angular.z = 0.0
+            twist.angular.z = target_angular_velocity
 
             pub.publish(twist)
 

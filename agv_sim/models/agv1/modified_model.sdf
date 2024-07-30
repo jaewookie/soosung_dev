@@ -94,7 +94,7 @@
     <joint name="steering_joint" type="revolute">
       <parent>base_link</parent>
       <child>steering_part</child>
-      <pose>0.212 -0.0656 0.375 0 0 1.574</pose>
+      <pose>0.216 0 0.375 0 0 1.574</pose>
       <axis>
         <xyz>0 0 1</xyz>
       </axis>
@@ -103,20 +103,20 @@
     <link name="steering_part">
 
       <inertial>
-        <pose>0.212 -0.0656 0.375 0 0 1.574</pose>
+        <pose>0.216 0 0.075 0 0 1.574</pose>
         <inertia>
-          <ixx>2.81</ixx>
+          <ixx>3.2</ixx>
           <ixy>0</ixy>
-          <ixz>-0.11</ixz>
-          <iyy>2.77</iyy>
-          <iyz>0.12</iyz>
-          <izz>0.92</izz>
+          <ixz>0</ixz>
+          <iyy>2.81</iyy>
+          <iyz>0</iyz>
+          <izz>2.81</izz>
         </inertia>
         <mass>85.056</mass>
       </inertial>
 
       <collision name="steering_part_collision">
-        <pose>0.212 -0.0656 0.378 0 0 1.574</pose>
+        <pose>0.216 0 0.378 0 0 1.574</pose>
         <geometry>
           <cylinder>
             <radius>0.175</radius>
@@ -147,10 +147,12 @@
       </collision>
 
       <visual name="steering_part_visual">
-        <pose>0.212 -0.0656 0.375 0 0 1.574</pose>
+        <pose>0.216 0 0.375 0 0 1.574</pose>
+        <!-- 0.212 -0.0656 0.375 -->
         <geometry>
           <mesh>
             <uri>model://agv_common/meshes/STEERING_PART_RE2.stl</uri>
+            <scale>0.001 0.001 0.001</scale>
           </mesh>
         </geometry>
       </visual>
@@ -159,7 +161,7 @@
     <joint name="drive_wheel_joint" type="revolute">
       <parent>steering_part</parent>
       <child>drive_wheel</child>
-      <pose>0.2 -0.002 0.09 0 0 1.574</pose>
+      <pose>0.217 0.0 0.09 0 0 1.574</pose>
       <axis>
         <xyz>1 0 0</xyz>
       </axis>
@@ -168,7 +170,7 @@
     <link name="drive_wheel">
 
       <inertial>
-        <pose>0.2 -0.002 0.09 0 0 1.574</pose>
+        <pose>0.217 0.0 0.09 0 0 1.574</pose>
         <inertia>
           <ixx>0.166</ixx>
           <ixy>0.0</ixy>
@@ -181,7 +183,7 @@
       </inertial>
 
       <collision name="drive_wheel_collision">
-        <pose>0.2 -0.002 0.09 0 1.571 1.574</pose>
+        <pose>0.217 0.0 0.09 0 1.571 1.574</pose>
         <geometry>
           <cylinder>
             <radius>0.155</radius>
@@ -202,7 +204,7 @@
             <ode>
               <soft_cfm>0</soft_cfm>
               <soft_erp>0.2</soft_erp>
-              <kp>5e+6</kp>
+              <kp>8e+6</kp>
               <kd>1</kd>
               <max_vel>1.5</max_vel>
               <min_depth>0.0005</min_depth>
@@ -212,7 +214,7 @@
       </collision>
 
       <visual name="drive_wheel_visual">
-        <pose>0.2 -0.002 0.09 0 0 1.574</pose>
+        <pose>0.217 0.0 0.09 0 0 1.574</pose>
         <geometry>
           <mesh>
             <uri>model://agv_common/meshes/DRIVE_WHEEL_RE2.stl</uri>
@@ -260,7 +262,7 @@
             <ode>
               <soft_cfm>0</soft_cfm>
               <soft_erp>0.2</soft_erp>
-              <kp>1e+6</kp>
+              <kp>9e+5</kp>
               <kd>1</kd>
               <max_vel>1.5</max_vel>
               <min_depth>0.001</min_depth>
@@ -314,7 +316,7 @@
             <ode>
               <soft_cfm>0</soft_cfm>
               <soft_erp>0.2</soft_erp>
-              <kp>1e+6</kp>
+              <kp>9e+5</kp>
               <kd>1</kd>
               <max_vel>1.5</max_vel>
               <min_depth>0.001</min_depth>
@@ -338,6 +340,50 @@
       <child>imu_link</child>
       <pose>-0.341 0.103 0.803 0 0 0</pose>
     </joint>
+
+    <!-- <link name="imu_link">
+      <inertial>
+        <pose>-0.341 0.103 0.803 0 0 0</pose>
+        <inertia>
+          <ixx>0.001</ixx>
+          <ixy>0.0</ixy>
+          <ixz>0.0</ixz>
+          <iyy>0.001</iyy>
+          <iyz>0.0</iyz>
+          <izz>0.002</izz>
+        </inertia>
+        <mass>0.641</mass>
+      </inertial>
+
+      <visual name="imu_link">
+        <pose>-0.341 0.103 0.803 0 0 0</pose>
+        <geometry>
+          <mesh>
+            <uri>model://agv_common/meshes/IMU.stl</uri>
+            <scale>0.001 0.001 0.001</scale>
+          </mesh>
+        </geometry>
+      </visual>
+      <sensor name="agv_imu" type="imu">
+        <always_on>true</always_on>
+        <update_rate>1000</update_rate>
+        <visualize>false</visualize>
+        <topic>__default_topic__</topic>
+        <plugin filename="libgazebo_ros_imu_sensor.so" name="imu_plugin">
+          <topicName>imu</topicName>
+          <bodyName>imu_link</bodyName>
+          <updateRateHZ>1000</updateRateHZ>
+          <gaussianNoise>2e-4</gaussianNoise>
+          <xyzOffset>0 0 0</xyzOffset>
+          <rpyOffset>0 0 0</rpyOffset>
+          <frameName>imu_link</frameName>
+          <initialOrientationAsReference>false</initialOrientationAsReference>
+          <ros>
+            <remapping>~/out:=imu</remapping>
+          </ros>
+        </plugin>
+      </sensor>
+    </link> -->
 
     <link name="imu_link">
       <sensor name="agv_imu" type="imu">
@@ -385,9 +431,9 @@
             </z>
           </linear_acceleration>
         </imu>
-        <!-- <visualize>true</visualize>
+        <visualize>true</visualize>
         <topic>__default_topic__</topic>
-        <plugin filename="libgazebo_ros_imu_sensor.so" name="imu_plugin">
+        <!-- <plugin filename="libgazebo_ros_imu_sensor.so" name="imu_plugin">
           <topicName>imu</topicName>
           <bodyName>imu_link</bodyName>
           <updateRateHZ>200.0</updateRateHZ>
@@ -400,8 +446,9 @@
             <remapping>~/out:=imu</remapping>
           </ros>
         </plugin> -->
-        <plugin name="agv_imu" filename="libgazebo_ros_imu_sensor.so">
+        <plugin name="imu_plugin" filename="libgazebo_ros_imu_sensor.so">
           <ros>
+            <!-- <namespace>/tb3</namespace> -->
             <remapping>~/out:=imu</remapping>
           </ros>
         </plugin>
@@ -479,7 +526,7 @@
           <organize_cloud>false</organize_cloud>
           <min_range>0.8</min_range>
           <max_range>200</max_range>
-          <gaussianNoise>0.1</gaussianNoise>
+          <gaussian_noise>0.008</gaussian_noise>
         </plugin>
 
         <!-- <plugin name="gazebo_ros_ray_sensor" filename="libgazebo_ros_ray_sensor.so">
@@ -493,7 +540,7 @@
 
     </link>
 
-    <joint name='safety_lidar_l_joint' type='fixed'>
+    <!-- <joint name='safety_lidar_l_joint' type='fixed'>
       <parent>base_link</parent>
       <child>safety_lidar_l</child>
       <pose>0.332 -0.442 0.034 0 0 1.574</pose>
@@ -683,12 +730,12 @@
           <frameName>safety_lidar_m</frameName>
         </plugin>
       </sensor>
-    </link>
+    </link> -->
 
 
     <plugin name="agv_drive" filename="libtricycle_drive_plugin.so">
-      <!-- <wheel_separation_>0.9</wheel_separation_>
-      <max_steering_speed_>1</max_steering_speed_> -->
+      <wheel_separation_>0.9</wheel_separation_>
+      <max_steering_speed_>1</max_steering_speed_>
       <max_wheel_acceleration>6.25</max_wheel_acceleration>
       <max_wheel_deceleration>6.25</max_wheel_deceleration>
       <max_wheel_speed_tolerance>0.005</max_wheel_speed_tolerance>

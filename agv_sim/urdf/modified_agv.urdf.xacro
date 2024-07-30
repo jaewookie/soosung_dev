@@ -59,7 +59,8 @@
   <joint name="steering_joint" type="continuous">
     <parent link="base_link" />
     <child link="steering_part" />
-    <origin xyz="0.212 -0.0476 0.344" rpy="0 0 1.574" />
+    <origin xyz="0.216 0 0.344" rpy="0 0 1.574" />
+    <!-- 0.212 -0.0476 0.344 -->
     <axis xyz="0 0 1"/>
   </joint>
 
@@ -72,14 +73,14 @@
     <visual>
       <origin xyz="0 0 0" rpy="0 0 0" />
       <geometry>
-        <mesh filename="package://agv_sim/meshes/STEERING_PART_RE2.stl"/>
+        <mesh filename="package://agv_sim/meshes/STEERING_PART_RE2.stl" scale = "0.001 0.001 0.001"/>
       </geometry>
       <material name="white" />
     </visual>
     <collision>
       <origin xyz="0 0 0" rpy="0 0 0" />
       <geometry>
-        <mesh filename="package://agv_sim/meshes/STEERING_PART_RE2.stl"/>
+        <mesh filename="package://agv_sim/meshes/STEERING_PART_RE2.stl" scale = "0.001 0.001 0.001"/>
       </geometry>
     </collision>
   </link>
@@ -87,7 +88,8 @@
   <joint name="drive_wheel_joint" type="continuous">
     <parent link="steering_part" />
     <child link="drive_wheel" />
-    <origin xyz="0.063 0.012 -0.285" rpy="0 0 0" />
+    <!-- <origin xyz="0.063 0.012 -0.285" rpy="0 0 0" /> -->
+    <origin xyz="0.01 0.0 -0.285" rpy="0 0 0" />
     <axis xyz="1 0 0"/>
   </joint>
 
@@ -171,7 +173,18 @@
     <origin xyz="-0.341 0.103 0.763" rpy="0 0 0"/>
   </joint>
 
-  <link name="imu_link"/>
+  <link name="imu_link">
+    <!-- <inertial>
+      <mass value="0.641"/>
+      <inertia ixx="0.001" ixy="0.0" ixz="0.0" iyy="0.001" iyz="0.0" izz="0.002"/>
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="package://agv_sim/meshes/IMU.stl" scale = "0.001 0.001 0.001"/>
+      </geometry>
+    </visual> -->
+  </link>
 
   <joint name="slam_lidar_joint" type="fixed">
     <parent link="base_link" />
@@ -192,7 +205,7 @@
     </visual>
   </link>
 
-  <joint name="safety_lidar_l_joint" type="fixed">
+  <!-- <joint name="safety_lidar_l_joint" type="fixed">
     <parent link="base_link" />
     <child link="safety_lidar_l" />
     <origin xyz="0.332 -0.442 -0.006" rpy="0 0 -0.7854" />
@@ -247,5 +260,5 @@
         <mesh filename="package://agv_sim/meshes/2D_SAFETY_LIDAR.stl" scale = "0.001 0.001 0.001"/>
       </geometry>
     </visual>
-  </link>
+  </link> -->
 </robot>
