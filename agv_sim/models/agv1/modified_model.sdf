@@ -745,9 +745,9 @@
     </plugin>
 
     <plugin name="fork_drive" filename="libfork_control_plugin.so">
-      <max_mast_acceleration>6.25</max_mast_acceleration>
-      <max_mast_deceleration>6.25</max_mast_deceleration>
-      <max_mast_speed_tolerance>0.005</max_mast_speed_tolerance>
+      <max_mast_acceleration>0.05</max_mast_acceleration>
+      <max_mast_deceleration>0.05</max_mast_deceleration>
+      <max_mast_speed_tolerance>0.001</max_mast_speed_tolerance>
     </plugin>
 
     <!-- <plugin name="agv_drive" filename="libgazebo_ros_tricycle_drive.so">

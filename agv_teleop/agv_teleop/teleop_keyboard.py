@@ -4,6 +4,7 @@ import sys
 import rclpy
 
 from geometry_msgs.msg import Twist
+from agv_msgs.msg import ForkControl
 from rclpy.qos import QoSProfile
 
 if os.name == 'nt':
@@ -16,19 +17,18 @@ LIN_VEL = 0.3
 ANG_VEL = 0.7854
 
 msg = """
----------------------------
-        w : 전진
+-------------------------------------
+            w : 전진
 
-a : 좌회전        d : 우회전
+a : 좌회전   s : 정지   d : 우회전
 
-        x : 후진
+            x : 후진
 
-u : 포크 상승     i : 포크 하강
 
-space key, s : 정지
+u : 포크 상승 i : 정지  o : 포크 하강
 
 CTRL-C : 종료
----------------------------
+-------------------------------------
 """
 
 e = """
@@ -58,11 +58,13 @@ def main():
 
     qos = QoSProfile(depth=10)
     node = rclpy.create_node('teleop_keyboard')
-    pub = node.create_publisher(Twist, 'cmd_vel', qos)
+    drive_pub = node.create_publisher(Twist, 'cmd_vel', qos)
+    mast_pub = node.create_publisher(ForkControl, 'mast_vel', qos)
 
     status = 0
     target_linear_velocity = 0.0
     target_angular_velocity = 0.0
+    mast_vel = 0.0
 
     try:
         print(msg)
@@ -90,6 +92,15 @@ def main():
                 target_linear_velocity = 0.0
                 target_angular_velocity = 0.0
                 print('정지!!!')
+            elif key == 'u':
+                mast_vel = 0.5
+                print('상승!!!')
+            elif key == 'i':
+                mast_vel = 0.0
+                print('정지!!!')
+            elif key == 'o':
+                mast_vel = -0.5
+                print('하강!!!')
             else:
                 if (key == '\x03'):
                     break
@@ -99,6 +110,7 @@ def main():
                 status = 0
 
             twist = Twist()
+            fork = ForkControl()
 
             twist.linear.x = target_linear_velocity
             twist.linear.y = 0.0
@@ -108,7 +120,10 @@ def main():
             twist.angular.y = 0.0
             twist.angular.z = target_angular_velocity
 
-            pub.publish(twist)
+            drive_pub.publish(twist)
+
+            fork.fork_vel = mast_vel
+            mast_pub.publish(fork)
 
     except Exception as e:
         print(e)
@@ -123,7 +138,10 @@ def main():
         twist.angular.y = 0.0
         twist.angular.z = 0.0
 
-        pub.publish(twist)
+        drive_pub.publish(twist)
+
+        fork.fork_vel = 0.0
+        mast_pub.publish(fork)
 
         if os.name != 'nt':
             termios.tcsetattr(sys.stdin, termios.TCSADRAIN, settings)
