@@ -6,7 +6,6 @@ Panels:
       Expanded:
         - /Global Options1
         - /Status1
-        - /RobotModel1
       Splitter Ratio: 0.5
     Tree Height: 1147
   - Class: rviz_common/Selection
@@ -42,61 +41,6 @@ Visualization Manager:
       Plane Cell Count: 10
       Reference Frame: odom
       Value: true
-    - Alpha: 1
-      Class: rviz_default_plugins/RobotModel
-      Collision Enabled: true
-      Description File: ""
-      Description Source: Topic
-      Description Topic:
-        Depth: 5
-        Durability Policy: Volatile
-        History Policy: Keep Last
-        Reliability Policy: Reliable
-        Value: /robot_description
-      Enabled: true
-      Links:
-        All Links Enabled: true
-        Expand Joint Details: false
-        Expand Link Details: false
-        Expand Tree: false
-        Link Tree Style: Links in Alphabetic Order
-        base_footprint:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-        base_link:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        drive_wheel:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        front_wheel_l:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        front_wheel_r:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        steering_part:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-      Mass Properties:
-        Inertia: false
-        Mass: false
-      Name: RobotModel
-      TF Prefix: ""
-      Update Interval: 0
-      Value: true
-      Visual Enabled: true
     - Angle Tolerance: 0.10000000149011612
       Class: rviz_default_plugins/Odometry
       Covariance:
@@ -151,7 +95,7 @@ Visualization Manager:
       Enabled: true
       Invert Rainbow: false
       Max Color: 255; 255; 255
-      Max Intensity: 0
+      Max Intensity: 1
       Min Color: 0; 0; 0
       Min Intensity: 0
       Name: PointCloud2
@@ -300,7 +244,13 @@ Visualization Manager:
           Value: true
         front_wheel_r_joint:
           Value: true
+        imu_link:
+          Value: true
         odom:
+          Value: true
+        slam_lidar:
+          Value: true
+        steering_joint:
           Value: true
         steering_part:
           Value: true
@@ -310,23 +260,28 @@ Visualization Manager:
       Show Axes: true
       Show Names: true
       Tree:
-        base_footprint:
-          base_link:
-            front_wheel_l:
-              {}
-            front_wheel_l_joint:
-              {}
-            front_wheel_r:
-              {}
-            front_wheel_r_joint:
-              {}
-            steering_part:
-              drive_wheel:
-                {}
-              drive_wheel_joint:
-                {}
         odom:
-          {}
+          base_footprint:
+            base_link:
+              front_wheel_l:
+                {}
+              front_wheel_l_joint:
+                {}
+              front_wheel_r:
+                {}
+              front_wheel_r_joint:
+                {}
+              imu_link:
+                {}
+              slam_lidar:
+                {}
+              steering_joint:
+                {}
+              steering_part:
+                drive_wheel:
+                  {}
+                drive_wheel_joint:
+                  {}
       Update Interval: 0
       Value: true
   Enabled: true

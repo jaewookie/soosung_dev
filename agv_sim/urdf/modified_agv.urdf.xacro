@@ -11,35 +11,37 @@
 
   <link name="base_link">
     <inertial>
-      <origin xyz="0 0 0.89" rpy="0 0 0"/>
-      <mass value="2129.355" />
+      <origin xyz="0 0 0.89" rpy="0 0 0" />
+      <mass value="2522.3" />
       <inertia ixx="990" ixy="0" ixz="0" iyy="990" iyz="0" izz="990" />
     </inertial>
     <visual>
       <origin xyz="0 0 0" rpy="0 0 1.574" />
       <geometry>
-        <mesh filename="package://agv_sim/meshes/BODY.stl" />
+        <mesh filename="package://agv_sim/meshes/BODY_N_MAST.stl" scale="0.001 0.001 0.001" />
       </geometry>
       <material name="orange" />
     </visual>
     <collision>
       <origin xyz="0 0 0" rpy="0 0 1.574" />
       <geometry>
-        <mesh filename="package://agv_sim/meshes/BODY.stl"  />
+        <mesh filename="package://agv_sim/meshes/BODY_N_MAST.stl" scale="0.001 0.001 0.001" />
       </geometry>
     </collision>
   </link>
 
-  <!-- <joint name="mast_joint" type="fixed">
+  <joint name="fork_joint" type="prismatic">
     <parent link="base_link" />
-    <child link="mast" />
-    <origin xyz="0 0.631 1.875" rpy="0 0 0" />
+    <child link="fork_house" />
+    <axis xyz="0 0 1"/>
+    <limit lower="2.05" upper="3.07" effort="1000.0" velocity="0.1"/>
+    <origin xyz="-0.631 0 2.07" rpy="0 0 1.574" />
   </joint>
 
-  <link name="mast">
+  <link name="fork_house">
     <inertial>
-      <mass value="590.628"/>
-      <inertia ixx="1122.228" ixy="-0.195" ixz="1.265" iyy="1071.349" iyz="-243.104" izz="135.921"/>
+      <mass value="203.9"/>
+      <inertia ixx="320.5" ixy="0" ixz="0" iyy="34.5" iyz="0" izz="320.5"/>
     </inertial>
     <visual>
       <origin xyz="0 0 0" rpy="0 0 0" />
@@ -54,33 +56,33 @@
         <mesh filename="package://agv_sim/meshes/MAST.stl" scale = "0.001 0.001 0.001" />
       </geometry>
     </collision>
-  </link> -->
+  </link>
 
   <joint name="steering_joint" type="continuous">
     <parent link="base_link" />
     <child link="steering_part" />
-    <origin xyz="0.216 0 0.344" rpy="0 0 1.574" />
+    <origin xyz="0.216 0 0.334" rpy="0 0 1.574" />
     <!-- 0.212 -0.0476 0.344 -->
-    <axis xyz="0 0 1"/>
+    <axis xyz="0 0 1" />
   </joint>
 
 
   <link name="steering_part">
     <inertial>
-      <mass value="85.056"/>
-      <inertia ixx="2.81" ixy="0.0" ixz="-0.11" iyy="2.77" iyz="0.12" izz="0.9"/>
+      <mass value="85.056" />
+      <inertia ixx="2.81" ixy="0.0" ixz="-0.11" iyy="2.77" iyz="0.12" izz="0.9" />
     </inertial>
     <visual>
       <origin xyz="0 0 0" rpy="0 0 0" />
       <geometry>
-        <mesh filename="package://agv_sim/meshes/STEERING_PART_RE2.stl" scale = "0.001 0.001 0.001"/>
+        <mesh filename="package://agv_sim/meshes/STEERING_PART_RE2.stl" scale="0.001 0.001 0.001" />
       </geometry>
       <material name="white" />
     </visual>
     <collision>
       <origin xyz="0 0 0" rpy="0 0 0" />
       <geometry>
-        <mesh filename="package://agv_sim/meshes/STEERING_PART_RE2.stl" scale = "0.001 0.001 0.001"/>
+        <mesh filename="package://agv_sim/meshes/STEERING_PART_RE2.stl" scale="0.001 0.001 0.001" />
       </geometry>
     </collision>
   </link>
@@ -90,25 +92,25 @@
     <child link="drive_wheel" />
     <!-- <origin xyz="0.063 0.012 -0.285" rpy="0 0 0" /> -->
     <origin xyz="0.01 0.0 -0.285" rpy="0 0 0" />
-    <axis xyz="1 0 0"/>
+    <axis xyz="1 0 0" />
   </joint>
 
   <link name="drive_wheel">
     <inertial>
-      <mass value="21.755"/>
-      <inertia ixx="0.166" ixy="0.0" ixz="0.0" iyy="0.166" iyz="0.0" izz="0.166"/>
+      <mass value="21.755" />
+      <inertia ixx="0.166" ixy="0.0" ixz="0.0" iyy="0.166" iyz="0.0" izz="0.166" />
     </inertial>
     <visual>
       <origin xyz="0 0 0" rpy="0 0 0" />
       <geometry>
-        <mesh filename="package://agv_sim/meshes/DRIVE_WHEEL_RE2.stl"/>
+        <mesh filename="package://agv_sim/meshes/DRIVE_WHEEL_RE2.stl" />
       </geometry>
       <material name="blue" />
     </visual>
     <collision>
       <origin xyz="0 0 0" rpy="0 0 0" />
       <geometry>
-        <mesh filename="package://agv_sim/meshes/DRIVE_WHEEL_RE2.stl"/>
+        <mesh filename="package://agv_sim/meshes/DRIVE_WHEEL_RE2.stl" />
       </geometry>
     </collision>
   </link>
@@ -117,25 +119,25 @@
     <parent link="base_link" />
     <child link="front_wheel_l" />
     <origin xyz="-0.86 -0.451 0.025" rpy="0 0 0" />
-    <axis xyz="0 1 0"/>
+    <axis xyz="0 1 0" />
   </joint>
 
   <link name="front_wheel_l">
     <inertial>
-      <mass value="16.096"/>
-      <inertia ixx="0.066" ixy="0.0" ixz="0.0" iyy="0.066" iyz="0.0" izz="0.066"/>
+      <mass value="16.096" />
+      <inertia ixx="0.066" ixy="0.0" ixz="0.0" iyy="0.066" iyz="0.0" izz="0.066" />
     </inertial>
     <visual>
       <origin xyz="0 0 0" rpy="0 0 0" />
       <geometry>
-        <mesh filename="package://agv_sim/meshes/FRONT_WHEEL_RE2.stl"/>
+        <mesh filename="package://agv_sim/meshes/FRONT_WHEEL_RE2.stl" />
       </geometry>
       <material name="green" />
     </visual>
     <collision>
       <origin xyz="0 0 0" rpy="0 0 0" />
       <geometry>
-        <mesh filename="package://agv_sim/meshes/FRONT_WHEEL_RE2.stl"/>
+        <mesh filename="package://agv_sim/meshes/FRONT_WHEEL_RE2.stl" />
       </geometry>
     </collision>
   </link>
@@ -144,33 +146,33 @@
     <parent link="base_link" />
     <child link="front_wheel_r" />
     <origin xyz="-0.86 0.451 0.025" rpy="0 0 3.14" />
-    <axis xyz="0 1 0"/>
+    <axis xyz="0 1 0" />
   </joint>
 
   <link name="front_wheel_r">
     <inertial>
-      <mass value="16.096"/>
-      <inertia ixx="0.066" ixy="0.0" ixz="0.0" iyy="0.066" iyz="0.0" izz="0.066"/>
+      <mass value="16.096" />
+      <inertia ixx="0.066" ixy="0.0" ixz="0.0" iyy="0.066" iyz="0.0" izz="0.066" />
     </inertial>
     <visual>
       <origin xyz="0 0 0" rpy="0 0 0" />
       <geometry>
-        <mesh filename="package://agv_sim/meshes/FRONT_WHEEL_RE2.stl"/>
+        <mesh filename="package://agv_sim/meshes/FRONT_WHEEL_RE2.stl" />
       </geometry>
       <material name="green" />
     </visual>
     <collision>
       <origin xyz="0 0 0" rpy="0 0 0" />
       <geometry>
-        <mesh filename="package://agv_sim/meshes/FRONT_WHEEL_RE2.stl"/>
+        <mesh filename="package://agv_sim/meshes/FRONT_WHEEL_RE2.stl" />
       </geometry>
     </collision>
   </link>
 
   <joint name="imu_joint" type="fixed">
-    <parent link="base_link"/>
-    <child link="imu_link"/>
-    <origin xyz="-0.341 0.103 0.763" rpy="0 0 0"/>
+    <parent link="base_link" />
+    <child link="imu_link" />
+    <origin xyz="-0.341 0.103 0.763" rpy="0 0 0" />
   </joint>
 
   <link name="imu_link">
@@ -194,13 +196,13 @@
 
   <link name="slam_lidar">
     <inertial>
-      <mass value="0.641"/>
-      <inertia ixx="0.001" ixy="0.0" ixz="0.0" iyy="0.001" iyz="0.0" izz="0.002"/>
+      <mass value="0.641" />
+      <inertia ixx="0.001" ixy="0.0" ixz="0.0" iyy="0.001" iyz="0.0" izz="0.002" />
     </inertial>
     <visual>
       <origin xyz="0 0 0" rpy="0 0 0" />
       <geometry>
-        <mesh filename="package://agv_sim/meshes/C16_3D.stl" scale = "0.001 0.001 0.001"/>
+        <mesh filename="package://agv_sim/meshes/C16_3D.stl" scale="0.001 0.001 0.001" />
       </geometry>
     </visual>
   </link>

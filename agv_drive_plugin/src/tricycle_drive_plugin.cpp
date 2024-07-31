@@ -509,13 +509,13 @@ namespace gazebo_ros
 
     last_theta = theta;
 
-    RCLCPP_INFO(ros_node_->get_logger(), "---------------------------------");
-    RCLCPP_INFO(ros_node_->get_logger(), "x: [%f]", pose_encoder_.x);
-    RCLCPP_INFO(ros_node_->get_logger(), "y: [%f]", pose_encoder_.y);
-    RCLCPP_INFO(ros_node_->get_logger(), "z: [%f]", odom_.pose.pose.position.z);
-    RCLCPP_INFO(ros_node_->get_logger(), "---------------------------------");
-    RCLCPP_INFO(ros_node_->get_logger(), "theta:\t\t[%f]", theta);
-    RCLCPP_INFO(ros_node_->get_logger(), "---------------------------------");
+    // RCLCPP_INFO(ros_node_->get_logger(), "---------------------------------");
+    // RCLCPP_INFO(ros_node_->get_logger(), "x: [%f]", pose_encoder_.x);
+    // RCLCPP_INFO(ros_node_->get_logger(), "y: [%f]", pose_encoder_.y);
+    // RCLCPP_INFO(ros_node_->get_logger(), "z: [%f]", odom_.pose.pose.position.z);
+    // RCLCPP_INFO(ros_node_->get_logger(), "---------------------------------");
+    // RCLCPP_INFO(ros_node_->get_logger(), "theta:\t\t[%f]", theta);
+    // RCLCPP_INFO(ros_node_->get_logger(), "---------------------------------");
   }
 
   // void TricycleDrivePluginPrivate::UpdateOdometryEncoder(

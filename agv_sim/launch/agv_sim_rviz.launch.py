@@ -44,7 +44,7 @@ ARGUMENTS = [
 
 def generate_launch_description():
     test_description = get_package_share_directory('agv_sim')
-    xacro_file = PathJoinSubstitution([test_description, 'urdf', 'agv_description.urdf.xacro'])
+    xacro_file = PathJoinSubstitution([test_description, 'urdf', 'modified_agv_description.urdf.xacro'])
     namespace = LaunchConfiguration('namespace')
     robot_state_publisher = Node(
         package='robot_state_publisher',

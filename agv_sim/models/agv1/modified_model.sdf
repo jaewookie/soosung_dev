@@ -25,15 +25,15 @@
           <iyz>0</iyz>
           <izz>990</izz>
         </inertia>
-        <mass>2129.36</mass>
+        <mass>2522.3</mass>
       </inertial>
 
       <collision name="base_collision">
         <pose>0 0 0.0 0 0 1.574</pose>
         <geometry>
           <mesh>
-            <uri>model://agv_common/meshes/BODY.stl</uri>
-            <!-- <scale>0.001 0.001 0.001</scale> -->
+            <uri>model://agv_common/meshes/BODY_N_MAST.stl</uri>
+            <scale>0.001 0.001 0.001</scale>
           </mesh>
         </geometry>
       </collision>
@@ -42,59 +42,62 @@
         <pose>0 0 0.0 0 0 1.574</pose>
         <geometry>
           <mesh>
-            <uri>model://agv_common/meshes/BODY.stl</uri>
-            <!-- <scale>0.001 0.001 0.001</scale> -->
+            <uri>model://agv_common/meshes/BODY_N_MAST.stl</uri>
+            <scale>0.001 0.001 0.001</scale>
           </mesh>
         </geometry>
       </visual>
     </link>
 
-    <!-- <joint name="mast_joint" type="fixed">
+    <joint name="fork_joint" type="prismatic">
       <parent>base_link</parent>
-      <child>mast</child>
-      <pose>0 0.631 1.875 0 0 0</pose>
+      <child>fork_house</child>
+      <pose>-0.989 0 2.1 0 0 1.574</pose>
+      <axis>
+        <xyz>0 0 1</xyz>
+      </axis>
     </joint>
 
-    <link name="mast">
+    <link name="fork_house">
 
       <inertial>
-        <pose>-0.003 0.914 0.741 0 0 0</pose>
+        <pose>-0.989 0 0.5 0 0 1.574</pose>
         <inertia>
-          <ixx>1122.28</ixx>
-          <ixy>-0.195</ixy>
-          <ixz>1.265</ixz>
-          <iyy>1071.349</iyy>
-          <iyz>-243.104</iyz>
-          <izz>135.921</izz>
+          <ixx>320.5</ixx>
+          <ixy>0</ixy>
+          <ixz>0</ixz>
+          <iyy>34.5</iyy>
+          <iyz>0</iyz>
+          <izz>320.5</izz>
         </inertia>
-        <mass>590.628</mass>
+        <mass>203.9</mass>
       </inertial>
 
-      <collision name="mast_collision">
-        <pose>0 0.631 1.875 0 0 0</pose>
+      <collision name="fork_house_collision">
+        <pose>-0.631 0 2.1 0 0 1.574</pose>
         <geometry>
           <mesh>
-            <uri>model://agv_common/meshes/MAST.stl</uri>
+            <uri>model://agv_common/meshes/FORK_HOUSE.stl</uri>
             <scale>0.001 0.001 0.001</scale>
           </mesh>
         </geometry>
       </collision>
 
-      <visual name="mast_visual">
-        <pose>0 0.631 1.875 0 0 0</pose>
+      <visual name="fork_house_visual">
+        <pose>-0.631 0 2.1 0 0 1.574</pose>
         <geometry>
           <mesh>
-            <uri>model://agv_common/meshes/MAST.stl</uri>
+            <uri>model://agv_common/meshes/FORK_HOUSE.stl</uri>
             <scale>0.001 0.001 0.001</scale>
           </mesh>
         </geometry>
       </visual>
-    </link> -->
+    </link>
 
     <joint name="steering_joint" type="revolute">
       <parent>base_link</parent>
       <child>steering_part</child>
-      <pose>0.216 0 0.375 0 0 1.574</pose>
+      <pose>0.216 0 0.365 0 0 1.574</pose>
       <axis>
         <xyz>0 0 1</xyz>
       </axis>
@@ -103,7 +106,7 @@
     <link name="steering_part">
 
       <inertial>
-        <pose>0.216 0 0.075 0 0 1.574</pose>
+        <pose>0.216 0 0.065 0 0 1.574</pose>
         <inertia>
           <ixx>3.2</ixx>
           <ixy>0</ixy>
@@ -116,7 +119,7 @@
       </inertial>
 
       <collision name="steering_part_collision">
-        <pose>0.216 0 0.378 0 0 1.574</pose>
+        <pose>0.216 0 0.368 0 0 1.574</pose>
         <geometry>
           <cylinder>
             <radius>0.175</radius>
@@ -147,7 +150,7 @@
       </collision>
 
       <visual name="steering_part_visual">
-        <pose>0.216 0 0.375 0 0 1.574</pose>
+        <pose>0.216 0 0.365 0 0 1.574</pose>
         <!-- 0.212 -0.0656 0.375 -->
         <geometry>
           <mesh>
@@ -161,7 +164,7 @@
     <joint name="drive_wheel_joint" type="revolute">
       <parent>steering_part</parent>
       <child>drive_wheel</child>
-      <pose>0.217 0.0 0.09 0 0 1.574</pose>
+      <pose>0.217 0.0 0.08 0 0 1.574</pose>
       <axis>
         <xyz>1 0 0</xyz>
       </axis>
@@ -170,7 +173,7 @@
     <link name="drive_wheel">
 
       <inertial>
-        <pose>0.217 0.0 0.09 0 0 1.574</pose>
+        <pose>0.217 0.0 0.08 0 0 1.574</pose>
         <inertia>
           <ixx>0.166</ixx>
           <ixy>0.0</ixy>
@@ -183,7 +186,7 @@
       </inertial>
 
       <collision name="drive_wheel_collision">
-        <pose>0.217 0.0 0.09 0 1.571 1.574</pose>
+        <pose>0.217 0.0 0.08 0 1.571 1.574</pose>
         <geometry>
           <cylinder>
             <radius>0.155</radius>
@@ -204,7 +207,7 @@
             <ode>
               <soft_cfm>0</soft_cfm>
               <soft_erp>0.2</soft_erp>
-              <kp>8e+6</kp>
+              <kp>9e+6</kp>
               <kd>1</kd>
               <max_vel>1.5</max_vel>
               <min_depth>0.0005</min_depth>
@@ -214,7 +217,7 @@
       </collision>
 
       <visual name="drive_wheel_visual">
-        <pose>0.217 0.0 0.09 0 0 1.574</pose>
+        <pose>0.217 0.0 0.08 0 0 1.574</pose>
         <geometry>
           <mesh>
             <uri>model://agv_common/meshes/DRIVE_WHEEL_RE2.stl</uri>
@@ -262,7 +265,7 @@
             <ode>
               <soft_cfm>0</soft_cfm>
               <soft_erp>0.2</soft_erp>
-              <kp>9e+5</kp>
+              <kp>3e+6</kp>
               <kd>1</kd>
               <max_vel>1.5</max_vel>
               <min_depth>0.001</min_depth>
@@ -316,7 +319,7 @@
             <ode>
               <soft_cfm>0</soft_cfm>
               <soft_erp>0.2</soft_erp>
-              <kp>9e+5</kp>
+              <kp>3e+6</kp>
               <kd>1</kd>
               <max_vel>1.5</max_vel>
               <min_depth>0.001</min_depth>
@@ -739,6 +742,12 @@
       <max_wheel_acceleration>6.25</max_wheel_acceleration>
       <max_wheel_deceleration>6.25</max_wheel_deceleration>
       <max_wheel_speed_tolerance>0.005</max_wheel_speed_tolerance>
+    </plugin>
+
+    <plugin name="fork_drive" filename="libfork_control_plugin.so">
+      <max_mast_acceleration>6.25</max_mast_acceleration>
+      <max_mast_deceleration>6.25</max_mast_deceleration>
+      <max_mast_speed_tolerance>0.005</max_mast_speed_tolerance>
     </plugin>
 
     <!-- <plugin name="agv_drive" filename="libgazebo_ros_tricycle_drive.so">
