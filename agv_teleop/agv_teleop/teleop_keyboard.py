@@ -2,6 +2,7 @@ import os
 import select
 import sys
 import rclpy
+import math
 
 from geometry_msgs.msg import Twist
 from agv_msgs.msg import ForkControl
@@ -13,8 +14,11 @@ else:
     import termios
     import tty
 
-LIN_VEL = 0.3
-ANG_VEL = 0.7854
+MAX_LIN = 1.1
+MAX_ANG = 0.7854
+
+LIN_VEL = 0.05
+ANG_VEL = 0.0524
 FORK_VEL = 0.25
 
 msg = """
@@ -50,6 +54,25 @@ def get_key(settings):
     termios.tcsetattr(sys.stdin, termios.TCSADRAIN, settings)
     return key
 
+def print_vels(target_linear_velocity, target_angular_velocity):
+    print('currently: linear velocity {0}[m/s]\t steering angle {1}[degree] '.format(
+        round(target_linear_velocity, 2),
+        round(target_angular_velocity)))
+
+def print_mast(mast_vel):
+    print('currently:\tmast linear velocity {0} '.format(
+        mast_vel))
+
+def constrain(input_vel, low_bound, high_bound):
+    if input_vel < low_bound:
+        input_vel = low_bound
+    elif input_vel > high_bound:
+        input_vel = high_bound
+    else:
+        input_vel = input_vel
+
+    return input_vel
+
 def main():
     settings = None
     if os.name != 'nt':
@@ -72,36 +95,36 @@ def main():
         while(1):
             key = get_key(settings)
             if key == 'w':
-                target_linear_velocity = LIN_VEL
+                target_linear_velocity = constrain(target_linear_velocity+LIN_VEL, -MAX_LIN, MAX_LIN)
                 target_angular_velocity = 0.0
                 status = status + 1
-                print('전진!!!')
+                print_vels(target_linear_velocity, target_angular_velocity*180/math.pi)
             elif key == 'x':
-                target_linear_velocity = -LIN_VEL
+                target_linear_velocity = constrain(target_linear_velocity-LIN_VEL, -MAX_LIN, MAX_LIN)
                 target_angular_velocity = 0.0
                 status = status + 1
-                print('후진!!!')
+                print_vels(target_linear_velocity, target_angular_velocity*180/math.pi)
             elif key == 'a':
-                target_angular_velocity = ANG_VEL
+                target_angular_velocity = constrain(target_angular_velocity+ANG_VEL, -MAX_ANG, MAX_ANG)
                 status = status + 1
-                print('좌회전!!!')
+                print_vels(target_linear_velocity, target_angular_velocity*180/math.pi)
             elif key == 'd':
-                target_angular_velocity = -ANG_VEL
+                target_angular_velocity = constrain(target_angular_velocity-ANG_VEL, -MAX_ANG, MAX_ANG)
                 status = status + 1
-                print('우회전!!!')
+                print_vels(target_linear_velocity, target_angular_velocity*180/math.pi)
             elif key == ' ' or key == 's':
                 target_linear_velocity = 0.0
                 target_angular_velocity = 0.0
-                print('정지!!!')
+                print_vels(target_linear_velocity, target_angular_velocity*180/math.pi)
             elif key == 'u':
                 mast_vel = FORK_VEL
-                print('상승!!!')
+                print_mast(mast_vel)
             elif key == 'i':
                 mast_vel = 0.0
-                print('정지!!!')
+                print_mast(mast_vel)
             elif key == 'o':
                 mast_vel = -FORK_VEL
-                print('하강!!!')
+                print_mast(mast_vel)
             else:
                 if (key == '\x03'):
                     break
