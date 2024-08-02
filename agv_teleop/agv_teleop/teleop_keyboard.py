@@ -15,6 +15,7 @@ else:
 
 LIN_VEL = 0.3
 ANG_VEL = 0.7854
+FORK_VEL = 0.25
 
 msg = """
 -------------------------------------
@@ -93,13 +94,13 @@ def main():
                 target_angular_velocity = 0.0
                 print('정지!!!')
             elif key == 'u':
-                mast_vel = 0.5
+                mast_vel = FORK_VEL
                 print('상승!!!')
             elif key == 'i':
                 mast_vel = 0.0
                 print('정지!!!')
             elif key == 'o':
-                mast_vel = -0.5
+                mast_vel = -FORK_VEL
                 print('하강!!!')
             else:
                 if (key == '\x03'):

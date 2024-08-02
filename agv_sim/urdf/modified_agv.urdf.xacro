@@ -34,26 +34,27 @@
     <parent link="base_link" />
     <child link="fork_house" />
     <axis xyz="0 0 1"/>
-    <limit lower="2.05" upper="3.07" effort="1000.0" velocity="0.1"/>
-    <origin xyz="-0.631 0 2.07" rpy="0 0 1.574" />
+    <limit lower="-0.05" upper="1.5" effort="1000.0" velocity="0.1"/>
+    <origin xyz="-0.989 0 0.1" rpy="0 0 1.574" />
   </joint>
 
   <link name="fork_house">
     <inertial>
-      <mass value="203.9"/>
-      <inertia ixx="320.5" ixy="0" ixz="0" iyy="34.5" iyz="0" izz="320.5"/>
+      <mass value="0.1"/>
+      <inertia ixx="0.0" ixy="0.0" ixz="0.0" iyy="0.0" iyz="0.0" izz="0.0"/>
+      <!-- <inertia ixx="320.5" ixy="0" ixz="0" iyy="34.5" iyz="0" izz="320.5"/> -->
     </inertial>
     <visual>
       <origin xyz="0 0 0" rpy="0 0 0" />
       <geometry>
-        <mesh filename="package://agv_sim/meshes/MAST.stl" scale = "0.001 0.001 0.001" />
+        <mesh filename="package://agv_sim/meshes/FORK_HOUSE_RE.stl" scale = "0.001 0.001 0.001" />
       </geometry>
       <material name="dark_grey" />
     </visual>
     <collision>
       <origin xyz="0 0 0" rpy="0 0 0" />
       <geometry>
-        <mesh filename="package://agv_sim/meshes/MAST.stl" scale = "0.001 0.001 0.001" />
+        <mesh filename="package://agv_sim/meshes/FORK_HOUSE_RE.stl" scale = "0.001 0.001 0.001" />
       </geometry>
     </collision>
   </link>

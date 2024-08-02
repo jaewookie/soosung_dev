@@ -27,12 +27,11 @@ namespace gazebo_ros
   class ForkControlPluginPrivate
   {
   public:
-
     void OnUpdate(const gazebo::common::UpdateInfo &_info);
     void OnMastCon(const agv_msgs::msg::ForkControl::ConstSharedPtr msg);
     void PublishMastsTf(const gazebo::common::Time &_current_time);
     void PublishmastJointState(const gazebo::common::Time &_current_time);
-    void MotorController(double target_speed, double dt); // ok
+    void MotorVelController(double target_speed, double dt); // ok
 
     gazebo_ros::Node::SharedPtr ros_node_;
     rclcpp::Subscription<agv_msgs::msg::ForkControl>::SharedPtr mast_vel_sub_;
@@ -43,8 +42,9 @@ namespace gazebo_ros
     double max_mast_decel_;
     double max_mast_speed_tol_;
     double max_mast_torque_;
+    double max_mast_speed_;
 
-    double mast_vel;
+    double mast_vel = 0.0;
     sensor_msgs::msg::JointState joint_state_;
     std::vector<gazebo::physics::JointPtr> joints_;
 
@@ -63,6 +63,7 @@ namespace gazebo_ros
     bool publish_mast_tf_;
     bool publish_mast_joint_state_;
     bool publish_odom_;
+    bool motor_pose_con_;
   };
 
   ForkControlPlugin::ForkControlPlugin()
@@ -86,9 +87,7 @@ namespace gazebo_ros
 
     const gazebo_ros::QoS &qos = impl_->ros_node_->get_qos();
 
-
     impl_->robot_base_frame_ = "base_footprint";
-
 
     impl_->publish_mast_tf_ = true;
 
@@ -100,13 +99,15 @@ namespace gazebo_ros
                                      "max_mast_deceleration", impl_->max_mast_accel_)
                                  .first;
     impl_->max_mast_speed_tol_ = _sdf->Get<double>("max_mast_speed_tolerance", 0.01).first;
+    impl_->max_mast_speed_ = _sdf->Get<double>("max_mast_speed", 0).first;
+    impl_->motor_pose_con_ = _sdf->Get<bool>("motor_pose_con", false).first;
 
-    impl_->joints_.resize(1); // 조향 추가시 4로 변경
+    impl_->joints_.resize(1);
 
     // OBTAIN -> JOINTS:
     impl_->joints_[0] = _model->GetJoint("fork_joint");
 
-    impl_->max_mast_torque_ = 104;
+    impl_->max_mast_torque_ = 300;
     impl_->joints_[0]->SetParam("fmax", 0, impl_->max_mast_torque_);
 
     auto publish_rate = 100;
@@ -235,50 +236,156 @@ namespace gazebo_ros
     std::unique_lock<std::mutex> lock(lock_);
     double target_mast_speed = mast_vel;
     lock.unlock();
-
 #ifdef IGN_PROFILER_ENABLE
-    IGN_PROFILE_BEGIN("MotorController");
+    IGN_PROFILE_BEGIN("MotorVelController");
 #endif
-    MotorController(
-        target_mast_speed, seconds_since_last_update);
+    MotorVelController(target_mast_speed, seconds_since_last_update);
 #ifdef IGN_PROFILER_ENABLE
     IGN_PROFILE_END();
 #endif
     last_actuator_update_ = _info.simTime;
   }
 
-  void ForkControlPluginPrivate::MotorController(
+  void ForkControlPluginPrivate::MotorVelController(
       double target_speed, double dt)
   {
+    // 중력 보정
+    double gravity_torque = joints_[0]->GetChild()->GetInertial()->Mass() * 9.81;
+
+    joints_[0]->SetForce(0, gravity_torque);
+
+    // 위치 변환 계산
+    static double current_pose = joints_[0]->Position(0);
+
     double applied_speed = target_speed;
+    double applied_pose = current_pose;
 
-    double current_speed = joints_[0]->GetVelocity(0);
+    applied_pose += (applied_speed * dt);
 
-    if (max_mast_accel_ > 0 || max_mast_decel_ > 0)
+    if (applied_pose > 1.5)
     {
-      double diff_speed = current_speed - target_speed;
-      if (fabs(diff_speed) < max_mast_speed_tol_)
-      {
-        applied_speed = current_speed;
-      }
-      else if (-diff_speed > max_mast_accel_ * dt)
-      {
-        applied_speed = current_speed + max_mast_accel_ * dt;
-      }
-      else if (diff_speed > max_mast_decel_ * dt)
-      {
-        applied_speed = current_speed - max_mast_decel_ * dt;
-      }
+      applied_pose = 1.5;
+    }
+    else if (applied_pose < -0.05)
+    {
+      applied_pose = -0.05;
+    }
+    else if (applied_speed == 0)
+    {
+      applied_pose = current_pose;
     }
 
+    double pose_checker1 = joints_[0]->Position(0);
+
+    // 변환 위치 및 속도 적용
+    joints_[0]->SetPosition(0, applied_pose, true);
     joints_[0]->SetParam("vel", 0, applied_speed);
+
+    current_pose = applied_pose;
+
+    double pose_checker2 = joints_[0]->Position(0);
+
+    // std::string frame = joints_[0]->GetName();
+    // std::string parent_frame = joints_[0]->GetParent()->GetName();
+
+    // ignition::math::Pose3d pose = joints_[0]->GetChild()->RelativePose();
+
+    // geometry_msgs::msg::TransformStamped msg;
+    // msg.header.stamp = gazebo_ros::Convert<builtin_interfaces::msg::Time>(joints_[0]->GetWorld()->SimTime());
+    // msg.header.frame_id = parent_frame;
+    // msg.child_frame_id = frame;
+    // msg.transform.translation = gazebo_ros::Convert<geometry_msgs::msg::Vector3>(pose.Pos());
+    // msg.transform.translation.z = current_pose;
+    // msg.transform.rotation = gazebo_ros::Convert<geometry_msgs::msg::Quaternion>(pose.Rot());
+    // tf_broadcaster_->sendTransform(msg);
+
+    // joint_state_.header.stamp = gazebo_ros::Convert<builtin_interfaces::msg::Time>(joints_[0]->GetWorld()->SimTime());
+
+    // joint_state_.position[0] = current_pose;
+    // joint_state_.velocity[0] = applied_speed;
+    // joint_state_.effort[0] = gravity_torque;
+
+    // joint_state_pub_->publish(joint_state_);
   }
+
+  // void ForkControlPluginPrivate::MotorVelController(
+  //     double target_speed, double dt)
+  // {
+  //   // double current_speed = joints_[0]->GetVelocity(0);
+  //   // double current_pose = joints_[0]->Position(0);
+  //   double gravity_torque = joints_[0]->GetChild()->GetInertial()->Mass() * 9.81 * 1.01;
+
+  //   // double applied_speed = target_speed;
+  //   // double applied_pose = current_pose;
+
+  //   // double diff_speed = target_speed - current_speed;
+  //   // if (fabs(diff_speed) > max_mast_speed_tol_)
+  //   // {
+  //   //   applied_speed = current_speed + ((diff_speed > 0 ? max_mast_accel_ : -max_mast_decel_) * dt);
+  //   // }
+
+  //   // applied_pose += applied_speed * dt;
+
+  //   joints_[0]->SetForce(0, gravity_torque);
+  //   // joints_[0]->SetPosition(0, applied_pose, true);
+
+  //   // double current_speed = joints_[0]->GetVelocity(0);
+  //   double current_pose = joints_[0]->Position(0);
+
+  //   double applied_speed = target_speed;
+  //   double applied_pose = current_pose;
+
+  //   applied_pose += (applied_speed * dt);
+
+  //   // RCLCPP_INFO(ros_node_->get_logger(), "speed1 : \t[%f]", applied_pose);
+  //   // double diff_speed = current_speed - target_speed;
+  //   // if (fabs(diff_speed) < max_mast_speed_tol_)
+  //   // {
+  //   //   applied_speed = target_speed;
+  //   // }
+  //   // else if (-diff_speed > max_mast_accel_ * dt)
+  //   // {
+  //   //   applied_speed = current_speed + max_mast_accel_ * dt;
+  //   // }
+  //   // else if (diff_speed > max_mast_decel_ * dt)
+  //   // {
+  //   //   applied_speed = current_speed - max_mast_decel_ * dt;
+  //   //   RCLCPP_INFO(ros_node_->get_logger(), "aaaaaaaaaaa");
+  //   // }c
+  //   if (applied_pose > 1.5)
+  //   {
+  //     applied_pose = 1.5;
+  //   }
+  //   else if (applied_pose < -0.05)
+  //   {
+  //     applied_pose = -0.05;
+  //   }
+  //   else if (applied_speed == 0)
+  //   {
+  //     applied_pose = current_pose;
+  //   }
+  //   // RCLCPP_INFO(ros_node_->get_logger(), "speed2 : \t[%f]", applied_pose);
+  //   // RCLCPP_INFO(ros_node_->get_logger(), "speed2 : \t[%f]", applied_pose);
+
+  //   double pose_checker1 = joints_[0]->Position(0);
+
+  //   joints_[0]->SetPosition(0, applied_pose, true);
+  //   // joints_[0]->SetParam("vel", 0, applied_speed);
+
+  //   current_pose = applied_pose;
+
+  //   double pose_checker2 = joints_[0]->Position(0);
+
+  //   // RCLCPP_INFO(ros_node_->get_logger(), "speed3 : \t[%f]", applied_pose);
+  //   RCLCPP_INFO(ros_node_->get_logger(), "pose2 : \t[%f]", pose_checker1);
+  //   RCLCPP_INFO(ros_node_->get_logger(), "pose3 : \t[%f]", pose_checker2);
+  //   RCLCPP_INFO(ros_node_->get_logger(), "-----------------------------");
+  // }
 
   void ForkControlPluginPrivate::OnMastCon(const agv_msgs::msg::ForkControl::ConstSharedPtr agv_msg)
   {
     std::lock_guard<std::mutex> scoped_lock(lock_);
     mast_vel = agv_msg->fork_vel;
-    RCLCPP_INFO(ros_node_->get_logger(), "get data : [%f]", mast_vel);
   }
 
   GZ_REGISTER_MODEL_PLUGIN(ForkControlPlugin)
