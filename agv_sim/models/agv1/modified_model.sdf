@@ -61,8 +61,8 @@
       <axis>
         <xyz>0 0 1</xyz>
         <limit>
-          <lower>-0.05</lower>
-          <upper>1.5</upper>
+          <lower>-0.15</lower>
+          <upper>1.1</upper>
           <effort>1000.0</effort>
           <velocity>0.1</velocity>
         </limit>
@@ -520,7 +520,7 @@
             </vertical>
           </scan>
           <range>
-            <min>0.8</min>
+            <min>1.5</min>
             <max>200</max>
             <resolution>0.03</resolution>
           </range>

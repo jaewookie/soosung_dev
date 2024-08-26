@@ -55,6 +55,10 @@ Visualization Manager:
           Value: true
         drive_wheel_joint:
           Value: true
+        fork_house:
+          Value: true
+        fork_joint:
+          Value: true
         front_wheel_l:
           Value: true
         front_wheel_l_joint:
@@ -63,19 +67,15 @@ Visualization Manager:
           Value: true
         front_wheel_r_joint:
           Value: true
-        imu:
+        imu_link:
           Value: true
         map:
           Value: true
         odom:
           Value: true
-        safety_lidar_l:
-          Value: true
-        safety_lidar_m:
-          Value: true
-        safety_lidar_r:
-          Value: true
         slam_lidar:
+          Value: true
+        steering_joint:
           Value: true
         steering_part:
           Value: true
@@ -89,6 +89,10 @@ Visualization Manager:
           odom:
             base_footprint:
               base_link:
+                fork_house:
+                  {}
+                fork_joint:
+                  {}
                 front_wheel_l:
                   {}
                 front_wheel_l_joint:
@@ -97,15 +101,11 @@ Visualization Manager:
                   {}
                 front_wheel_r_joint:
                   {}
-                imu:
-                  {}
-                safety_lidar_l:
-                  {}
-                safety_lidar_m:
-                  {}
-                safety_lidar_r:
+                imu_link:
                   {}
                 slam_lidar:
+                  {}
+                steering_joint:
                   {}
                 steering_part:
                   drive_wheel:
@@ -282,85 +282,6 @@ Visualization Manager:
           Value: false
       Enabled: true
       Name: Cartographer
-    - Alpha: 1
-      Class: rviz_default_plugins/RobotModel
-      Collision Enabled: false
-      Description File: ""
-      Description Source: Topic
-      Description Topic:
-        Depth: 5
-        Durability Policy: Volatile
-        History Policy: Keep Last
-        Reliability Policy: Reliable
-        Value: /robot_description
-      Enabled: true
-      Links:
-        All Links Enabled: true
-        Expand Joint Details: false
-        Expand Link Details: false
-        Expand Tree: false
-        Link Tree Style: Links in Alphabetic Order
-        base_footprint:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-        base_link:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        drive_wheel:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        front_wheel_l:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        front_wheel_r:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        imu:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-        safety_lidar_l:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        safety_lidar_m:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        safety_lidar_r:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        slam_lidar:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        steering_part:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-      Mass Properties:
-        Inertia: false
-        Mass: false
-      Name: RobotModel
-      TF Prefix: ""
-      Update Interval: 0
-      Value: true
-      Visual Enabled: true
   Enabled: true
   Global Options:
     Background Color: 48; 48; 48
@@ -439,5 +360,5 @@ Window Geometry:
   Views:
     collapsed: false
   Width: 1441
-  X: 798
-  Y: 142
+  X: 2794
+  Y: 153

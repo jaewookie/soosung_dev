@@ -34,7 +34,7 @@
     <parent link="base_link" />
     <child link="fork_house" />
     <axis xyz="0 0 1"/>
-    <limit lower="-0.05" upper="1.5" effort="1000.0" velocity="0.1"/>
+    <limit lower="-0.11" upper="1.5" effort="1000.0" velocity="0.1"/>
     <origin xyz="-0.989 0 0.1" rpy="0 0 1.574" />
   </joint>
 

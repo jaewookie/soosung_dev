@@ -96,12 +96,10 @@ def main():
             key = get_key(settings)
             if key == 'w':
                 target_linear_velocity = constrain(target_linear_velocity+LIN_VEL, -MAX_LIN, MAX_LIN)
-                target_angular_velocity = 0.0
                 status = status + 1
                 print_vels(target_linear_velocity, target_angular_velocity*180/math.pi)
             elif key == 'x':
                 target_linear_velocity = constrain(target_linear_velocity-LIN_VEL, -MAX_LIN, MAX_LIN)
-                target_angular_velocity = 0.0
                 status = status + 1
                 print_vels(target_linear_velocity, target_angular_velocity*180/math.pi)
             elif key == 'a':

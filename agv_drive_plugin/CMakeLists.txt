@@ -19,6 +19,8 @@ find_package(nav_msgs REQUIRED)
 find_package(sensor_msgs REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(agv_msgs REQUIRED)
+# find_package(nav2_amcl REQUIRED)
+find_package(pluginlib REQUIRED)
 
 include_directories(
     include
@@ -102,6 +104,25 @@ target_link_libraries(fork_control_plugin
   ${tf2_ros_LIBRARIES}
 )
 
+# add_library(tricycle_motion_model SHARED
+#   src/tricycle_motion_model.cpp
+# )
+
+# target_include_directories(tricycle_motion_model
+#   PUBLIC
+#   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+#   $<INSTALL_INTERFACE:include>)
+
+# ament_target_dependencies(tricycle_motion_model
+#   "rclcpp"
+#   "nav2_amcl"
+#   "pluginlib"
+#   "tf2"
+#   "tf2_ros"
+# )
+
+# pluginlib_export_plugin_description_file(nav2_amcl tricycle_motion_model.xml)
+
 ament_environment_hooks("${CMAKE_CURRENT_SOURCE_DIR}/env-hooks/gazebo_plugins.sh.in")
 
 install(TARGETS
@@ -109,6 +130,8 @@ install(TARGETS
   agv_drive_plugin
   lslidar_plugin
   fork_control_plugin
+  # tricycle_motion_model
+  EXPORT export_tricycle_motion_model
   ARCHIVE DESTINATION lib
   LIBRARY DESTINATION lib
   RUNTIME DESTINATION bin

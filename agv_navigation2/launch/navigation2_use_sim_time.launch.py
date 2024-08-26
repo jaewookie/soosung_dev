@@ -46,7 +46,7 @@ def generate_launch_description():
             [
                 FindPackageShare('agv_navigation2'),
                 'map',
-                'map.yaml'
+                'test_map.yaml'
             ]
         )
     )

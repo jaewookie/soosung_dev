@@ -36,7 +36,7 @@ namespace gazebo_ros
     // ROS node for communication, managed by gazebo_ros.
     gazebo_ros::Node::SharedPtr ros_node_;
     sensor_msgs::msg::JointState joint_state_;
-    nav_msgs::msg::Odometry odom_;
+    // nav_msgs::msg::Odometry odom_;
 
     // The joint that controls the movement of the belt:
     std::vector<gazebo::physics::JointPtr> joints_;
@@ -46,7 +46,7 @@ namespace gazebo_ros
     gazebo::physics::JointPtr front_wheel_l_joint_;
     gazebo::physics::JointPtr front_wheel_r_joint_;
 
-    std::string odometry_frame_;
+    // std::string odometry_frame_;
     std::string robot_base_frame_;
 
     // Additional parametres:
@@ -65,7 +65,7 @@ namespace gazebo_ros
     // PUBLISH ConveyorBelt status:
     void PublishStatus(); // Method to publish status.
     rclcpp::Publisher<sensor_msgs::msg::JointState>::SharedPtr joint_state_pub_;
-    rclcpp::Publisher<nav_msgs::msg::Odometry>::SharedPtr odom_pub_;
+    // rclcpp::Publisher<nav_msgs::msg::Odometry>::SharedPtr odom_pub_;
     rclcpp::Subscription<geometry_msgs::msg::Twist>::SharedPtr cmd_vel_sub_;
     std::shared_ptr<tf2_ros::TransformBroadcaster> tf_broadcaster_;
 
@@ -122,12 +122,11 @@ namespace gazebo_ros
     impl_->joint_state_pub_ = impl_->ros_node_->create_publisher<sensor_msgs::msg::JointState>(
         "joint_states", qos.get_publisher_qos("joint_states", rclcpp::QoS(1000)));
 
-    impl_->odom_pub_ = impl_->ros_node_->create_publisher<nav_msgs::msg::Odometry>(
-        "odom", qos.get_publisher_qos("odom", rclcpp::QoS(1)));
+    // impl_->odom_pub_ = impl_->ros_node_->create_publisher<nav_msgs::msg::Odometry>(
+    //     "odom", qos.get_publisher_qos("odom", rclcpp::QoS(1)));
 
     impl_->tf_broadcaster_ = std::make_shared<tf2_ros::TransformBroadcaster>(
         impl_->ros_node_);
-
 
     // Initialize joint state message
     impl_->joint_state_.name.resize(impl_->joints_.size());
@@ -139,15 +138,15 @@ namespace gazebo_ros
       impl_->joint_state_.name[i] = impl_->joints_[i]->GetName();
     }
 
-    // Initialize odom message
-    impl_->odom_.header.frame_id = impl_->odometry_frame_;
-    impl_->odom_.child_frame_id = impl_->robot_base_frame_;
-    impl_->odom_.pose.covariance[0] = 0.00001;
-    impl_->odom_.pose.covariance[7] = 0.00001;
-    impl_->odom_.pose.covariance[14] = 1000000000000.0;
-    impl_->odom_.pose.covariance[21] = 1000000000000.0;
-    impl_->odom_.pose.covariance[28] = 1000000000000.0;
-    impl_->odom_.pose.covariance[35] = 0.001;
+    // // Initialize odom message
+    // impl_->odom_.header.frame_id = impl_->odometry_frame_;
+    // impl_->odom_.child_frame_id = impl_->robot_base_frame_;
+    // impl_->odom_.pose.covariance[0] = 0.00001;
+    // impl_->odom_.pose.covariance[7] = 0.00001;
+    // impl_->odom_.pose.covariance[14] = 1000000000000.0;
+    // impl_->odom_.pose.covariance[21] = 1000000000000.0;
+    // impl_->odom_.pose.covariance[28] = 1000000000000.0;
+    // impl_->odom_.pose.covariance[35] = 0.001;
 
     // Create a connection so the OnUpdate function is called at every simulation iteration.
 
@@ -161,6 +160,12 @@ namespace gazebo_ros
   {
     lin_vel_ = msg->linear.x;
     ang_vel_ = msg->angular.z;
+    RCLCPP_INFO(ros_node_->get_logger(), "b");
+    if (ang_vel_ != 0 && (fabs(lin_vel_) < 0.001))
+    {
+      RCLCPP_INFO(ros_node_->get_logger(), "a");
+      lin_vel_ = 0.2;
+    }
   }
 
   void AgvDrivePluginPrivate::OnUpdate()
@@ -169,6 +174,7 @@ namespace gazebo_ros
     double dt = (current_time.seconds() - last_time_.seconds());
     last_time_ = current_time;
 
+    RCLCPP_INFO(ros_node_->get_logger(), "[%f]", lin_vel_);
     // Calculate the wheel velocity and steering angle
     double drvie_wheel_velocity = lin_vel_ / drive_wheel_radius_;
     double front_wheel_velocity = lin_vel_ / front_wheel_radius_;
@@ -203,43 +209,43 @@ namespace gazebo_ros
     }
     joint_state_pub_->publish(joint_state_);
 
-    // Publish odometry
-    // double delta_x = lin_vel_ * cos(yaw_) * dt;
-    // double delta_y = lin_vel_ * sin(yaw_) * dt;
+    // // Publish odometry
+    // // double delta_x = lin_vel_ * cos(yaw_) * dt;
+    // // double delta_y = lin_vel_ * sin(yaw_) * dt;
+    // // double delta_yaw = ang_vel_ * dt;
+
+    // double delta_x = 0;
+    // double delta_y = lin_vel_ * dt;
     // double delta_yaw = ang_vel_ * dt;
 
-    double delta_x = 0;
-    double delta_y = lin_vel_ * dt;
-    double delta_yaw = ang_vel_ * dt;
+    // // x_ += delta_x;
+    // y_ += delta_y;
+    // yaw_ += delta_yaw;
 
-    // x_ += delta_x;
-    y_ += delta_y;
-    yaw_ += delta_yaw;
+    // nav_msgs::msg::Odometry odom_msg;
+    // odom_msg.header.stamp = ros_node_->get_clock()->now();
+    // odom_msg.header.frame_id = "odom";
+    // odom_msg.child_frame_id = "base_footprint";
+    // odom_msg.pose.pose.position.x = 0.0;
+    // odom_msg.pose.pose.position.y = y_;
+    // odom_msg.pose.pose.position.z = 0.0;
+    // tf2::Quaternion q;
+    // q.setRPY(0, 0, yaw_);
+    // tf2::convert(q, odom_.pose.pose.orientation);
+    // odom_msg.twist.twist.linear.x = lin_vel_;
+    // odom_msg.twist.twist.angular.z = ang_vel_;
+    // odom_pub_->publish(odom_msg);
 
-    nav_msgs::msg::Odometry odom_msg;
-    odom_msg.header.stamp = ros_node_->get_clock()->now();
-    odom_msg.header.frame_id = "odom";
-    odom_msg.child_frame_id = "base_footprint";
-    odom_msg.pose.pose.position.x = 0.0;
-    odom_msg.pose.pose.position.y = y_;
-    odom_msg.pose.pose.position.z = 0.0;
-    tf2::Quaternion q;
-    q.setRPY(0, 0, yaw_);
-    tf2::convert(q, odom_.pose.pose.orientation);
-    odom_msg.twist.twist.linear.x = lin_vel_;
-    odom_msg.twist.twist.angular.z = ang_vel_;
-    odom_pub_->publish(odom_msg);
-
-    // Publish transform
-    geometry_msgs::msg::TransformStamped odom_tf;
-    odom_tf.header.stamp = ros_node_->get_clock()->now();
-    odom_tf.header.frame_id = "odom";
-    odom_tf.child_frame_id = "base_footprint";
-    odom_tf.transform.translation.x = 0.0;
-    odom_tf.transform.translation.y = y_;
-    odom_tf.transform.translation.z = 0.0;
-    tf2::convert(q, odom_.pose.pose.orientation);
-    tf_broadcaster_->sendTransform(odom_tf);
+    // // Publish transform
+    // geometry_msgs::msg::TransformStamped odom_tf;
+    // odom_tf.header.stamp = ros_node_->get_clock()->now();
+    // odom_tf.header.frame_id = "odom";
+    // odom_tf.child_frame_id = "base_footprint";
+    // odom_tf.transform.translation.x = 0.0;
+    // odom_tf.transform.translation.y = y_;
+    // odom_tf.transform.translation.z = 0.0;
+    // tf2::convert(q, odom_.pose.pose.orientation);
+    // tf_broadcaster_->sendTransform(odom_tf);
 
     for (auto &joint : joints_)
     {

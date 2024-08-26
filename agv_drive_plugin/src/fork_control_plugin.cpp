@@ -266,16 +266,14 @@ namespace gazebo_ros
     {
       applied_pose = 1.5;
     }
-    else if (applied_pose < -0.05)
+    else if (applied_pose < -0.11)
     {
-      applied_pose = -0.05;
+      applied_pose = -0.11;
     }
     else if (applied_speed == 0)
     {
       applied_pose = current_pose;
     }
-
-    double pose_checker1 = joints_[0]->Position(0);
 
     // 변환 위치 및 속도 적용
     joints_[0]->SetPosition(0, applied_pose, true);
@@ -283,7 +281,7 @@ namespace gazebo_ros
 
     current_pose = applied_pose;
 
-    double pose_checker2 = joints_[0]->Position(0);
+    // RCLCPP_INFO(ros_node_->get_logger(), "[%f]", joints_[0]->Position(0));
   }
 
   void ForkControlPluginPrivate::OnMastCon(const agv_msgs::msg::ForkControl::ConstSharedPtr agv_msg)
