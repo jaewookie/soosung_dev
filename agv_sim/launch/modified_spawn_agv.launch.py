@@ -23,12 +23,12 @@ from launch_ros.actions import Node
 
 def generate_launch_description():
     # Get the urdf file
-    model_folder = 'agv1'
+    model_folder = 'agv1_final'
     urdf_path = os.path.join(
         get_package_share_directory('agv_sim'),
         'models',
         model_folder,
-        'modified_model.sdf'
+        'final_model.sdf'
     )
 
     # Launch configuration variables specific to simulation

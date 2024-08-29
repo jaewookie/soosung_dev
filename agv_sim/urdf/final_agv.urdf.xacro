@@ -6,12 +6,12 @@
   <joint name="base_joint" type="fixed">
     <parent link="base_footprint" />
     <child link="base_link" />
-    <origin xyz="0 0 0.1" rpy="0 0 0" />
+    <origin xyz="0 0 0.18" rpy="0 0 0" />
   </joint>
 
   <link name="base_link">
     <inertial>
-      <origin xyz="0 0 0.89" rpy="0 0 0" />
+      <origin xyz="0 0 0.81" rpy="0 0 0" />
       <mass value="2522.3" />
       <inertia ixx="990" ixy="0" ixz="0" iyy="990" iyz="0" izz="990" />
     </inertial>
@@ -35,14 +35,13 @@
     <child link="fork_house" />
     <axis xyz="0 0 1"/>
     <limit lower="-0.11" upper="1.5" effort="1000.0" velocity="0.1"/>
-    <origin xyz="-0.989 0 0.1" rpy="0 0 1.574" />
+    <origin xyz="-0.989 0 0.18" rpy="0 0 1.574" />
   </joint>
 
   <link name="fork_house">
     <inertial>
       <mass value="0.1"/>
       <inertia ixx="0.0" ixy="0.0" ixz="0.0" iyy="0.0" iyz="0.0" izz="0.0"/>
-      <!-- <inertia ixx="320.5" ixy="0" ixz="0" iyy="34.5" iyz="0" izz="320.5"/> -->
     </inertial>
     <visual>
       <origin xyz="0 0 0" rpy="0 0 0" />
@@ -59,11 +58,11 @@
     </collision>
   </link>
 
+  <!-- <joint name="steering_joint" type="fixed"> -->
   <joint name="steering_joint" type="continuous">
     <parent link="base_link" />
     <child link="steering_part" />
-    <origin xyz="0.216 0 0.334" rpy="0 0 1.574" />
-    <!-- 0.212 -0.0476 0.344 -->
+    <origin xyz="0.216 0 0.414" rpy="0 0 1.574" />
     <axis xyz="0 0 1" />
   </joint>
 
@@ -88,10 +87,10 @@
     </collision>
   </link>
 
+  <!-- <joint name="drive_wheel_joint" type="fixed"> -->
   <joint name="drive_wheel_joint" type="continuous">
     <parent link="steering_part" />
     <child link="drive_wheel" />
-    <!-- <origin xyz="0.063 0.012 -0.285" rpy="0 0 0" /> -->
     <origin xyz="0.01 0.0 -0.285" rpy="0 0 0" />
     <axis xyz="1 0 0" />
   </joint>
@@ -119,7 +118,7 @@
   <joint name="front_wheel_l_joint" type="continuous">
     <parent link="base_link" />
     <child link="front_wheel_l" />
-    <origin xyz="-0.86 -0.451 0.025" rpy="0 0 0" />
+    <origin xyz="-0.86 -0.451 0.105" rpy="0 0 0" />
     <axis xyz="0 1 0" />
   </joint>
 
@@ -146,7 +145,7 @@
   <joint name="front_wheel_r_joint" type="continuous">
     <parent link="base_link" />
     <child link="front_wheel_r" />
-    <origin xyz="-0.86 0.451 0.025" rpy="0 0 3.14" />
+    <origin xyz="-0.86 0.451 0.105" rpy="0 0 3.14" />
     <axis xyz="0 1 0" />
   </joint>
 
@@ -173,26 +172,15 @@
   <joint name="imu_joint" type="fixed">
     <parent link="base_link" />
     <child link="imu_link" />
-    <origin xyz="-0.341 0.103 0.763" rpy="0 0 0" />
+    <origin xyz="-0.341 0.103 0.843" rpy="0 0 0" />
   </joint>
 
-  <link name="imu_link">
-    <!-- <inertial>
-      <mass value="0.641"/>
-      <inertia ixx="0.001" ixy="0.0" ixz="0.0" iyy="0.001" iyz="0.0" izz="0.002"/>
-    </inertial>
-    <visual>
-      <origin xyz="0 0 0" rpy="0 0 0" />
-      <geometry>
-        <mesh filename="package://agv_sim/meshes/IMU.stl" scale = "0.001 0.001 0.001"/>
-      </geometry>
-    </visual> -->
-  </link>
+  <link name="imu_link" />
 
   <joint name="slam_lidar_joint" type="fixed">
     <parent link="base_link" />
     <child link="slam_lidar" />
-    <origin xyz="0 -0.2 2.197" rpy="0 0 0" />
+    <origin xyz="0 -0.2 2.277" rpy="0 0 0" />
   </joint>
 
   <link name="slam_lidar">
@@ -216,13 +204,13 @@
 
   <link name="safety_lidar_l">
     <inertial>
-      <mass value="0.295"/>
-      <inertia ixx="0.001" ixy="0.0" ixz="0.0" iyy="0.001" iyz="0.0" izz="0.002"/>
+      <mass value="0.295" />
+      <inertia ixx="0.001" ixy="0.0" ixz="0.0" iyy="0.001" iyz="0.0" izz="0.002" />
     </inertial>
     <visual>
       <origin xyz="0 0 0" rpy="-1.57 0 1.57" />
       <geometry>
-        <mesh filename="package://agv_sim/meshes/2D_SAFETY_LIDAR.stl" scale = "0.001 0.001 0.001"/>
+        <mesh filename="package://agv_sim/meshes/2D_SAFETY_LIDAR.stl" scale="0.001 0.001 0.001" />
       </geometry>
     </visual>
   </link>
@@ -235,13 +223,13 @@
 
   <link name="safety_lidar_r">
     <inertial>
-      <mass value="0.295"/>
-      <inertia ixx="0.001" ixy="0.0" ixz="0.0" iyy="0.001" iyz="0.0" izz="0.002"/>
+      <mass value="0.295" />
+      <inertia ixx="0.001" ixy="0.0" ixz="0.0" iyy="0.001" iyz="0.0" izz="0.002" />
     </inertial>
     <visual>
       <origin xyz="0 0 0" rpy="-1.57 0 1.56" />
       <geometry>
-        <mesh filename="package://agv_sim/meshes/2D_SAFETY_LIDAR.stl" scale = "0.001 0.001 0.001"/>
+        <mesh filename="package://agv_sim/meshes/2D_SAFETY_LIDAR.stl" scale="0.001 0.001 0.001" />
       </geometry>
     </visual>
   </link>
@@ -254,13 +242,13 @@
 
   <link name="safety_lidar_m">
     <inertial>
-      <mass value="0.295"/>
-      <inertia ixx="0.001" ixy="0.0" ixz="0.0" iyy="0.001" iyz="0.0" izz="0.002"/>
+      <mass value="0.295" />
+      <inertia ixx="0.001" ixy="0.0" ixz="0.0" iyy="0.001" iyz="0.0" izz="0.002" />
     </inertial>
     <visual>
       <origin xyz="0 0 0" rpy="-1.57 0 1.57" />
       <geometry>
-        <mesh filename="package://agv_sim/meshes/2D_SAFETY_LIDAR.stl" scale = "0.001 0.001 0.001"/>
+        <mesh filename="package://agv_sim/meshes/2D_SAFETY_LIDAR.stl" scale="0.001 0.001 0.001" />
       </geometry>
     </visual>
   </link>

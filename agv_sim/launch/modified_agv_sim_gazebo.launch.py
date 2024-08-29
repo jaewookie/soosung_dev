@@ -75,29 +75,8 @@ def generate_launch_description():
 
     ld = LaunchDescription()
 
-    # Add the commands to the launch description
-    # ld.add_action(start_gazebo_server_cmd)
     ld.add_action(gzserver_cmd)
     ld.add_action(gzclient_cmd)
     ld.add_action(robot_state_publisher_cmd)
     ld.add_action(spawn_agv_cmd)
-    # ld.add_action(
-    #     Node(
-    #         package='agv_controller',
-    #         executable='tricycle_agv_drive',
-    #         name='tricycle_agv_drive',
-    #         output='screen',
-    #         parameters=[{
-    #             'max_wheel_accel': 0.1,
-    #             'max_wheel_decel': 0.1,
-    #             'max_wheel_speed_tol': 1.0,
-    #             # 'wheel_separation': 0.9,
-    #             'drive_wheel_radius': 0.31,
-    #             # 'front_wheel_radius': 0.25,
-    #             'publish_odom': True,
-    #             'publish_wheel_tf': True,
-    #             'publish_wheel_joint_state': True
-    #         }]
-    #     ),
-    # )
     return ld

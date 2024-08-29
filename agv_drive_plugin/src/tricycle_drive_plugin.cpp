@@ -48,8 +48,8 @@ namespace gazebo_ros
     void OnUpdate(const gazebo::common::UpdateInfo &_info);
     void OnCmdVel(const geometry_msgs::msg::Twist::ConstSharedPtr msg); // ok
     void OnImu(const sensor_msgs::msg::Imu::ConstSharedPtr msg);
-    // void UpdateOdometryEncoder(const gazebo::common::Time &_current_time); // ok
-    // void PublishOdometryMsg(const gazebo::common::Time &_current_time);    // ok
+    void UpdateOdometryEncoder(const gazebo::common::Time &_current_time); // ok
+    void PublishOdometryMsg(const gazebo::common::Time &_current_time);    // ok
     void PublishWheelsTf(const gazebo::common::Time &_current_time);
     void PublishWheelJointState(const gazebo::common::Time &_current_time);
     void MotorController(double target_speed, double target_angle, double dt); // ok
@@ -58,7 +58,7 @@ namespace gazebo_ros
     gazebo_ros::Node::SharedPtr ros_node_;
     rclcpp::Subscription<geometry_msgs::msg::Twist>::SharedPtr cmd_vel_sub_;
     rclcpp::Subscription<sensor_msgs::msg::Imu>::SharedPtr imu_sub_;
-    // rclcpp::Publisher<nav_msgs::msg::Odometry>::SharedPtr odom_pub_;
+    rclcpp::Publisher<nav_msgs::msg::Odometry>::SharedPtr odom_pub_;
     rclcpp::Publisher<sensor_msgs::msg::JointState>::SharedPtr joint_state_pub_;
     gazebo::event::ConnectionPtr update_connection_; // Connection to world update event. Callback is called while this is alive.
 
@@ -85,20 +85,20 @@ namespace gazebo_ros
 
     double update_period_;
     geometry_msgs::msg::Pose2D pose_encoder_;
-    // std::string odometry_frame_;
+    std::string odometry_frame_;
 
-    // gazebo::common::Time last_odom_update_;
+    gazebo::common::Time last_odom_update_;
     gazebo::common::Time last_actuator_update_;
 
-    // OdomSource odom_source_;
+    OdomSource odom_source_;
 
-    // nav_msgs::msg::Odometry odom_;
+    nav_msgs::msg::Odometry odom_;
 
     std::string robot_base_frame_;
 
     bool publish_wheel_tf_;
     bool publish_wheel_joint_state_;
-    // bool publish_odom_;
+    bool publish_odom_;
   };
 
   TricycleDrivePlugin::TricycleDrivePlugin()
@@ -122,17 +122,17 @@ namespace gazebo_ros
 
     const gazebo_ros::QoS &qos = impl_->ros_node_->get_qos();
 
-    // impl_->odometry_frame_ = "odom";
+    impl_->odometry_frame_ = "odom";
 
     impl_->robot_base_frame_ = "base_footprint";
 
-    // impl_->odom_source_ = TricycleDrivePluginPrivate::ENCODER;
+    impl_->odom_source_ = TricycleDrivePluginPrivate::ENCODER;
 
     impl_->publish_wheel_tf_ = true;
 
     impl_->publish_wheel_joint_state_ = true;
 
-    // impl_->publish_odom_ = true;
+    impl_->publish_odom_ = true;
 
     // 가제보 플러그인 태그
     impl_->wheel_separation_ = _sdf->Get<double>("wheel_separation_", 0.9).first;
@@ -172,8 +172,8 @@ namespace gazebo_ros
     impl_->joint_state_pub_ = impl_->ros_node_->create_publisher<sensor_msgs::msg::JointState>(
         "joint_states", qos.get_publisher_qos("joint_states", rclcpp::QoS(1000)));
 
-    // impl_->odom_pub_ = impl_->ros_node_->create_publisher<nav_msgs::msg::Odometry>(
-    //     "odom", qos.get_publisher_qos("odom", rclcpp::QoS(1)));
+    impl_->odom_pub_ = impl_->ros_node_->create_publisher<nav_msgs::msg::Odometry>(
+        "odom", qos.get_publisher_qos("odom", rclcpp::QoS(1)));
 
     impl_->tf_broadcaster_ = std::make_shared<tf2_ros::TransformBroadcaster>(
         impl_->ros_node_);
@@ -188,15 +188,15 @@ namespace gazebo_ros
       impl_->joint_state_.name[i] = impl_->joints_[i]->GetName();
     }
 
-    // // Initialize odom message
-    // impl_->odom_.header.frame_id = impl_->odometry_frame_;
-    // impl_->odom_.child_frame_id = impl_->robot_base_frame_;
-    // impl_->odom_.pose.covariance[0] = 0.00001;
-    // impl_->odom_.pose.covariance[7] = 0.00001;
-    // impl_->odom_.pose.covariance[14] = 1000000000000.0;
-    // impl_->odom_.pose.covariance[21] = 1000000000000.0;
-    // impl_->odom_.pose.covariance[28] = 1000000000000.0;
-    // impl_->odom_.pose.covariance[35] = 0.001;
+    // Initialize odom message
+    impl_->odom_.header.frame_id = impl_->odometry_frame_;
+    impl_->odom_.child_frame_id = impl_->robot_base_frame_;
+    impl_->odom_.pose.covariance[0] = 0.00001;
+    impl_->odom_.pose.covariance[7] = 0.00001;
+    impl_->odom_.pose.covariance[14] = 1000000000000.0;
+    impl_->odom_.pose.covariance[21] = 1000000000000.0;
+    impl_->odom_.pose.covariance[28] = 1000000000000.0;
+    impl_->odom_.pose.covariance[35] = 0.001;
 
     // Create a connection so the OnUpdate function is called at every simulation iteration.
 
@@ -222,7 +222,7 @@ namespace gazebo_ros
       impl_->joints_[TricycleDrivePluginPrivate::STEERING]->SetParam("vel", 0, 0.0);
 
       impl_->last_actuator_update_ = current_time;
-      // impl_->last_odom_update_ = current_time;
+      impl_->last_odom_update_ = current_time;
     }
     impl_->pose_encoder_.x = 0;
     impl_->pose_encoder_.y = 0;
@@ -278,10 +278,10 @@ namespace gazebo_ros
     IGN_PROFILE_BEGIN("UpdateOdometryEncoder");
 #endif
     gazebo::common::Time current_time = _info.simTime;
-    // if (odom_source_ == ENCODER)
-    // {
-    //   UpdateOdometryEncoder(current_time);
-    // }
+    if (odom_source_ == ENCODER)
+    {
+      UpdateOdometryEncoder(current_time);
+    }
 #ifdef IGN_PROFILER_ENABLE
     IGN_PROFILE_END();
 #endif
@@ -292,16 +292,16 @@ namespace gazebo_ros
       return;
     }
 
-//     if (publish_odom_)
-//     {
-// #ifdef IGN_PROFILER_ENABLE
-//       IGN_PROFILE_BEGIN("PublishOdometryMsg");
-// #endif
-//       PublishOdometryMsg(current_time);
-// #ifdef IGN_PROFILER_ENABLE
-//       IGN_PROFILE_END();
-// #endif
-//     }
+    if (publish_odom_)
+    {
+#ifdef IGN_PROFILER_ENABLE
+      IGN_PROFILE_BEGIN("PublishOdometryMsg");
+#endif
+      PublishOdometryMsg(current_time);
+#ifdef IGN_PROFILER_ENABLE
+      IGN_PROFILE_END();
+#endif
+    }
 
     if (publish_wheel_tf_)
     {
@@ -452,7 +452,7 @@ namespace gazebo_ros
       // RCLCPP_INFO(ros_node_->get_logger(), "b");
       cmd_.linear.x = 0.5;
     }
-    RCLCPP_INFO(ros_node_->get_logger(), "b:[%f]", cmd_.linear.x);
+    // RCLCPP_INFO(ros_node_->get_logger(), "b:[%f]", cmd_.linear.x);
   }
 
   void TricycleDrivePluginPrivate::OnImu(
@@ -465,64 +465,62 @@ namespace gazebo_ros
     imu_.orientation.w = imu_msg->orientation.w;
   }
 
-  // void TricycleDrivePluginPrivate::UpdateOdometryEncoder(
-  //     const gazebo::common::Time &_current_time)
-  // {
-  //   // 마치 앞바퀴에 엔코더가 달려 해당 속도를 받아오는 것과 같이 속도를 읽어오는 부분
+  void TricycleDrivePluginPrivate::UpdateOdometryEncoder(
+      const gazebo::common::Time &_current_time)
+  {
+    // 마치 앞바퀴에 엔코더가 달려 해당 속도를 받아오는 것과 같이 속도를 읽어오는 부분
 
-  //   tf2::Quaternion quat(imu_.orientation.x, imu_.orientation.y, imu_.orientation.z, imu_.orientation.w);
-  //   tf2::Matrix3x3 mat(quat);
-  //   double roll, pitch, yaw;
-  //   mat.getRPY(roll, pitch, yaw);
+    tf2::Quaternion quat(imu_.orientation.x, imu_.orientation.y, imu_.orientation.z, imu_.orientation.w);
+    tf2::Matrix3x3 mat(quat);
+    double roll, pitch, yaw;
+    mat.getRPY(roll, pitch, yaw);
 
-  //   double vet_rot = joints_[STEERING]->Position(0);
+    double seconds_since_last_update = (_current_time - last_odom_update_).Double();
+    last_odom_update_ = _current_time;
 
-  //   double seconds_since_last_update = (_current_time - last_odom_update_).Double();
-  //   last_odom_update_ = _current_time;
+    static double last_theta = 0;
+    double theta = yaw;
 
-  //   static double last_theta = 0;
-  //   double theta = yaw;
+    double dtheta = theta - last_theta;
 
-  //   double dtheta = theta - last_theta;
+    // drive wheel 사용
+    double vd = joints_[DRIVE_WHEEL]->GetVelocity(0);
+    double sd = vd * (drive_wheel_radius_)*seconds_since_last_update;
 
-  //   // drive wheel 사용
-  //   double vd = joints_[DRIVE_WHEEL]->GetVelocity(0);
-  //   double sd = vd * (drive_wheel_radius_)*seconds_since_last_update;
+    double dx = sd * cos(theta);
+    double dy = sd * sin(theta);
 
-  //   double dx = sd * cos(theta);
-  //   double dy = sd * sin(theta);
+    pose_encoder_.x += dx;
+    pose_encoder_.y += dy;
+    // pose_encoder_.theta += dtheta;
+    pose_encoder_.theta = theta;
 
-  //   pose_encoder_.x += dx;
-  //   pose_encoder_.y += dy;
-  //   // pose_encoder_.theta += dtheta;
-  //   pose_encoder_.theta = theta;
+    // double w = dthetad / seconds_since_last_update;
 
-  //   // double w = dthetad / seconds_since_last_update;
+    tf2::Vector3 vt;
+    vt = tf2::Vector3(pose_encoder_.x, pose_encoder_.y, 0);
+    odom_.pose.pose.position.x = vt.x();
+    odom_.pose.pose.position.y = vt.y();
+    odom_.pose.pose.position.z = vt.z();
 
-  //   tf2::Vector3 vt;
-  //   vt = tf2::Vector3(pose_encoder_.x, pose_encoder_.y, 0);
-  //   odom_.pose.pose.position.x = vt.x();
-  //   odom_.pose.pose.position.y = vt.y();
-  //   odom_.pose.pose.position.z = vt.z();
+    tf2::Quaternion qt;
+    qt.setRPY(0, 0, pose_encoder_.theta);
+    odom_.pose.pose.orientation = tf2::toMsg(qt);
 
-  //   tf2::Quaternion qt;
-  //   qt.setRPY(0, 0, pose_encoder_.theta);
-  //   odom_.pose.pose.orientation = tf2::toMsg(qt);
+    odom_.twist.twist.angular.z = dtheta / seconds_since_last_update;
+    odom_.twist.twist.linear.x = sd / seconds_since_last_update;
+    odom_.twist.twist.linear.y = 0;
 
-  //   odom_.twist.twist.angular.z = dtheta / seconds_since_last_update;
-  //   odom_.twist.twist.linear.x = sd / seconds_since_last_update;
-  //   odom_.twist.twist.linear.y = 0;
+    last_theta = theta;
 
-  //   last_theta = theta;
-
-  //   // RCLCPP_INFO(ros_node_->get_logger(), "---------------------------------");
-  //   // RCLCPP_INFO(ros_node_->get_logger(), "x: [%f]", pose_encoder_.x);
-  //   // RCLCPP_INFO(ros_node_->get_logger(), "y: [%f]", pose_encoder_.y);
-  //   // RCLCPP_INFO(ros_node_->get_logger(), "z: [%f]", odom_.pose.pose.position.z);
-  //   // RCLCPP_INFO(ros_node_->get_logger(), "---------------------------------");
-  //   // RCLCPP_INFO(ros_node_->get_logger(), "theta:\t\t[%f]", theta);
-  //   // RCLCPP_INFO(ros_node_->get_logger(), "---------------------------------");
-  // }
+    // RCLCPP_INFO(ros_node_->get_logger(), "---------------------------------");
+    // RCLCPP_INFO(ros_node_->get_logger(), "x: [%f]", pose_encoder_.x);
+    // RCLCPP_INFO(ros_node_->get_logger(), "y: [%f]", pose_encoder_.y);
+    // RCLCPP_INFO(ros_node_->get_logger(), "z: [%f]", odom_.pose.pose.position.z);
+    // RCLCPP_INFO(ros_node_->get_logger(), "---------------------------------");
+    // RCLCPP_INFO(ros_node_->get_logger(), "theta:\t\t[%f]", theta);
+    // RCLCPP_INFO(ros_node_->get_logger(), "---------------------------------");
+  }
 
   // void TricycleDrivePluginPrivate::UpdateOdometryEncoder(
   //     const gazebo::common::Time &_current_time)
@@ -583,44 +581,44 @@ namespace gazebo_ros
   //   RCLCPP_INFO(ros_node_->get_logger(), "---------------------------------");
   // }
 
-  // void TricycleDrivePluginPrivate::PublishOdometryMsg(const gazebo::common::Time &_current_time)
-  // {
-  //   rclcpp::Time current_time = gazebo_ros::Convert<builtin_interfaces::msg::Time>(_current_time);
+  void TricycleDrivePluginPrivate::PublishOdometryMsg(const gazebo::common::Time &_current_time)
+  {
+    rclcpp::Time current_time = gazebo_ros::Convert<builtin_interfaces::msg::Time>(_current_time);
 
-  //   if (odom_source_ == WORLD)
-  //   {
-  //     // getting data form gazebo world
-  //     ignition::math::Pose3d pose = model_->WorldPose();
+    if (odom_source_ == WORLD)
+    {
+      // getting data form gazebo world
+      ignition::math::Pose3d pose = model_->WorldPose();
 
-  //     odom_.pose.pose.position = gazebo_ros::Convert<geometry_msgs::msg::Point>(pose.Pos());
-  //     odom_.pose.pose.orientation = gazebo_ros::Convert<geometry_msgs::msg::Quaternion>(pose.Rot());
+      odom_.pose.pose.position = gazebo_ros::Convert<geometry_msgs::msg::Point>(pose.Pos());
+      odom_.pose.pose.orientation = gazebo_ros::Convert<geometry_msgs::msg::Quaternion>(pose.Rot());
 
-  //     // get velocity in /odom frame
-  //     ignition::math::Vector3d linear;
-  //     linear = model_->WorldLinearVel();
-  //     odom_.twist.twist.angular.z = model_->WorldAngularVel().Z();
+      // get velocity in /odom frame
+      ignition::math::Vector3d linear;
+      linear = model_->WorldLinearVel();
+      odom_.twist.twist.angular.z = model_->WorldAngularVel().Z();
 
-  //     // convert velocity to child_frame_id (aka base_footprint)
-  //     auto yaw = static_cast<float>(pose.Rot().Yaw());
-  //     odom_.twist.twist.linear.x = cosf(yaw) * linear.X() + sinf(yaw) * linear.Y();
-  //     odom_.twist.twist.linear.y = cosf(yaw) * linear.Y() - sinf(yaw) * linear.X();
-  //   }
+      // convert velocity to child_frame_id (aka base_footprint)
+      auto yaw = static_cast<float>(pose.Rot().Yaw());
+      odom_.twist.twist.linear.x = cosf(yaw) * linear.X() + sinf(yaw) * linear.Y();
+      odom_.twist.twist.linear.y = cosf(yaw) * linear.Y() - sinf(yaw) * linear.X();
+    }
 
-  //   geometry_msgs::msg::TransformStamped msg;
-  //   msg.header.stamp = current_time;
-  //   msg.header.frame_id = odometry_frame_;
-  //   msg.child_frame_id = robot_base_frame_;
-  //   msg.transform.translation =
-  //       gazebo_ros::Convert<geometry_msgs::msg::Vector3>(odom_.pose.pose.position);
-  //   msg.transform.rotation = odom_.pose.pose.orientation;
+    geometry_msgs::msg::TransformStamped msg;
+    msg.header.stamp = current_time;
+    msg.header.frame_id = odometry_frame_;
+    msg.child_frame_id = robot_base_frame_;
+    msg.transform.translation =
+        gazebo_ros::Convert<geometry_msgs::msg::Vector3>(odom_.pose.pose.position);
+    msg.transform.rotation = odom_.pose.pose.orientation;
 
-  //   tf_broadcaster_->sendTransform(msg);
+    tf_broadcaster_->sendTransform(msg);
 
-  //   // set header stamp
-  //   odom_.header.stamp = current_time;
+    // set header stamp
+    odom_.header.stamp = current_time;
 
-  //   odom_pub_->publish(odom_);
-  // }
+    odom_pub_->publish(odom_);
+  }
 
   GZ_REGISTER_MODEL_PLUGIN(TricycleDrivePlugin)
 } // namespace gazebo_ros

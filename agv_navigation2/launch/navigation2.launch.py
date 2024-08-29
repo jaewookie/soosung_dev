@@ -164,7 +164,7 @@ def generate_launch_description():
             parameters=[laser_params_file],
             remappings=[
                 ('/cloud_in', '/points2'),
-                ('/scan', '/scan')
+                ('/scan', '/scan_nav')
             ]
         ),
         Node(

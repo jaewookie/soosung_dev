@@ -6,6 +6,7 @@ Panels:
       Expanded:
         - /Global Options1
         - /Status1
+        - /RobotModel1
       Splitter Ratio: 0.5
     Tree Height: 1147
   - Class: rviz_common/Selection
@@ -234,24 +235,6 @@ Visualization Manager:
           Value: true
         drive_wheel:
           Value: true
-        drive_wheel_joint:
-          Value: true
-        front_wheel_l:
-          Value: true
-        front_wheel_l_joint:
-          Value: true
-        front_wheel_r:
-          Value: true
-        front_wheel_r_joint:
-          Value: true
-        imu_link:
-          Value: true
-        odom:
-          Value: true
-        slam_lidar:
-          Value: true
-        steering_joint:
-          Value: true
         steering_part:
           Value: true
       Marker Scale: 1
@@ -260,34 +243,62 @@ Visualization Manager:
       Show Axes: true
       Show Names: true
       Tree:
-        odom:
-          base_footprint:
-            base_link:
-              front_wheel_l:
+        base_footprint:
+          base_link:
+            steering_part:
+              drive_wheel:
                 {}
-              front_wheel_l_joint:
-                {}
-              front_wheel_r:
-                {}
-              front_wheel_r_joint:
-                {}
-              imu_link:
-                {}
-              slam_lidar:
-                {}
-              steering_joint:
-                {}
-              steering_part:
-                drive_wheel:
-                  {}
-                drive_wheel_joint:
-                  {}
       Update Interval: 0
       Value: true
+    - Alpha: 1
+      Class: rviz_default_plugins/RobotModel
+      Collision Enabled: false
+      Description File: ""
+      Description Source: Topic
+      Description Topic:
+        Depth: 5
+        Durability Policy: Volatile
+        History Policy: Keep Last
+        Reliability Policy: Reliable
+        Value: /robot_description
+      Enabled: true
+      Links:
+        All Links Enabled: true
+        Expand Joint Details: false
+        Expand Link Details: false
+        Expand Tree: false
+        Link Tree Style: Links in Alphabetic Order
+        base_footprint:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        base_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        drive_wheel:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        steering_part:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+      Mass Properties:
+        Inertia: false
+        Mass: false
+      Name: RobotModel
+      TF Prefix: ""
+      Update Interval: 0
+      Value: true
+      Visual Enabled: true
   Enabled: true
   Global Options:
     Background Color: 48; 48; 48
-    Fixed Frame: odom
+    Fixed Frame: base_footprint
     Frame Rate: 30
   Name: root
   Tools:
@@ -328,7 +339,7 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz_default_plugins/Orbit
-      Distance: 9.003477096557617
+      Distance: 3.1186604499816895
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.05999999865889549
         Stereo Focal Distance: 1
@@ -343,10 +354,10 @@ Visualization Manager:
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.009999999776482582
-      Pitch: 0.3203980326652527
+      Pitch: -0.43960174918174744
       Target Frame: odom
       Value: Orbit (rviz_default_plugins)
-      Yaw: 1.2304003238677979
+      Yaw: 1.4304001331329346
     Saved: ~
 Window Geometry:
   Displays:

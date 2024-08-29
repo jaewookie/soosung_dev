@@ -19,7 +19,6 @@ find_package(nav_msgs REQUIRED)
 find_package(sensor_msgs REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(agv_msgs REQUIRED)
-# find_package(nav2_amcl REQUIRED)
 find_package(pluginlib REQUIRED)
 
 include_directories(
@@ -33,29 +32,6 @@ include_directories(
     ${tf2_geometry_msgs_INCLUDE_DIRS}
     ${ignition-common3_INCLUDE_DIRS}
   )
-
-add_library(agv_drive_plugin SHARED src/agv_drive_plugin.cpp)
-ament_target_dependencies(agv_drive_plugin
-  "gazebo"
-  "gazebo_ros"
-  "gazebo_dev"
-  "rclcpp"
-  "sensor_msgs"
-  "nav_msgs"
-  "geometry_msgs"
-  "tf2"
-  "tf2_ros"
-  "tf2_geometry_msgs"
-)
-ament_export_libraries(agv_drive_plugin)
-target_link_libraries(agv_drive_plugin ${GAZEBO_LIBRARIES} ${rclcpp_LIBRARIES} ${sensor_msgs_LIBRARIES} ${nav_msgs_LIBRARIES} ${geometry_msgs_LIBRARIES} ${tf2_ros_LIBRARIES} ${tf2_geometry_msgs_LIBRARIES} ${ignition-common3_LIBRARIES})
-
-add_library(lslidar_plugin SHARED src/lslidar_plugin.cpp)
-target_link_libraries(lslidar_plugin ${GAZEBO_LIBRARIES} ${rclcpp_LIBRARIES})
-ament_target_dependencies(lslidar_plugin
-  "gazebo_ros"
-  "rclcpp"
-)
 
 add_library(tricycle_drive_plugin SHARED src/tricycle_drive_plugin.cpp)
 ament_target_dependencies(tricycle_drive_plugin
@@ -104,31 +80,10 @@ target_link_libraries(fork_control_plugin
   ${tf2_ros_LIBRARIES}
 )
 
-# add_library(tricycle_motion_model SHARED
-#   src/tricycle_motion_model.cpp
-# )
-
-# target_include_directories(tricycle_motion_model
-#   PUBLIC
-#   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-#   $<INSTALL_INTERFACE:include>)
-
-# ament_target_dependencies(tricycle_motion_model
-#   "rclcpp"
-#   "nav2_amcl"
-#   "pluginlib"
-#   "tf2"
-#   "tf2_ros"
-# )
-
-# pluginlib_export_plugin_description_file(nav2_amcl tricycle_motion_model.xml)
-
 ament_environment_hooks("${CMAKE_CURRENT_SOURCE_DIR}/env-hooks/gazebo_plugins.sh.in")
 
 install(TARGETS
   tricycle_drive_plugin
-  agv_drive_plugin
-  lslidar_plugin
   fork_control_plugin
   # tricycle_motion_model
   EXPORT export_tricycle_motion_model
