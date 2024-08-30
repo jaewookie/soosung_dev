@@ -27,7 +27,7 @@ options = {
   provide_odom_frame = true,
   publish_frame_projected_to_2d = false,
   use_pose_extrapolator = false,
-  use_odometry = false,
+  use_odometry = true,
   use_nav_sat = false,
   use_landmarks = false,
   num_laser_scans = 0,
@@ -44,36 +44,6 @@ options = {
   imu_sampling_ratio = 1.,
   landmarks_sampling_ratio = 1.,
 }
--- -- 3D LiDAR를 사용하여 트랙킹 빌더 설정
--- TRAJECTORY_BUILDER_3D = {
---   submaps = {
---     high_resolution = 0.10,
---     high_resolution_max_range = 20.0,
---     low_resolution = 0.45,
---     num_range_data = 160,
---   },
---   motion_filter = {
---     max_time_seconds = 0.5,
---     max_distance_meters = 0.2,
---     max_angle_radians = 0.04,
---   },
---   imu_gravity_time_constant = 10.0,
---   ceres_scan_matcher = {
---     occupied_space_weight_0 = 10.0,
---     occupied_space_weight_1 = 20.0,
---     translation_weight = 1.0,
---     rotation_weight = 0.1,
---   },
---   use_online_correlative_scan_matching = true,
---   real_time_correlative_scan_matcher = {
---     linear_search_window = 0.1,
---     angular_search_window = math.rad(1.),
---   },
--- }
-
--- MAP_BUILDER.use_trajectory_builder_3d = true
--- MAP_BUILDER.num_background_threads = 7
-
 
 TRAJECTORY_BUILDER_3D.motion_filter.max_angle_radians = math.rad(0.1)
 

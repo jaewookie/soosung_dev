@@ -47,7 +47,7 @@ def generate_launch_description():
             [
                 FindPackageShare('agv_navigation2'),
                 'map',
-                'map.yaml'
+                'maaappp.yaml'
             ]
         )
     )
@@ -164,7 +164,7 @@ def generate_launch_description():
             parameters=[laser_params_file],
             remappings=[
                 ('/cloud_in', '/points2'),
-                ('/scan', '/scan_nav')
+                ('/scan', '/scan')
             ]
         ),
         Node(

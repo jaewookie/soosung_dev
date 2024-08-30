@@ -292,16 +292,16 @@ namespace gazebo_ros
       return;
     }
 
-    if (publish_odom_)
-    {
-#ifdef IGN_PROFILER_ENABLE
-      IGN_PROFILE_BEGIN("PublishOdometryMsg");
-#endif
-      PublishOdometryMsg(current_time);
-#ifdef IGN_PROFILER_ENABLE
-      IGN_PROFILE_END();
-#endif
-    }
+        if (publish_odom_)
+        {
+    #ifdef IGN_PROFILER_ENABLE
+          IGN_PROFILE_BEGIN("PublishOdometryMsg");
+    #endif
+          PublishOdometryMsg(current_time);
+    #ifdef IGN_PROFILER_ENABLE
+          IGN_PROFILE_END();
+    #endif
+        }
 
     if (publish_wheel_tf_)
     {
@@ -403,56 +403,20 @@ namespace gazebo_ros
         // steer toward target angle
         applied_steering_speed = -max_steering_speed_;
       }
-      // RCLCPP_INFO(ros_node_->get_logger(), "---------------------------------");
-      // RCLCPP_INFO(ros_node_->get_logger(), "current_ang :\t\t[%f]", current_angle);
-      // RCLCPP_INFO(ros_node_->get_logger(), "target_ang :\t\t[%f]", target_angle);
-      // RCLCPP_INFO(ros_node_->get_logger(), "diff ang :\t\t[%f]", diff_angle);
-      // RCLCPP_INFO(ros_node_->get_logger(), "applied ang :\t\t[%f]", applied_steering_speed);
-      // RCLCPP_INFO(ros_node_->get_logger(), "---------------------------------");
 
       joints_[STEERING]->SetPosition(0, applied_angle, true);
-
-      // use speed control, not recommended, for better dynamics use force control
-      // joints_[STEERING]->SetParam("vel", 0, applied_steering_speed);
     }
-    // else
-    // {
-    //   // max_steering_speed_ is zero, use position control.
-    //   // This is not a good idea if we want dynamics to work.
-    //   if (fabs(diff_angle) < max_steering_speed_ * dt)
-    //   {
-    //     // we can take a step and still not overshoot target
-    //     if (diff_angle > 0)
-    //     {
-    //       applied_angle = current_angle - max_steering_speed_ * dt;
-    //     }
-    //     else
-    //     {
-    //       applied_angle = current_angle + max_steering_speed_ * dt;
-    //     }
-    //   }
-    //   else
-    //   {
-    //     applied_angle = target_angle;
-    //   }
-
-    //   joints_[STEERING]->SetPosition(0, applied_angle, true);
-    // }
-    // RCLCPP_INFO(ros_node_->get_logger(), "applied_speed : [%f]", applied_speed);
-    // RCLCPP_INFO(ros_node_->get_logger(), "applied_speed / wheel_rad : [%f]", applied_speed/drive_wheel_radius_);
   }
-
   void TricycleDrivePluginPrivate::OnCmdVel(
       const geometry_msgs::msg::Twist::ConstSharedPtr cmd_msg)
   {
     std::lock_guard<std::mutex> scoped_lock(lock_);
     cmd_.linear.x = cmd_msg->linear.x;
     cmd_.angular.z = cmd_msg->angular.z;
-    if(fabs(cmd_.linear.x)<max_wheel_speed_tol_ && fabs(cmd_.angular.z)>max_steering_angle_tol_){
-      // RCLCPP_INFO(ros_node_->get_logger(), "b");
+    if (fabs(cmd_.linear.x) < max_wheel_speed_tol_ && fabs(cmd_.angular.z) > max_steering_angle_tol_)
+    {
       cmd_.linear.x = 0.5;
     }
-    // RCLCPP_INFO(ros_node_->get_logger(), "b:[%f]", cmd_.linear.x);
   }
 
   void TricycleDrivePluginPrivate::OnImu(
@@ -512,74 +476,7 @@ namespace gazebo_ros
     odom_.twist.twist.linear.y = 0;
 
     last_theta = theta;
-
-    // RCLCPP_INFO(ros_node_->get_logger(), "---------------------------------");
-    // RCLCPP_INFO(ros_node_->get_logger(), "x: [%f]", pose_encoder_.x);
-    // RCLCPP_INFO(ros_node_->get_logger(), "y: [%f]", pose_encoder_.y);
-    // RCLCPP_INFO(ros_node_->get_logger(), "z: [%f]", odom_.pose.pose.position.z);
-    // RCLCPP_INFO(ros_node_->get_logger(), "---------------------------------");
-    // RCLCPP_INFO(ros_node_->get_logger(), "theta:\t\t[%f]", theta);
-    // RCLCPP_INFO(ros_node_->get_logger(), "---------------------------------");
   }
-
-  // void TricycleDrivePluginPrivate::UpdateOdometryEncoder(
-  //     const gazebo::common::Time &_current_time)
-  // {
-  //   tf2::Quaternion quat(imu_.orientation.x, imu_.orientation.y, imu_.orientation.z, imu_.orientation.w);
-  //   tf2::Matrix3x3 mat(quat);
-  //   double roll, pitch, yaw;
-  //   mat.getRPY(roll, pitch, yaw);
-
-  //   static double last_theta = 0;
-  //   double theta = yaw;
-
-  //   double vl = joints_[FRONT_WHEEL_LEFT]->GetVelocity(0);
-  //   double vr = joints_[FRONT_WHEEL_RIGHT]->GetVelocity(0);
-
-  //   double seconds_since_last_update = (_current_time - last_odom_update_).Double();
-  //   last_odom_update_ = _current_time;
-
-  //   double b = wheel_separation_;
-
-  //   // Book: Sigwart 2011 Autonomous Mobile Robots page:337
-  //   double sl = vl * (front_wheel_radius_)*seconds_since_last_update;
-  //   double sr = vr * (front_wheel_radius_)*seconds_since_last_update;
-
-  //   double dx = (sl + sr) / 2.0 * cos(pose_encoder_.theta + (sl - sr) / (2.0 * b));
-  //   double dy = (sl + sr) / 2.0 * sin(pose_encoder_.theta + (sl - sr) / (2.0 * b));
-  //   double dtheta = (sl - sr) / b;
-  //   // double dtheta = theta - last_theta;
-
-  //   pose_encoder_.x += dx;
-  //   pose_encoder_.y += dy;
-  //   pose_encoder_.theta += dtheta;
-
-  //   double w = dtheta / seconds_since_last_update;
-
-  //   tf2::Vector3 vt;
-  //   vt = tf2::Vector3(pose_encoder_.x, pose_encoder_.y, 0);
-  //   odom_.pose.pose.position.x = vt.x();
-  //   odom_.pose.pose.position.y = vt.y();
-  //   odom_.pose.pose.position.z = vt.z();
-
-  //   tf2::Quaternion qt;
-  //   qt.setRPY(0, 0, pose_encoder_.theta);
-  //   odom_.pose.pose.orientation = tf2::toMsg(qt);
-
-  //   odom_.twist.twist.angular.z = w;
-  //   odom_.twist.twist.linear.x = dx / seconds_since_last_update;
-  //   odom_.twist.twist.linear.y = dy / seconds_since_last_update;
-
-  //   last_theta = theta;
-
-  //   RCLCPP_INFO(ros_node_->get_logger(), "---------------------------------");
-  //   RCLCPP_INFO(ros_node_->get_logger(), "x: [%f]", odom_.pose.pose.position.x);
-  //   RCLCPP_INFO(ros_node_->get_logger(), "y: [%f]", odom_.pose.pose.position.y);
-  //   RCLCPP_INFO(ros_node_->get_logger(), "z: [%f]", odom_.pose.pose.position.z);
-  //   RCLCPP_INFO(ros_node_->get_logger(), "---------------------------------");
-  //   RCLCPP_INFO(ros_node_->get_logger(), "theta:\t\t[%f]", theta);
-  //   RCLCPP_INFO(ros_node_->get_logger(), "---------------------------------");
-  // }
 
   void TricycleDrivePluginPrivate::PublishOdometryMsg(const gazebo::common::Time &_current_time)
   {

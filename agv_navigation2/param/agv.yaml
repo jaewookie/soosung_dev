@@ -133,8 +133,8 @@ controller_server:
     general_goal_checker:
       stateful: True
       plugin: "nav2_controller::SimpleGoalChecker"
-      xy_goal_tolerance: 0.05
-      yaw_goal_tolerance: 0.05
+      xy_goal_tolerance: 0.25
+      yaw_goal_tolerance: 0.125
     # DWB parameters
     FollowPath:
       plugin: "dwb_core::DWBLocalPlanner"
@@ -191,6 +191,7 @@ local_costmap:
       width: 3
       height: 3
       resolution: 0.05
+      footprint: "[ [0.8, 0.55], [0.8, -0.55], [-1.5, -0.55], [-1.5, 0.55] ]"
       robot_radius: 2.0
       plugins: ["voxel_layer", "inflation_layer"]
       inflation_layer:
@@ -230,6 +231,7 @@ global_costmap:
       global_frame: map
       robot_base_frame: base_footprint
       use_sim_time: True
+      footprint: "[ [0.8, 0.55], [0.8, -0.55], [-1.5, -0.55], [-1.5, 0.55] ]"
       robot_radius: 2.0
       resolution: 0.05
       track_unknown_space: true
