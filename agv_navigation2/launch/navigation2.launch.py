@@ -35,7 +35,7 @@ def generate_launch_description():
     use_sim = LaunchConfiguration('use_sim')
     map_yaml_file = LaunchConfiguration('map_yaml_file')
     params_file = LaunchConfiguration('params_file')
-    laser_params_file = LaunchConfiguration('laser_params_file')
+    # laser_params_file = LaunchConfiguration('laser_params_file')
     default_bt_xml_filename = LaunchConfiguration('default_bt_xml_filename')
     autostart = LaunchConfiguration('autostart')
     use_composition = LaunchConfiguration('use_composition')
@@ -63,16 +63,16 @@ def generate_launch_description():
         )
     )
 
-    laser_params_file = LaunchConfiguration(
-        'laser_params_file',
-        default=PathJoinSubstitution(
-            [
-                FindPackageShare('agv_navigation2'),
-                'param',
-                'pointcloud_to_laserscan_params.yaml'
-            ]
-        )
-    )
+    # laser_params_file = LaunchConfiguration(
+    #     'laser_params_file',
+    #     default=PathJoinSubstitution(
+    #         [
+    #             FindPackageShare('agv_navigation2'),
+    #             'param',
+    #             'pointcloud_to_laserscan_params.yaml'
+    #         ]
+    #     )
+    # )
 
     nav2_launch_file_dir = PathJoinSubstitution(
         [
@@ -118,10 +118,10 @@ def generate_launch_description():
             default_value=params_file,
             description='Full path to the ROS2 parameters file to use for all launched nodes'),
 
-        DeclareLaunchArgument(
-            'laser_params_file',
-            default_value=laser_params_file,
-            description='Full path to the ROS2 parameters file to use for all launched nodes'),
+        # DeclareLaunchArgument(
+        #     'laser_params_file',
+        #     default_value=laser_params_file,
+        #     description='Full path to the ROS2 parameters file to use for all launched nodes'),
 
         DeclareLaunchArgument(
             'default_bt_xml_filename',
@@ -156,17 +156,17 @@ def generate_launch_description():
                 'use_respawn': use_respawn,
             }.items(),
         ),
-        Node(
-            package='pointcloud_to_laserscan',
-            executable='pointcloud_to_laserscan_node',
-            name='pointcloud_to_laserscan',
-            output='screen',
-            parameters=[laser_params_file],
-            remappings=[
-                ('/cloud_in', '/points2'),
-                ('/scan', '/scan')
-            ]
-        ),
+        # Node(
+        #     package='pointcloud_to_laserscan',
+        #     executable='pointcloud_to_laserscan_node',
+        #     name='pointcloud_to_laserscan',
+        #     output='screen',
+        #     parameters=[laser_params_file],
+        #     remappings=[
+        #         ('/cloud_in', '/points2'),
+        #         ('/scan', '/scan')
+        #     ]
+        # ),
         Node(
             package='rviz2',
             executable='rviz2',

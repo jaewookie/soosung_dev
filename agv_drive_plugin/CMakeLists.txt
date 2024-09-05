@@ -56,6 +56,29 @@ target_link_libraries(tricycle_drive_plugin
   ${tf2_ros_LIBRARIES}
 )
 
+add_library(tricycle_sec_drive_plugin SHARED src/tricycle_sec_drive_plugin.cpp)
+ament_target_dependencies(tricycle_sec_drive_plugin
+  "gazebo_ros"
+  "rclcpp"
+  "sensor_msgs"
+  "nav_msgs"
+  "geometry_msgs"
+  "tf2"
+  "tf2_ros"
+  "tf2_geometry_msgs"
+)
+
+# Link libraries
+target_link_libraries(tricycle_sec_drive_plugin
+  ${GAZEBO_LIBRARIES}
+  ${rclcpp_LIBRARIES}
+  ${sensor_msgs_LIBRARIES}
+  ${nav_msgs_LIBRARIES}
+  ${geometry_msgs_LIBRARIES}
+  ${tf2_LIBRARIES}
+  ${tf2_ros_LIBRARIES}
+)
+
 add_library(fork_control_plugin SHARED src/fork_control_plugin.cpp)
 ament_target_dependencies(fork_control_plugin
   "gazebo_ros"
@@ -85,6 +108,7 @@ ament_environment_hooks("${CMAKE_CURRENT_SOURCE_DIR}/env-hooks/gazebo_plugins.sh
 install(TARGETS
   tricycle_drive_plugin
   fork_control_plugin
+  tricycle_sec_drive_plugin
   # tricycle_motion_model
   EXPORT export_tricycle_motion_model
   ARCHIVE DESTINATION lib

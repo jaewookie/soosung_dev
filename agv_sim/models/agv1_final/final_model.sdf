@@ -681,7 +681,7 @@
       </sensor>
     </link>
 
-    <plugin name="agv_drive" filename="libtricycle_drive_plugin.so">
+    <plugin name="agv_drive" filename="libtricycle_sec_drive_plugin.so">
       <wheel_separation_>0.9</wheel_separation_>
       <max_steering_speed_>1</max_steering_speed_>
       <max_wheel_acceleration>6.25</max_wheel_acceleration>
