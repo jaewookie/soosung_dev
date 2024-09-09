@@ -151,6 +151,7 @@ void PointCloudToLaserScanNode::cloudCallback(
   scan_msg->scan_time = scan_time_;
   scan_msg->range_min = range_min_;
   scan_msg->range_max = range_max_;
+  scan_msg->intensities = {0.0};
 
   // determine amount of rays to create
   uint32_t ranges_size = std::ceil(

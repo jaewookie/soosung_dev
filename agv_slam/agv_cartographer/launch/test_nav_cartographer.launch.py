@@ -29,18 +29,18 @@ from launch_ros.substitutions import FindPackageShare
 def generate_launch_description():
     start_rviz = LaunchConfiguration('start_rviz')
     use_sim = LaunchConfiguration('use_sim')
-    laser_params_file = LaunchConfiguration('laser_params_file')
+    # laser_params_file = LaunchConfiguration('laser_params_file')
 
-    laser_params_file = LaunchConfiguration(
-        'laser_params_file',
-        default=PathJoinSubstitution(
-            [
-                FindPackageShare('agv_cartographer'),
-                'config',
-                'pointcloud_to_laserscan_params.yaml'
-            ]
-        )
-    )
+    # laser_params_file = LaunchConfiguration(
+    #     'laser_params_file',
+    #     default=PathJoinSubstitution(
+    #         [
+    #             FindPackageShare('agv_cartographer'),
+    #             'config',
+    #             'pointcloud_to_laserscan_params.yaml'
+    #         ]
+    #     )
+    # )
 
     cartographer_config_dir = PathJoinSubstitution(
         [
@@ -52,12 +52,13 @@ def generate_launch_description():
 
     resolution = LaunchConfiguration('resolution')
 
+
     return LaunchDescription([
 
-        DeclareLaunchArgument(
-            'laser_params_file',
-            default_value=laser_params_file,
-            description='Full path to the ROS2 parameters file to use for all launched nodes'),
+        # DeclareLaunchArgument(
+        #     'laser_params_file',
+        #     default_value=laser_params_file,
+        #     description='Full path to the ROS2 parameters file to use for all launched nodes'),
 
         DeclareLaunchArgument(
             'use_sim',
@@ -79,17 +80,17 @@ def generate_launch_description():
             default_value='0.05',
             description='Resolution of a grid cell of occupancy grid'),
 
-        Node(
-            package='pointcloud_to_laserscan',
-            executable='pointcloud_to_laserscan_node',
-            name='pointcloud_to_laserscan',
-            output='screen',
-            parameters=[laser_params_file],
-            remappings=[
-                ('/cloud_in', '/points2'),
-                ('/scan', '/scan')
-            ]
-        ),
+        # Node(
+        #     package='pointcloud_to_laserscan',
+        #     executable='pointcloud_to_laserscan_node',
+        #     name='pointcloud_to_laserscan',
+        #     output='screen',
+        #     parameters=[laser_params_file],
+        #     remappings=[
+        #         ('/cloud_in', '/points2'),
+        #         ('/scan', '/scan_s')
+        #     ]
+        # ),
 
         Node(
             package='cartographer_ros',
@@ -99,10 +100,10 @@ def generate_launch_description():
             arguments=['-configuration_directory', cartographer_config_dir,
                        '-configuration_basename', configuration_basename]),
 
-        Node(
-            package='cartographer_ros',
-            executable='cartographer_occupancy_grid_node',
-            output='screen',
-            parameters=[{'use_sim_time': use_sim}],
-            arguments=['-resolution', resolution])
+        # Node(
+        #     package='cartographer_ros',
+        #     executable='cartographer_occupancy_grid_node',
+        #     output='screen',
+        #     parameters=[{'use_sim_time': use_sim}],
+        #     arguments=['-resolution', resolution])
     ])

@@ -12,7 +12,7 @@ from rclpy.qos import QoSProfile
 if os.name == 'nt':
     import msvcrt
 else:
-    import termios
+    # import termios
     import tty
 
 MAX_LIN = 1.1
@@ -63,8 +63,8 @@ def constrain(input_vel, low_bound, high_bound):
 
 def main():
     settings = None
-    if os.name != 'nt':
-        settings = termios.tcgetattr(sys.stdin)
+    # if os.name != 'nt':
+    #     settings = termios.tcgetattr(sys.stdin)
 
     rclpy.init()
 

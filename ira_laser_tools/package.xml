@@ -12,10 +12,12 @@
   <license>BSD</license>
 
   <buildtool_depend>ament_cmake</buildtool_depend>
-
+  <build_depend>pcl_conversion</build_depend>
   <depend>sensor_msgs</depend>
+  <depend>pcl</depend>
   <depend>libpcl-all-dev</depend>
   <depend>pcl_ros</depend>
+
   <depend>geometry_msgs</depend>
   <depend>std_msgs</depend>
   <depend>tf2</depend>
@@ -26,7 +28,7 @@
   <depend>rclcpp_lifecycle</depend>
   <!-- Needed to work around https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=894656 on Debian Stretch -->
   <exec_depend>rosidl_default_runtime</exec_depend>
-
+  <exec_depend>pcl_conversion</exec_depend>
   <export>
     <build_type>ament_cmake</build_type>
   </export>

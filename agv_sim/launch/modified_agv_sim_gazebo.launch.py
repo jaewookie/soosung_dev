@@ -73,10 +73,17 @@ def generate_launch_description():
         }.items()
     )
 
+    joy_node = Node(
+        package='joy',
+        executable='joy_node',
+        name='joy_node',
+    )
+
     ld = LaunchDescription()
 
     ld.add_action(gzserver_cmd)
     ld.add_action(gzclient_cmd)
     ld.add_action(robot_state_publisher_cmd)
     ld.add_action(spawn_agv_cmd)
+    ld.add_action(joy_node)
     return ld
