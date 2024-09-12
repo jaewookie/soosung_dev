@@ -359,10 +359,10 @@ namespace gazebo_ros
     std::lock_guard<std::mutex> scoped_lock(lock_);
     cmd_.linear.x = cmd_msg->linear.x;
     cmd_.angular.z = cmd_msg->angular.z;
-    if (fabs(cmd_.linear.x) < 0.5 && fabs(cmd_.angular.z) > max_steering_angle_tol_)
-    {
-      cmd_.linear.x = 0.5;
-    }
+    // if (fabs(cmd_.linear.x) < 0.5 && fabs(cmd_.angular.z) > max_steering_angle_tol_)
+    // {
+    //   cmd_.linear.x = 0.5;
+    // }
   }
 
   void TricycleSecDrivePluginPrivate::OnImu(

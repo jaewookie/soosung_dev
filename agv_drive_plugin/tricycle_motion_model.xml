@@ -1,5 +1,5 @@
-<!-- <library path="libtricycle_motion_model.so">
+<library path="libtricycle_motion_model.so">
   <class name="nav2_amcl::TricycleMotionModel" type="nav2_amcl::MotionModel">
     <description>Tricycle motion model for AMCL</description>
   </class>
-</library> -->
+</library>

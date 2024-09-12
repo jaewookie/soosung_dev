@@ -257,23 +257,40 @@ namespace gazebo_ros
     // 위치 변환 계산
     static double current_pose = joints_[0]->Position(0);
 
-    double applied_speed = target_speed;
-    double applied_pose = current_pose;
+    double applied_speed = 0;
+    double applied_pose = 0;
 
+    applied_speed = target_speed;
+
+    if (current_pose == 1.12 || current_pose > 1.12)
+    {
+      if (applied_speed > 0)
+      {
+        applied_speed = 0;
+      }
+    }
+    else if (current_pose == -0.11 || current_pose < -0.11)
+    {
+      if (applied_speed < 0)
+      {
+        applied_speed = 0;
+      }
+    }
+    applied_pose = current_pose;
     applied_pose += (applied_speed * dt);
 
-    if (applied_pose > 1.5)
-    {
-      applied_pose = 1.5;
-    }
-    else if (applied_pose < -0.11)
-    {
-      applied_pose = -0.11;
-    }
-    else if (applied_speed == 0)
-    {
-      applied_pose = current_pose;
-    }
+    // if (applied_pose >= 1.5)
+    // {
+    //   applied_pose = 1.5;
+    // }
+    // else if (applied_pose <= -0.11)
+    // {
+    //   applied_pose = -0.11;
+    // }
+    // else if (applied_speed == 0)
+    // {
+    //   applied_pose = current_pose;
+    // }
 
     // 변환 위치 및 속도 적용
     joints_[0]->SetPosition(0, applied_pose, true);
