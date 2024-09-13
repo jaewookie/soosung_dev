@@ -262,7 +262,7 @@ namespace gazebo_ros
 
     applied_speed = target_speed;
 
-    if (current_pose == 1.12 || current_pose > 1.12)
+    if (current_pose == 1.105 || current_pose > 1.105)
     {
       if (applied_speed > 0)
       {
