@@ -2,7 +2,7 @@
 
 <launch>
 	<node pkg="ira_laser_tools" name="laserscan_multi_merger" exec="laserscan_multi_merger" output="screen">
-		<param name="destination_frame" value="odom"/>
+		<param name="destination_frame" value="slam_lidar"/>
 		<param name="cloud_destination_topic" value="/merged_cloud"/>
 		<param name="scan_destination_topic" value="/scan"/>
 		<param name="laserscan_topics" value ="/scan_s_l /scan_s_r /scan_na" />

@@ -27,7 +27,6 @@ from launch_ros.substitutions import FindPackageShare
 
 
 def generate_launch_description():
-    start_rviz = LaunchConfiguration('start_rviz')
     use_sim = LaunchConfiguration('use_sim')
     # laser_params_file = LaunchConfiguration('laser_params_file')
 

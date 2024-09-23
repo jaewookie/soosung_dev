@@ -279,19 +279,6 @@ namespace gazebo_ros
     applied_pose = current_pose;
     applied_pose += (applied_speed * dt);
 
-    // if (applied_pose >= 1.5)
-    // {
-    //   applied_pose = 1.5;
-    // }
-    // else if (applied_pose <= -0.11)
-    // {
-    //   applied_pose = -0.11;
-    // }
-    // else if (applied_speed == 0)
-    // {
-    //   applied_pose = current_pose;
-    // }
-
     // 변환 위치 및 속도 적용
     joints_[0]->SetPosition(0, applied_pose, true);
     joints_[0]->SetParam("vel", 0, applied_speed);

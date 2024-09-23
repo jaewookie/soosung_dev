@@ -1,3 +1,4 @@
+#include <math.h>
 #include <gazebo/physics/Model.hh>
 #include <gazebo/physics/World.hh>
 #include <gazebo/physics/Joint.hh>
@@ -39,7 +40,7 @@ namespace gazebo_ros
     void OnUpdate(const gazebo::common::UpdateInfo &_info);
     void OnCmdVel(const geometry_msgs::msg::Twist::ConstSharedPtr msg); // ok
     void OnImu(const sensor_msgs::msg::Imu::ConstSharedPtr msg);
-    void PublishWheelsTf(const gazebo::common::Time &_current_time);
+    // void PublishWheelsTf(const gazebo::common::Time &_current_time);
     void PublishWheelJointState(const gazebo::common::Time &_current_time);
     void MotorController(double target_speed, double target_angle, double dt); // ok
 
@@ -67,7 +68,7 @@ namespace gazebo_ros
 
     gazebo::physics::ModelPtr model_;
 
-    std::shared_ptr<tf2_ros::TransformBroadcaster> tf_broadcaster_;
+    // std::shared_ptr<tf2_ros::TransformBroadcaster> tf_broadcaster_;
 
     std::mutex lock_;
 
@@ -78,7 +79,7 @@ namespace gazebo_ros
 
     std::string robot_base_frame_;
 
-    bool publish_wheel_tf_;
+    // bool publish_wheel_tf_;
     bool publish_wheel_joint_state_;
   };
 
@@ -105,7 +106,7 @@ namespace gazebo_ros
 
     impl_->robot_base_frame_ = "base_footprint";
 
-    impl_->publish_wheel_tf_ = true;
+    // impl_->publish_wheel_tf_ = true;
 
     impl_->publish_wheel_joint_state_ = true;
 
@@ -147,8 +148,8 @@ namespace gazebo_ros
     impl_->joint_state_pub_ = impl_->ros_node_->create_publisher<sensor_msgs::msg::JointState>(
         "joint_states", qos.get_publisher_qos("joint_states", rclcpp::QoS(1000)));
 
-    impl_->tf_broadcaster_ = std::make_shared<tf2_ros::TransformBroadcaster>(
-        impl_->ros_node_);
+    // impl_->tf_broadcaster_ = std::make_shared<tf2_ros::TransformBroadcaster>(
+    //     impl_->ros_node_);
 
     // Initialize joint state message
     impl_->joint_state_.name.resize(impl_->joints_.size());
@@ -209,28 +210,28 @@ namespace gazebo_ros
     joint_state_pub_->publish(joint_state_);
   }
 
-  // joint와 Link 연결 TF
-  void TricycleSecDrivePluginPrivate::PublishWheelsTf(const gazebo::common::Time &_current_time)
-  {
-    rclcpp::Time current_time = gazebo_ros::Convert<builtin_interfaces::msg::Time>(_current_time);
+  // // joint와 Link 연결 TF
+  // void TricycleSecDrivePluginPrivate::PublishWheelsTf(const gazebo::common::Time &_current_time)
+  // {
+  //   rclcpp::Time current_time = gazebo_ros::Convert<builtin_interfaces::msg::Time>(_current_time);
 
-    for (auto &joint : joints_)
-    {
-      // sdf파일에서 가지고오는 정보들
-      std::string frame = joint->GetName();
-      std::string parent_frame = joint->GetParent()->GetName();
+  //   for (auto &joint : joints_)
+  //   {
+  //     // sdf파일에서 가지고오는 정보들
+  //     std::string frame = joint->GetName();
+  //     std::string parent_frame = joint->GetParent()->GetName();
 
-      ignition::math::Pose3d pose = joint->GetChild()->RelativePose();
+  //     ignition::math::Pose3d pose = joint->GetChild()->RelativePose();
 
-      geometry_msgs::msg::TransformStamped msg;
-      msg.header.stamp = current_time;
-      msg.header.frame_id = parent_frame;
-      msg.child_frame_id = frame;
-      msg.transform.translation = gazebo_ros::Convert<geometry_msgs::msg::Vector3>(pose.Pos());
-      msg.transform.rotation = gazebo_ros::Convert<geometry_msgs::msg::Quaternion>(pose.Rot());
-      tf_broadcaster_->sendTransform(msg);
-    }
-  }
+  //     geometry_msgs::msg::TransformStamped msg;
+  //     msg.header.stamp = current_time;
+  //     msg.header.frame_id = parent_frame;
+  //     msg.child_frame_id = frame;
+  //     msg.transform.translation = gazebo_ros::Convert<geometry_msgs::msg::Vector3>(pose.Pos());
+  //     msg.transform.rotation = gazebo_ros::Convert<geometry_msgs::msg::Quaternion>(pose.Rot());
+  //     tf_broadcaster_->sendTransform(msg);
+  //   }
+  // }
 
   void TricycleSecDrivePluginPrivate::OnUpdate(const gazebo::common::UpdateInfo &_info)
   {
@@ -249,16 +250,16 @@ namespace gazebo_ros
       return;
     }
 
-    if (publish_wheel_tf_)
-    {
-#ifdef IGN_PROFILER_ENABLE
-      IGN_PROFILE_BEGIN("PublishWheelsTf");
-#endif
-      PublishWheelsTf(current_time);
-#ifdef IGN_PROFILER_ENABLE
-      IGN_PROFILE_END();
-#endif
-    }
+    //     if (publish_wheel_tf_)
+    //     {
+    // #ifdef IGN_PROFILER_ENABLE
+    //       IGN_PROFILE_BEGIN("PublishWheelsTf");
+    // #endif
+    //       PublishWheelsTf(current_time);
+    // #ifdef IGN_PROFILER_ENABLE
+    //       IGN_PROFILE_END();
+    // #endif
+    //     }
     if (publish_wheel_joint_state_)
     {
 #ifdef IGN_PROFILER_ENABLE
@@ -359,10 +360,15 @@ namespace gazebo_ros
     std::lock_guard<std::mutex> scoped_lock(lock_);
     cmd_.linear.x = cmd_msg->linear.x;
     cmd_.angular.z = cmd_msg->angular.z;
-    // if (fabs(cmd_.linear.x) < 0.5 && fabs(cmd_.angular.z) > max_steering_angle_tol_)
-    // {
-    //   cmd_.linear.x = 0.5;
-    // }
+    if (fabs(cmd_.linear.x) < 0.1 && fabs(cmd_.angular.z) > max_steering_angle_tol_)
+    {
+      if(cmd_.linear.x<0){
+        cmd_.linear.x = -0.5;
+      }else{
+        cmd_.linear.x = 0.5;
+      }
+      cmd_.angular.z = atan(1.5 / (cmd_.linear.x / cmd_.angular.z));
+    }
   }
 
   void TricycleSecDrivePluginPrivate::OnImu(

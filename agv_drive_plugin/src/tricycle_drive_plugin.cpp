@@ -197,6 +197,9 @@ namespace gazebo_ros
     impl_->odom_.pose.covariance[21] = 1000000000000.0;
     impl_->odom_.pose.covariance[28] = 1000000000000.0;
     impl_->odom_.pose.covariance[35] = 0.001;
+    // impl_->odom_.pose.covariance[0] = 0.1;
+    // impl_->odom_.pose.covariance[7] = 0.1;
+    // impl_->odom_.pose.covariance[35] = 0.05;
 
     // Create a connection so the OnUpdate function is called at every simulation iteration.
 
@@ -292,16 +295,16 @@ namespace gazebo_ros
       return;
     }
 
-        if (publish_odom_)
-        {
-    #ifdef IGN_PROFILER_ENABLE
-          IGN_PROFILE_BEGIN("PublishOdometryMsg");
-    #endif
-          PublishOdometryMsg(current_time);
-    #ifdef IGN_PROFILER_ENABLE
-          IGN_PROFILE_END();
-    #endif
-        }
+    if (publish_odom_)
+    {
+#ifdef IGN_PROFILER_ENABLE
+      IGN_PROFILE_BEGIN("PublishOdometryMsg");
+#endif
+      PublishOdometryMsg(current_time);
+#ifdef IGN_PROFILER_ENABLE
+      IGN_PROFILE_END();
+#endif
+    }
 
     if (publish_wheel_tf_)
     {
@@ -442,10 +445,10 @@ namespace gazebo_ros
     double seconds_since_last_update = (_current_time - last_odom_update_).Double();
     last_odom_update_ = _current_time;
 
-    static double last_theta = 0;
+    // static double last_theta = 0;
     double theta = yaw;
 
-    double dtheta = theta - last_theta;
+    // double dtheta = theta - last_theta;
 
     // drive wheel 사용
     double vd = joints_[DRIVE_WHEEL]->GetVelocity(0);
@@ -463,19 +466,44 @@ namespace gazebo_ros
 
     tf2::Vector3 vt;
     vt = tf2::Vector3(pose_encoder_.x, pose_encoder_.y, 0);
-    odom_.pose.pose.position.x = vt.x();
-    odom_.pose.pose.position.y = vt.y();
-    odom_.pose.pose.position.z = vt.z();
 
+    // odom_.pose.pose.position.x = vt.x();
+    // odom_.pose.pose.position.y = vt.y();
+    // odom_.pose.pose.position.z = vt.z();
+
+    // tf2::Quaternion qt;
+    // qt.setRPY(0, 0, pose_encoder_.theta);
+    // odom_.pose.pose.orientation = tf2::toMsg(qt);
+
+    // odom_.twist.twist.angular.z = dtheta / seconds_since_last_update;
+    // odom_.twist.twist.linear.x = sd / seconds_since_last_update;
+    // odom_.twist.twist.linear.y = 0;
+
+    // test_world_pose
+
+    ignition::math::Pose3d pose = this->model_->WorldPose();
+
+    // tf2::Quaternion q;
+    // q.setRPY(0, 0, pose.Rot().Yaw());
+
+    ignition::math::Vector3d linear_vel = this->model_->WorldLinearVel();
+    ignition::math::Vector3d angular_vel = this->model_->WorldAngularVel();
+
+    // Set the position
+    odom_.pose.pose.position.x = pose.Pos().X();
+    odom_.pose.pose.position.y = pose.Pos().Y();
+    odom_.pose.pose.position.z = pose.Pos().Z();
     tf2::Quaternion qt;
     qt.setRPY(0, 0, pose_encoder_.theta);
     odom_.pose.pose.orientation = tf2::toMsg(qt);
+    // odom_.pose.pose.orientation = tf2::toMsg(q);
 
-    odom_.twist.twist.angular.z = dtheta / seconds_since_last_update;
-    odom_.twist.twist.linear.x = sd / seconds_since_last_update;
-    odom_.twist.twist.linear.y = 0;
+    // Set the velocity
+    odom_.twist.twist.linear.x = linear_vel.X();
+    odom_.twist.twist.linear.y = linear_vel.Y();
+    odom_.twist.twist.angular.z = angular_vel.Z();
 
-    last_theta = theta;
+    // last_theta = theta;
   }
 
   void TricycleDrivePluginPrivate::PublishOdometryMsg(const gazebo::common::Time &_current_time)

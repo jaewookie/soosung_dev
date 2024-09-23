@@ -55,19 +55,13 @@ Visualization Manager:
           Value: true
         drive_wheel:
           Value: true
-        drive_wheel_joint:
-          Value: true
         fork_house:
           Value: true
         fork_joint:
           Value: true
         front_wheel_l:
           Value: true
-        front_wheel_l_joint:
-          Value: true
         front_wheel_r:
-          Value: true
-        front_wheel_r_joint:
           Value: true
         imu_link:
           Value: false
@@ -75,9 +69,13 @@ Visualization Manager:
           Value: true
         odom:
           Value: true
-        slam_lidar:
+        safety_lidar_l:
           Value: true
-        steering_joint:
+        safety_lidar_m:
+          Value: true
+        safety_lidar_r:
+          Value: true
+        slam_lidar:
           Value: true
         steering_part:
           Value: true
@@ -97,22 +95,20 @@ Visualization Manager:
                   {}
                 front_wheel_l:
                   {}
-                front_wheel_l_joint:
-                  {}
                 front_wheel_r:
-                  {}
-                front_wheel_r_joint:
                   {}
                 imu_link:
                   {}
-                slam_lidar:
+                safety_lidar_l:
                   {}
-                steering_joint:
+                safety_lidar_m:
+                  {}
+                safety_lidar_r:
+                  {}
+                slam_lidar:
                   {}
                 steering_part:
                   drive_wheel:
-                    {}
-                  drive_wheel_joint:
                     {}
       Update Interval: 0
       Value: true
@@ -503,26 +499,21 @@ Visualization Manager:
   Value: true
   Views:
     Current:
-      Class: rviz_default_plugins/Orbit
-      Distance: 19.913082122802734
+      Angle: -1.574999451637268
+      Class: rviz_default_plugins/TopDownOrtho
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.05999999865889549
         Stereo Focal Distance: 1
         Swap Stereo Eyes: false
         Value: false
-      Focal Point:
-        X: 6.693548679351807
-        Y: 1.6538914442062378
-        Z: -2.94577956199646
-      Focal Shape Fixed Size: true
-      Focal Shape Size: 0.05000000074505806
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.009999999776482582
-      Pitch: 1.5397963523864746
+      Scale: 61.3039436340332
       Target Frame: <Fixed Frame>
-      Value: Orbit (rviz_default_plugins)
-      Yaw: 3.2223846912384033
+      Value: TopDownOrtho (rviz_default_plugins)
+      X: 3.103058099746704
+      Y: -1.116543173789978
     Saved: ~
 Window Geometry:
   Displays:

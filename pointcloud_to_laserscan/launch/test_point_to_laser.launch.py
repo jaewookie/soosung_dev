@@ -15,7 +15,7 @@ def generate_launch_description():
             remappings=[('/cloud_in', '/points2'),
                         ('/scan', '/scan_na')],
             parameters=[{
-                'target_frame': 'odom',
+                'target_frame': 'slam_lidar',
                 'transform_tolerance': 0.01,
                 'min_height': 0.1,
                 'max_height': 3.0,

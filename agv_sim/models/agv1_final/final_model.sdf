@@ -4,7 +4,7 @@
 
     <static>false</static>
 
-    <pose>0.0 0.0 0.0 0.0 0.0 3.14</pose>
+    <pose>0.0 0.0 0.0 0.0 0.0 0.0</pose>
 
     <link name="base_footprint" />
 
