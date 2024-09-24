@@ -173,5 +173,8 @@ def generate_launch_description():
             name='rviz2',
             arguments=['-d', rviz_config_file],
             output='screen',
+            remappings=[
+                ('/goal_pose', '/custom_goal_pose')  # Remapping cmd_vel to new_cmd_vel
+            ],
             condition=IfCondition(start_rviz)),
     ])
