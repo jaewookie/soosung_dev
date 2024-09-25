@@ -9,24 +9,30 @@ endif()
 find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(geometry_msgs REQUIRED)
+find_package(action_msgs REQUIRED)
+find_package(sensor_msgs REQUIRED)
 
 add_executable(agv_goal_pub src/agv_goal_pub.cpp)
 
 ament_target_dependencies(agv_goal_pub
   rclcpp
   geometry_msgs
+  action_msgs
+  sensor_msgs
 )
 
-add_executable(agv_goal_pub_sec src/agv_goal_pub_sec.cpp)
+add_executable(agv_goal_planner src/agv_goal_planner.cpp)
 
-ament_target_dependencies(agv_goal_pub_sec
+ament_target_dependencies(agv_goal_planner
   rclcpp
   geometry_msgs
+  action_msgs
+  sensor_msgs
 )
 
 install(TARGETS
   agv_goal_pub
-  agv_goal_pub_sec
+  agv_goal_planner
   DESTINATION lib/${PROJECT_NAME})
 
 if(BUILD_TESTING)
