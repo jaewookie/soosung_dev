@@ -46,6 +46,9 @@ options = {
 }
 
 TRAJECTORY_BUILDER_3D.motion_filter.max_angle_radians = math.rad(0.1)
+TRAJECTORY_BUILDER.pure_localization_trimmer = {
+  max_submaps_to_keep = 3,
+}
 
 MAP_BUILDER.use_trajectory_builder_3d = true
 MAP_BUILDER.num_background_threads = 15

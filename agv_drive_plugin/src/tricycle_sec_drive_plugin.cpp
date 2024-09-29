@@ -369,9 +369,9 @@ namespace gazebo_ros
       }
       cmd_.angular.z = atan(1.0 / (cmd_.linear.x / cmd_.angular.z));
     }
-    if(cmd_.linear.x<0){
-        cmd_.angular.z = -cmd_.angular.z;
-      }
+    // if(cmd_.linear.x<0){
+    //     cmd_.angular.z = -cmd_.angular.z;
+    //   }
   }
 
   void TricycleSecDrivePluginPrivate::OnImu(

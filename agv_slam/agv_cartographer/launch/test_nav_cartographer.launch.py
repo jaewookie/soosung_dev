@@ -61,7 +61,7 @@ def generate_launch_description():
 
         DeclareLaunchArgument(
             'use_sim',
-            default_value='false',
+            default_value='true',
             description='Start robot in Gazebo simulation'),
 
         DeclareLaunchArgument(
@@ -99,10 +99,10 @@ def generate_launch_description():
             arguments=['-configuration_directory', cartographer_config_dir,
                        '-configuration_basename', configuration_basename]),
 
-        # Node(
-        #     package='cartographer_ros',
-        #     executable='cartographer_occupancy_grid_node',
-        #     output='screen',
-        #     parameters=[{'use_sim_time': use_sim}],
-        #     arguments=['-resolution', resolution])
+        Node(
+            package='cartographer_ros',
+            executable='cartographer_occupancy_grid_node',
+            output='screen',
+            parameters=[{'use_sim_time': use_sim}],
+            arguments=['-resolution', resolution])
     ])

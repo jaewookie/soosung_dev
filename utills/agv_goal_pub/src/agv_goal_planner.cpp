@@ -11,11 +11,11 @@
 class AgvGoalPlanner : public rclcpp::Node
 {
 public:
-  // enum
-  // {
-  //   HORIZONTAL,
-  //   VERTICAL
-  // };
+  enum
+  {
+    HORIZONTAL,
+    VERTICAL
+  };
   AgvGoalPlanner() : Node("agv_goal_pub"), goal_count(0), agv_status(0), agv_direction(VERTICAL)
   {
     // qos
@@ -109,13 +109,13 @@ private:
     imu_ = *msg;
     yaw_ = imu_.orientation.z;
     RCLCPP_INFO(this->get_logger(), "%f", yaw_);
-    // if(fabs(cos(yaw_)) > (1/sqrt(2))){
-    //   agv_direction = VERTICAL;
-    //   // RCLCPP_INFO(this->get_logger(), "VERTICAL!!!!!!!!!!!!");
-    // }else{
-    //   agv_direction = HORIZONTAL;
-    //   // RCLCPP_INFO(this->get_logger(), "HORIZONTAL!!!!!!!!!!!!");
-    // }
+    if(fabs(cos(yaw_)) > (1/sqrt(2))){
+      agv_direction = VERTICAL;
+      // RCLCPP_INFO(this->get_logger(), "VERTICAL!!!!!!!!!!!!");
+    }else{
+      agv_direction = HORIZONTAL;
+      // RCLCPP_INFO(this->get_logger(), "HORIZONTAL!!!!!!!!!!!!");
+    }
 
     if (agv_status == 4)
     {
