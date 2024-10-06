@@ -445,27 +445,27 @@ namespace gazebo_ros
     double seconds_since_last_update = (_current_time - last_odom_update_).Double();
     last_odom_update_ = _current_time;
 
-    // static double last_theta = 0;
+    static double last_theta = 0;
     double theta = yaw;
 
-    // double dtheta = theta - last_theta;
+    double dtheta = theta - last_theta;
 
-    // drive wheel 사용
-    double vd = joints_[DRIVE_WHEEL]->GetVelocity(0);
-    double sd = vd * (drive_wheel_radius_)*seconds_since_last_update;
+    // // drive wheel 사용
+    // double vd = joints_[DRIVE_WHEEL]->GetVelocity(0);
+    // double sd = vd * (drive_wheel_radius_)*seconds_since_last_update;
 
-    double dx = sd * cos(theta);
-    double dy = sd * sin(theta);
+    // double dx = sd * cos(theta);
+    // double dy = sd * sin(theta);
 
-    pose_encoder_.x += dx;
-    pose_encoder_.y += dy;
-    // pose_encoder_.theta += dtheta;
-    pose_encoder_.theta = theta;
+    // pose_encoder_.x += dx;
+    // pose_encoder_.y += dy;
+    // // pose_encoder_.theta += dtheta;
+    // pose_encoder_.theta = theta;
 
-    // double w = dthetad / seconds_since_last_update;
+    // // double w = dthetad / seconds_since_last_update;
 
-    tf2::Vector3 vt;
-    vt = tf2::Vector3(pose_encoder_.x, pose_encoder_.y, 0);
+    // tf2::Vector3 vt;
+    // vt = tf2::Vector3(pose_encoder_.x, pose_encoder_.y, 0);
 
     // odom_.pose.pose.position.x = vt.x();
     // odom_.pose.pose.position.y = vt.y();
@@ -503,7 +503,7 @@ namespace gazebo_ros
     odom_.twist.twist.linear.y = linear_vel.Y();
     odom_.twist.twist.angular.z = angular_vel.Z();
 
-    // last_theta = theta;
+    last_theta = theta;
   }
 
   void TricycleDrivePluginPrivate::PublishOdometryMsg(const gazebo::common::Time &_current_time)

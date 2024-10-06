@@ -132,7 +132,7 @@ namespace gazebo_ros
     impl_->joints_[TricycleSecDrivePluginPrivate::DRIVE_WHEEL]->SetParam("fmax", 0, impl_->max_wheel_torque_);
     impl_->joints_[TricycleSecDrivePluginPrivate::STEERING]->SetParam("fmax", 0, impl_->max_wheel_torque_);
 
-    auto publish_rate = 100;
+    auto publish_rate = 50;
 
     impl_->update_period_ = 1 / publish_rate;
 

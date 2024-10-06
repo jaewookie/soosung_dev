@@ -47,7 +47,7 @@ def generate_launch_description():
             [
                 FindPackageShare('agv_navigation2'),
                 'map',
-                'new_map.yaml'
+                'cmap.yaml'
             ]
         )
     )
@@ -105,7 +105,7 @@ def generate_launch_description():
 
         DeclareLaunchArgument(
             'use_sim',
-            default_value='false',
+            default_value='true',
             description='Start robot in Gazebo simulation'),
 
         DeclareLaunchArgument(
