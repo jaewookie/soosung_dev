@@ -13,7 +13,7 @@ def generate_launch_description():
         Node(
             package='pointcloud_to_laserscan', executable='pointcloud_to_laserscan_node',
             remappings=[('/cloud_in', '/points2'),
-                        ('/scan', '/scan')],
+                        ('/scan', '/scan_na')],
             parameters=[{
                 'target_frame': 'slam_lidar',
                 'transform_tolerance': 0.01,
