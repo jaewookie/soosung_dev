@@ -47,6 +47,15 @@ def generate_launch_description():
             'config',
         ]
     )
+
+    pbstream_name = PathJoinSubstitution(
+        [
+            FindPackageShare('agv_navigation2'),
+            'map',
+            'new_map.pbstream'
+        ]
+    )
+
     configuration_basename = LaunchConfiguration('configuration_basename')
 
     resolution = LaunchConfiguration('resolution')
@@ -75,6 +84,11 @@ def generate_launch_description():
             description='Name of lua file for cartographer'),
 
         DeclareLaunchArgument(
+            'pbstream_name',
+            default_value=pbstream_name,
+            description='Full direction of config file'),
+
+        DeclareLaunchArgument(
             'resolution',
             default_value='0.05',
             description='Resolution of a grid cell of occupancy grid'),
@@ -91,13 +105,24 @@ def generate_launch_description():
         #     ]
         # ),
 
+        # # pbstream 미사용 버전
+        # Node(
+        #     package='cartographer_ros',
+        #     executable='cartographer_node',
+        #     output='screen',
+        #     parameters=[{'use_sim_time': use_sim}],
+        #     arguments=['-configuration_directory', cartographer_config_dir,
+        #                '-configuration_basename', configuration_basename]),
+
+        # pbstream 사용 버전
         Node(
             package='cartographer_ros',
             executable='cartographer_node',
             output='screen',
             parameters=[{'use_sim_time': use_sim}],
             arguments=['-configuration_directory', cartographer_config_dir,
-                       '-configuration_basename', configuration_basename]),
+                       '-configuration_basename', configuration_basename,
+                       '-load_state_filename', pbstream_name]),
 
         # Node(
         #     package='cartographer_ros',

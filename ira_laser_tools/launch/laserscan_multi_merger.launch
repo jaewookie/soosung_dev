@@ -5,7 +5,7 @@
 		<param name="destination_frame" value="slam_lidar"/>
 		<param name="cloud_destination_topic" value="/merged_cloud"/>
 		<param name="scan_destination_topic" value="/scan"/>
-		<param name="laserscan_topics" value ="/scan_s_l /scan_s_r /scan_na" />
+		<param name="laserscan_topics" value ="/scan_s_l /scan_s_r /scan_na /scan_s_m" />
 		<!-- LIST OF THE LASER SCAN TOPICS TO SUBSCRIBE -->
 		<param name="angle_min" value="-3.14"/>
 		<param name="angle_max" value="3.14"/>

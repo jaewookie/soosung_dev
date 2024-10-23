@@ -53,6 +53,9 @@ TRAJECTORY_BUILDER.pure_localization_trimmer = {
 MAP_BUILDER.use_trajectory_builder_3d = true
 MAP_BUILDER.num_background_threads = 15
 TRAJECTORY_BUILDER_3D.submaps.num_range_data = 100.
+-- TRAJECTORY_BUILDER_3D.ceres_scan_matcher.translation_weight = 1000
+-- TRAJECTORY_BUILDER_3D.ceres_scan_matcher.rotation_weight = 1000
+TRAJECTORY_BUILDER_3D.pure_localization = True
 TRAJECTORY_BUILDER_3D.min_range = 0.5
 TRAJECTORY_BUILDER_3D.max_range = 15.
 

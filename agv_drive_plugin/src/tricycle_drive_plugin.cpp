@@ -416,10 +416,18 @@ namespace gazebo_ros
     std::lock_guard<std::mutex> scoped_lock(lock_);
     cmd_.linear.x = cmd_msg->linear.x;
     cmd_.angular.z = cmd_msg->angular.z;
-    if (fabs(cmd_.linear.x) < 0.5 && fabs(cmd_.angular.z) > max_steering_angle_tol_)
+    if (fabs(cmd_.linear.x) < 0.1 && fabs(cmd_.angular.z) > max_steering_angle_tol_)
     {
-      cmd_.linear.x = 0.5;
+      if(cmd_.linear.x<0){
+        cmd_.linear.x = -0.5;
+      }else{
+        cmd_.linear.x = 0.5;
+      }
+      cmd_.angular.z = atan(1.0 / (cmd_.linear.x / cmd_.angular.z));
     }
+    if(cmd_.linear.x<0){
+        cmd_.angular.z = -cmd_.angular.z;
+      }
   }
 
   void TricycleDrivePluginPrivate::OnImu(
@@ -450,58 +458,59 @@ namespace gazebo_ros
 
     double dtheta = theta - last_theta;
 
-    // // drive wheel 사용
-    // double vd = joints_[DRIVE_WHEEL]->GetVelocity(0);
-    // double sd = vd * (drive_wheel_radius_)*seconds_since_last_update;
+    // drive wheel 사용
+    double vd = joints_[DRIVE_WHEEL]->GetVelocity(0);
+    double sd = vd * (drive_wheel_radius_)*seconds_since_last_update;
 
-    // double dx = sd * cos(theta);
-    // double dy = sd * sin(theta);
+    double dx = sd * cos(theta);
 
-    // pose_encoder_.x += dx;
-    // pose_encoder_.y += dy;
-    // // pose_encoder_.theta += dtheta;
-    // pose_encoder_.theta = theta;
+    double dy = sd * sin(theta);
 
-    // // double w = dthetad / seconds_since_last_update;
+    pose_encoder_.x += dx;
+    pose_encoder_.y += dy;
+    // pose_encoder_.theta += dtheta;
+    pose_encoder_.theta = theta;
 
-    // tf2::Vector3 vt;
-    // vt = tf2::Vector3(pose_encoder_.x, pose_encoder_.y, 0);
+    // double w = dthetad / seconds_since_last_update;
 
-    // odom_.pose.pose.position.x = vt.x();
-    // odom_.pose.pose.position.y = vt.y();
-    // odom_.pose.pose.position.z = vt.z();
+    tf2::Vector3 vt;
+    vt = tf2::Vector3(pose_encoder_.x, pose_encoder_.y, 0);
 
-    // tf2::Quaternion qt;
-    // qt.setRPY(0, 0, pose_encoder_.theta);
-    // odom_.pose.pose.orientation = tf2::toMsg(qt);
+    odom_.pose.pose.position.x = vt.x();
+    odom_.pose.pose.position.y = vt.y();
+    odom_.pose.pose.position.z = vt.z();
 
-    // odom_.twist.twist.angular.z = dtheta / seconds_since_last_update;
-    // odom_.twist.twist.linear.x = sd / seconds_since_last_update;
-    // odom_.twist.twist.linear.y = 0;
-
-    // test_world_pose
-
-    ignition::math::Pose3d pose = this->model_->WorldPose();
-
-    // tf2::Quaternion q;
-    // q.setRPY(0, 0, pose.Rot().Yaw());
-
-    ignition::math::Vector3d linear_vel = this->model_->WorldLinearVel();
-    ignition::math::Vector3d angular_vel = this->model_->WorldAngularVel();
-
-    // Set the position
-    odom_.pose.pose.position.x = pose.Pos().X();
-    odom_.pose.pose.position.y = pose.Pos().Y();
-    odom_.pose.pose.position.z = pose.Pos().Z();
     tf2::Quaternion qt;
     qt.setRPY(0, 0, pose_encoder_.theta);
     odom_.pose.pose.orientation = tf2::toMsg(qt);
-    // odom_.pose.pose.orientation = tf2::toMsg(q);
 
-    // Set the velocity
-    odom_.twist.twist.linear.x = linear_vel.X();
-    odom_.twist.twist.linear.y = linear_vel.Y();
-    odom_.twist.twist.angular.z = angular_vel.Z();
+    odom_.twist.twist.angular.z = dtheta / seconds_since_last_update;
+    odom_.twist.twist.linear.x = sd / seconds_since_last_update;
+    odom_.twist.twist.linear.y = 0;
+
+    // // test_world_pose
+
+    // ignition::math::Pose3d pose = this->model_->WorldPose();
+
+    // // tf2::Quaternion q;
+    // // q.setRPY(0, 0, pose.Rot().Yaw());
+
+    // ignition::math::Vector3d linear_vel = this->model_->WorldLinearVel();
+    // ignition::math::Vector3d angular_vel = this->model_->WorldAngularVel();
+
+    // // Set the position
+    // odom_.pose.pose.position.x = pose.Pos().X();
+    // odom_.pose.pose.position.y = pose.Pos().Y();
+    // odom_.pose.pose.position.z = pose.Pos().Z();
+    // tf2::Quaternion qt;
+    // qt.setRPY(0, 0, pose_encoder_.theta);
+    // odom_.pose.pose.orientation = tf2::toMsg(qt);
+    // // odom_.pose.pose.orientation = tf2::toMsg(q);
+
+    // // Set the velocity
+    // odom_.twist.twist.linear.x = linear_vel.X();
+    // odom_.twist.twist.linear.y = linear_vel.Y();
+    // odom_.twist.twist.angular.z = angular_vel.Z();
 
     last_theta = theta;
   }
@@ -537,7 +546,7 @@ namespace gazebo_ros
         gazebo_ros::Convert<geometry_msgs::msg::Vector3>(odom_.pose.pose.position);
     msg.transform.rotation = odom_.pose.pose.orientation;
 
-    tf_broadcaster_->sendTransform(msg);
+    // tf_broadcaster_->sendTransform(msg);
 
     // set header stamp
     odom_.header.stamp = current_time;
