@@ -250,4 +250,55 @@
       </geometry>
     </visual>
   </link>
+
+  <joint name="bumper_r_joint" type="fixed">
+    <parent link="base_link" />
+    <child link="bumper_r_link" />
+    <origin xyz="-1.09 0.193 0.35" rpy="0 0 0" />
+  </joint>
+
+  <link name="bumper_r_link">
+    <inertial>
+      <mass value="0.295" />
+      <inertia ixx="0.001" ixy="0.0" ixz="0.0" iyy="0.001" iyz="0.0" izz="0.002" />
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <box size="0.01 0.04 0.12"/>
+      </geometry>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <box size="0.01 0.04 0.12"/>
+      </geometry>
+    </collision>
+  </link>
+
+  <joint name="bumper_l_joint" type="fixed">
+    <parent link="base_link" />
+    <child link="bumper_l_link" />
+    <origin xyz="-1.09 -0.193 0.35" rpy="0 0 0" />
+  </joint>
+
+  <link name="bumper_l_link">
+    <inertial>
+      <mass value="0.295" />
+      <inertia ixx="0.001" ixy="0.0" ixz="0.0" iyy="0.001" iyz="0.0" izz="0.002" />
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <box size="0.01 0.04 0.12"/>
+      </geometry>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <box size="0.01 0.04 0.12"/>
+      </geometry>
+    </collision>
+  </link>
+
 </robot>

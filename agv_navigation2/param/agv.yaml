@@ -353,7 +353,7 @@ controller_server:
     goal_checker:
       plugin: "nav2_controller::SimpleGoalChecker"
       xy_goal_tolerance: 0.11
-      yaw_goal_tolerance: 0.05
+      yaw_goal_tolerance: 0.02
       stateful: True
     FollowPath:
       plugin: "nav2_regulated_pure_pursuit_controller::RegulatedPurePursuitController"
@@ -373,7 +373,7 @@ controller_server:
       use_fixed_curvature_lookahead: false
       curvature_lookahead_dist: 1.2
       use_cost_regulated_linear_velocity_scaling: false
-      regulated_linear_scaling_min_radius: 0.75
+      regulated_linear_scaling_min_radius: 0.4
       regulated_linear_scaling_min_speed: 0.4
       use_rotate_to_heading: false
       allow_reversing: true
@@ -480,7 +480,7 @@ local_costmap:
         scan:
           topic: /scan
           max_obstacle_height: 5.0
-          clearing: True
+          clearing: False
           marking: True
           data_type: "LaserScan"
       voxel_layer:
@@ -496,7 +496,7 @@ local_costmap:
         scan:
           topic: /scan
           max_obstacle_height: 5.0
-          clearing: True
+          clearing: False
           marking: True
           data_type: "LaserScan"
           raytrace_max_range: 20.0
@@ -528,7 +528,7 @@ global_costmap:
         scan:
           topic: /scan
           max_obstacle_height: 5.0
-          clearing: True
+          clearing: False
           marking: True
           data_type: "LaserScan"
           raytrace_max_range: 20.0
@@ -548,7 +548,7 @@ global_costmap:
         scan:
           topic: /scan
           max_obstacle_height: 5.0
-          clearing: True
+          clearing: False
           marking: True
           data_type: "LaserScan"
           raytrace_max_range: 3.0
@@ -624,11 +624,11 @@ planner_server:
       analytic_expansion_max_length: 3.0  # For Hybrid/Lattice nodes: The maximum length of the analytic expansion to be considered valid to prevent unsafe shortcutting
       analytic_expansion_max_cost: 200.0  # The maximum single cost for any part of an analytic expansion to contain and be valid, except when necessary on approach to goal
       analytic_expansion_max_cost_override: false  #  Whether or not to override the maximum cost setting if within critical distance to goal (ie probably required)
-      minimum_turning_radius: 0.75        # minimum turning radius in m of path / vehicle
+      minimum_turning_radius: 0.6        # minimum turning radius in m of path / vehicle
       reverse_penalty: 1.0                # Penalty to apply if motion is reversing, must be => 1
       change_penalty: 10.0                 # Penalty to apply if motion is changing directions (L to R), must be >= 0
       non_straight_penalty: 1.1           # Penalty to apply if motion is non-straight, must be => 1
-      cost_penalty: 1.15                   # Penalty to apply to higher cost areas when adding into the obstacle map dynamic programming distance expansion heuristic. This drives the robot more towards the center of passages. A value between 1.3 - 3.5 is reasonable.
+      cost_penalty: 1.5                   # Penalty to apply to higher cost areas when adding into the obstacle map dynamic programming distance expansion heuristic. This drives the robot more towards the center of passages. A value between 1.3 - 3.5 is reasonable.
       retrospective_penalty: 0.013
       lookup_table_size: 15.0             # Size of the dubin/reeds-sheep distance window to cache, in meters.
       cache_obstacle_heuristic: true     # Cache the obstacle map dynamic programming distance expansion heuristic between subsequent replannings of the same goal location. Dramatically speeds up replanning performance (40x) if costmap is largely static.

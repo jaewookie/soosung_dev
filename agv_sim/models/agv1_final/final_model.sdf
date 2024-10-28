@@ -86,6 +86,27 @@
             <scale>0.001 0.001 0.001</scale>
           </mesh>
         </geometry>
+        <surface>
+          <friction>
+            <ode>
+              <mu>100000.0</mu>
+              <mu2>100000.0</mu2>
+              <fdir1>0 0 0</fdir1>
+              <slip1>0.0</slip1>
+              <slip2>0.0</slip2>
+            </ode>
+          </friction>
+          <contact>
+            <ode>
+              <soft_cfm>0</soft_cfm>
+              <soft_erp>0.2</soft_erp>
+              <kp>5e+6</kp>
+              <kd>1</kd>
+              <max_vel>0.01</max_vel>
+              <min_depth>0.001</min_depth>
+            </ode>
+          </contact>
+        </surface>
       </collision>
 
       <visual name="fork_house_visual">
@@ -661,7 +682,7 @@
           </scan>
           <range>
             <min>0.05</min>
-            <max>10</max>
+            <max>4.0</max>
             <resolution>0.001</resolution>
           </range>
           <noise>
@@ -677,6 +698,84 @@
           </ros>
           <output_type>sensor_msgs/LaserScan</output_type>
           <frameName>safety_lidar_m</frameName>
+        </plugin>
+      </sensor>
+    </link>
+
+    <joint name='bumper_r_joint' type='fixed'>
+      <parent>base_link</parent>
+      <child>bumper_r_link</child>
+      <pose>-1.09 0.193 0.35 0 0 0</pose>
+    </joint>
+
+    <link name='bumper_r_link'>
+      <visual name="bumper_r_link_visual">
+        <pose>-1.09 0.193 0.35 0 0 0</pose>
+        <geometry>
+          <box>
+            <size>0.01 0.04 0.12</size>
+          </box>
+        </geometry>
+      </visual>
+      <collision name="bumper_r_link_collision">
+        <pose>-1.09 0.193 0.35 0 0 0</pose>
+        <geometry>
+          <box>
+            <size>0.01 0.04 0.12</size>
+          </box>
+        </geometry>
+      </collision>
+
+      <sensor type="contact" name="contact_r_sensor">
+        <always_on>true</always_on>
+        <update_rate>50</update_rate>
+        <contact>
+          <collision>bumper_r_link_collision</collision>
+        </contact>
+        <plugin name="bumper_r_plugin" filename="libgazebo_ros_bumper.so">
+          <ros>
+            <namespace>/bumper_r</namespace>
+          </ros>
+          <frameName>bumper_r_link</frameName>
+        </plugin>
+      </sensor>
+    </link>
+
+    <joint name='bumper_l_joint' type='fixed'>
+      <parent>base_link</parent>
+      <child>bumper_l_link</child>
+      <pose>-1.09 -0.193 0.35 0 0 0</pose>
+    </joint>
+
+    <link name='bumper_l_link'>
+      <visual name="bumper_l_link_visual">
+        <pose>-1.09 -0.193 0.35 0 0 0</pose>
+        <geometry>
+          <box>
+            <size>0.01 0.04 0.12</size>
+          </box>
+        </geometry>
+      </visual>
+      <collision name="bumper_l_link_collision">
+        <pose>-1.09 -0.193 0.35 0 0 0</pose>
+        <geometry>
+          <box>
+            <size>0.01 0.04 0.12</size>
+          </box>
+        </geometry>
+      </collision>
+
+      <sensor type="contact" name="contact_l_sensor">
+        <always_on>true</always_on>
+        <update_rate>50</update_rate>
+        <contact>
+          <collision>bumper_l_link_collision</collision>
+        </contact>
+        <plugin name="bumper_l_plugin" filename="libgazebo_ros_bumper.so">
+          <ros>
+            <namespace>/bumper_l</namespace>
+          </ros>
+          <frameName>bumper_l_link</frameName>
         </plugin>
       </sensor>
     </link>
