@@ -9,21 +9,39 @@ endif()
 find_package(ament_cmake REQUIRED)
 find_package(rclcpp_action REQUIRED)
 find_package(geometry_msgs REQUIRED)
-find_package(actionlib_msgs REQUIRED)
+find_package(action_msgs REQUIRED)
 find_package(gazebo_msgs REQUIRED)
 find_package(std_msgs REQUIRED)
+find_package(agv_msgs REQUIRED)
+find_package(sensor_msgs REQUIRED)
 
 include_directories(
   include
 )
 
 add_executable(agv_test src/agv_test.cpp)
-
-ament_target_dependencies(agv_test rclcpp geometry_msgs std_msgs actionlib_msgs)
+ament_target_dependencies(agv_test
+"rclcpp"
+"geometry_msgs"
+"std_msgs"
+"action_msgs"
+"agv_msgs")
+target_link_libraries(agv_test
+  ${rclcpp_LIBRARIES}
+)
 
 add_executable(agv_pal_test src/agv_pal_test.cpp)
-
-ament_target_dependencies(agv_pal_test rclcpp geometry_msgs std_msgs actionlib_msgs gazebo_msgs)
+ament_target_dependencies(agv_pal_test
+"rclcpp"
+"geometry_msgs"
+"std_msgs"
+"action_msgs"
+"gazebo_msgs"
+"agv_msgs"
+"sensor_msgs")
+target_link_libraries(agv_pal_test
+  ${rclcpp_LIBRARIES}
+)
 
 install(TARGETS
   agv_test

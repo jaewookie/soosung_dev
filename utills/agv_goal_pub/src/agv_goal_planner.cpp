@@ -3,10 +3,15 @@
 #include "action_msgs/msg/goal_status_array.hpp"
 #include <geometry_msgs/msg/twist.hpp>
 #include <sensor_msgs/msg/imu.hpp>
+// #include "nav2_msgs/action/navigate_to_pose.hpp"
+// #include <rclcpp_action/rclcpp_action.hpp>
 
 #include <memory>
 
 //'/navigate_to_pose/_action/status'   action_msgs/msg/GoalStatusArray.status_list[count].status==4
+
+// using NavigateToPose = nav2_msgs::action::NavigateToPose;
+// using GoalHandleNavigate = rclcpp_action::ClientGoalHandle<NavigateToPose>;
 
 class AgvGoalPlanner : public rclcpp::Node
 {
@@ -16,8 +21,22 @@ public:
     HORIZONTAL,
     VERTICAL
   };
+
   AgvGoalPlanner() : Node("agv_goal_pub"), goal_count(0), agv_status(0), agv_direction(VERTICAL)
   {
+    // // 액션 클라이언트 생성
+    // rclcpp_action::Client<NavigateToPose>::SharedPtr client_ptr_;
+
+    // client_ptr_ = rclcpp_action::create_client<NavigateToPose>(this, "navigate_to_pose");
+
+    // if (client_ptr_->wait_for_action_server())
+    // {
+    //   RCLCPP_ERROR(this->get_logger(), "Action server not available.");
+    //   return;
+    // }
+
+    // send_goal();
+
     // qos
     this->declare_parameter("qos_depth", 10);
     int8_t qos_depth = 0;
@@ -109,10 +128,13 @@ private:
     imu_ = *msg;
     yaw_ = imu_.orientation.z;
     RCLCPP_INFO(this->get_logger(), "%f", yaw_);
-    if(fabs(cos(yaw_)) > (1/sqrt(2))){
+    if (fabs(cos(yaw_)) > (1 / sqrt(2)))
+    {
       agv_direction = VERTICAL;
       // RCLCPP_INFO(this->get_logger(), "VERTICAL!!!!!!!!!!!!");
-    }else{
+    }
+    else
+    {
       agv_direction = HORIZONTAL;
       // RCLCPP_INFO(this->get_logger(), "HORIZONTAL!!!!!!!!!!!!");
     }
