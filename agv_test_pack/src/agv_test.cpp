@@ -34,17 +34,42 @@ AgvTest::AgvTest(const rclcpp::NodeOptions &node_options)
   drive_mode_subscriber_ = this->create_subscription<agv_msgs::msg::AgvDrive>(
       "/agv_state", QOS_RKL10V, std::bind(&AgvTest::agv_status_callback, this, std::placeholders::_1));
   drive_mode_publisher_ = this->create_publisher<agv_msgs::msg::AgvDrive>("/agv_state", 10);
+  get_node_inform();
 }
 
 AgvTest::~AgvTest() {}
 
-// void AgvTest::get_node_inform()
-// {
-//   // 사용자로부터 좌표 입력 받기
-//   std::cout << "Enter the node: ";
-//   std::cin >> node_name_;
-//   publish_goal();
-// }
+void AgvTest::get_node_inform()
+{
+  // 사용자로부터 좌표 입력 받기
+  // test 단계에서만 사용되며 추후 메시지를 받는 방식으로 변경 예정 -> launch에서는 사용 불가하기 때문
+  std::cout << "Enter the node: ";
+  std::cin >> node_name_;
+  if (node_name_ == "a")
+  {
+    x_dep_ = 4.0;
+    y_dep_ = 0.0;
+    z_dep_ = -1.574;
+    w_dep_ = 0.0;
+    x_des_ = 0.0;
+    y_des_ = 0.0;
+    z_des_ = 0.0;
+    w_des_ = 0.0;
+  }
+  else if (node_name_ == "b")
+  {
+    x_dep_ = 0.0;
+    y_dep_ = 0.0;
+    z_dep_ = 0.0;
+    w_dep_ = 0.0;
+    x_des_ = 4.0;
+    y_des_ = 0.0;
+    z_des_ = -1.574;
+    w_des_ = 0.0;
+  }
+  sending_drive_mode_ = 2;
+  publish_states();
+}
 
 void AgvTest::publish_goal()
 {
@@ -83,6 +108,7 @@ void AgvTest::goal_status_callback(const action_msgs::msg::GoalStatusArray::Shar
   {
     // RCLCPP_INFO(this->get_logger(), "Reached");
     publish_states();
+
     // get_node_inform();
   }
 }
@@ -91,7 +117,10 @@ void AgvTest::agv_status_callback(const agv_msgs::msg::AgvDrive::SharedPtr msg)
 {
   drive_mode_ = msg->drive_state;
   RCLCPP_INFO(this->get_logger(), "%d", drive_mode_);
-  agv_action(drive_mode_);
+  if (drive_mode_ == 1 || drive_mode_ == 2 || drive_mode_ == 5)
+  {
+    agv_action(drive_mode_);
+  }
 }
 
 void AgvTest::publish_states()
@@ -109,24 +138,28 @@ void AgvTest::agv_action(int drive_mode_)
     sending_drive_mode_ = 2;
     x_ = 2.0;
     y_ = -1.5;
-    z_ = -1.574/2;
+    z_ = -1.574 / 2;
     w_ = 0.7;
   }
   else if (agv_mode == 2)
   {
     sending_drive_mode_ = 3;
-    x_ = 4.0;
-    y_ = 0.0;
-    z_ = -1.574;
-    w_ = 0.0;
+    x_ = x_dep_;
+    y_ = y_dep_;
+    z_ = z_dep_;
+    w_ = w_dep_;
   }
   else if (agv_mode == 5)
   {
     sending_drive_mode_ = 6;
-    x_ = 0.0;
-    y_ = 0.0;
-    z_ = 0.0;
-    w_ = 0.0;
+    x_ = x_des_;
+    y_ = y_des_;
+    z_ = z_des_;
+    w_ = w_des_;
+  }
+  else
+  {
+    return;
   }
   // else if (agv_mode == 1)
   // {
@@ -159,6 +192,7 @@ void AgvTest::agv_action(int drive_mode_)
   message.pose.orientation.z = z_;
   message.pose.orientation.w = w_;
 
+  sleep(1);
   goal_pose_publisher_->publish(message);
   RCLCPP_INFO(this->get_logger(), "Published goal: x=%f, y=%f", message.pose.position.x, message.pose.position.y);
 }

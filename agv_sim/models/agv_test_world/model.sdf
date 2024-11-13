@@ -248,7 +248,7 @@
       <link name='top_pallet'>
         <inertial>
           <pose frame=''>0 0 0.485 0 -0 0</pose>
-          <mass>5</mass>
+          <mass>10</mass>
         </inertial>
         <collision name='box_coll'>
           <pose frame=''>0 0 0.485 0 -0 0</pose>

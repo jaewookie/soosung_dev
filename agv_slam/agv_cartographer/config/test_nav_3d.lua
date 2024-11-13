@@ -17,6 +17,8 @@
 include "map_builder.lua"
 include "trajectory_builder.lua"
 
+-- tricycle_drive_plugin => odom_frame = false, use_odom = true
+
 options = {
   map_builder = MAP_BUILDER,
   trajectory_builder = TRAJECTORY_BUILDER,

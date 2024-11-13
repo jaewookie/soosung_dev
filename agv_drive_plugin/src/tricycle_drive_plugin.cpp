@@ -546,7 +546,7 @@ namespace gazebo_ros
         gazebo_ros::Convert<geometry_msgs::msg::Vector3>(odom_.pose.pose.position);
     msg.transform.rotation = odom_.pose.pose.orientation;
 
-    // tf_broadcaster_->sendTransform(msg);
+    tf_broadcaster_->sendTransform(msg);
 
     // set header stamp
     odom_.header.stamp = current_time;

@@ -47,6 +47,14 @@ private:
 
   std::string node_name_;
 
+  float x_dep_;
+  float y_dep_;
+  float z_dep_;
+  float w_dep_;
+  float x_des_;
+  float y_des_;
+  float z_des_;
+  float w_des_;
   float x_;
   float y_;
   float z_;

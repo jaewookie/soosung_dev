@@ -33,9 +33,10 @@ private:
   void bumper_l_status_callback(const gazebo_msgs::msg::ContactsState::SharedPtr msg);
   void bumper_r_status_callback(const gazebo_msgs::msg::ContactsState::SharedPtr msg);
   void fork_height_status_callback(const sensor_msgs::msg::JointState::SharedPtr msg);
-  void publish_cmd_vel(int agv_mode_);
+  void publish_cmd_vel();
   void bumper_checker(bool bumper_l_state, bool bumper_r_state);
   void publish_states();
+  void fork_action();
 
   rclcpp::Publisher<geometry_msgs::msg::Twist>::SharedPtr stop_publisher_;
   rclcpp::Publisher<agv_msgs::msg::ForkControl>::SharedPtr mast_publisher_;
@@ -48,6 +49,8 @@ private:
 
   bool bumper_l;
   bool bumper_r;
+
+  bool bumper_react_;
 
   int sending_drive_mode_;
   int drive_mode_;
