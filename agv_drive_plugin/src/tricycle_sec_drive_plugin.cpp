@@ -350,7 +350,6 @@ namespace gazebo_ros
         // steer toward target angle
         applied_steering_speed = -max_steering_speed_;
       }
-
       joints_[STEERING]->SetPosition(0, applied_angle, true);
     }
   }

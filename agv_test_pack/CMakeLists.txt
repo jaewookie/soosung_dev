@@ -14,6 +14,8 @@ find_package(gazebo_msgs REQUIRED)
 find_package(std_msgs REQUIRED)
 find_package(agv_msgs REQUIRED)
 find_package(sensor_msgs REQUIRED)
+find_package(can_msgs REQUIRED)
+find_package(agv_msgs REQUIRED)
 
 include_directories(
   include
@@ -43,9 +45,19 @@ target_link_libraries(agv_pal_test
   ${rclcpp_LIBRARIES}
 )
 
+
+add_executable(agv_can_bus src/agv_can_bus.cpp)
+
+TARGET_LINK_LIBRARIES(agv_can_bus dl -lboost_system -pthread  -lcrypt -lm -lpthread)
+
+ament_target_dependencies(agv_can_bus rclcpp std_msgs can_msgs geometry_msgs agv_msgs)
+
+
+
 install(TARGETS
   agv_test
   agv_pal_test
+  agv_can_bus
   DESTINATION lib/${PROJECT_NAME}
 )
 

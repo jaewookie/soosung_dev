@@ -69,6 +69,7 @@ void TricycleAGVDrive::MotorController(double target_speed, double dt)
   drive_wheel_speed_ = current_speed_ / wheel_radius_; //[rad/s]
 
   drive_rpm_ = 60 * lin_vel_ / (2 * M_PI * wheel_radius_); // [rpm] => 모터 드라이브로 전송할 데이터 중 하나 ( 모터 드라이브에서 가속도 설정이 가능하면 해당 목표 rpm 전송 )
+
   // drive_rpm_ = 60 * current_speed_ / (2 * M_PI * wheel_radius_); // [rpm] => 모터 드라이브로 전송할 데이터 중 하나 ( 모터 드라이브에서 가속도 설정이 없는 경우는 현재 속도에 따른 rpm을 연속적으로 전송 )
 
   RCLCPP_INFO(get_logger(), "current_lin_speed = [%f]", current_speed_);
