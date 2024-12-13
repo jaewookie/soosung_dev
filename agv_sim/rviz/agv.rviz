@@ -233,7 +233,27 @@ Visualization Manager:
           Value: true
         base_link:
           Value: true
+        bumper_l_link:
+          Value: true
+        bumper_r_link:
+          Value: true
         drive_wheel:
+          Value: true
+        fork_house:
+          Value: true
+        front_wheel_l:
+          Value: true
+        front_wheel_r:
+          Value: true
+        imu_link:
+          Value: true
+        safety_lidar_l:
+          Value: true
+        safety_lidar_m:
+          Value: true
+        safety_lidar_r:
+          Value: true
+        slam_lidar:
           Value: true
         steering_part:
           Value: true
@@ -245,6 +265,26 @@ Visualization Manager:
       Tree:
         base_footprint:
           base_link:
+            bumper_l_link:
+              {}
+            bumper_r_link:
+              {}
+            fork_house:
+              {}
+            front_wheel_l:
+              {}
+            front_wheel_r:
+              {}
+            imu_link:
+              {}
+            safety_lidar_l:
+              {}
+            safety_lidar_m:
+              {}
+            safety_lidar_r:
+              {}
+            slam_lidar:
+              {}
             steering_part:
               drive_wheel:
                 {}
@@ -261,39 +301,20 @@ Visualization Manager:
         History Policy: Keep Last
         Reliability Policy: Reliable
         Value: /robot_description
-      Enabled: true
+      Enabled: false
       Links:
         All Links Enabled: true
         Expand Joint Details: false
         Expand Link Details: false
         Expand Tree: false
         Link Tree Style: Links in Alphabetic Order
-        base_footprint:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-        base_link:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        drive_wheel:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        steering_part:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
       Mass Properties:
         Inertia: false
         Mass: false
       Name: RobotModel
       TF Prefix: ""
       Update Interval: 0
-      Value: true
+      Value: false
       Visual Enabled: true
   Enabled: true
   Global Options:
@@ -339,25 +360,25 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz_default_plugins/Orbit
-      Distance: 3.1186604499816895
+      Distance: 10.97128963470459
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.05999999865889549
         Stereo Focal Distance: 1
         Swap Stereo Eyes: false
         Value: false
       Focal Point:
-        X: 0.047438353300094604
-        Y: -1.439854383468628
-        Z: 0.8150118589401245
+        X: -0.03599736839532852
+        Y: -0.7457870244979858
+        Z: 0.38072484731674194
       Focal Shape Fixed Size: true
       Focal Shape Size: 0.05000000074505806
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.009999999776482582
-      Pitch: -0.43960174918174744
+      Pitch: 0.5603987574577332
       Target Frame: odom
       Value: Orbit (rviz_default_plugins)
-      Yaw: 1.4304001331329346
+      Yaw: 0.8903976678848267
     Saved: ~
 Window Geometry:
   Displays:
@@ -373,5 +394,5 @@ Window Geometry:
   Views:
     collapsed: false
   Width: 2490
-  X: 2630
+  X: 70
   Y: 27

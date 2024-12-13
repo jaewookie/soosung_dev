@@ -125,7 +125,6 @@ void TricycleAGVDrive::publishOdometryMsg(const rclcpp::Time &current_time)
   odom_.header.stamp = current_time;
 
   odom_pub_->publish(odom_);
-
 }
 
 int main(int argc, char **argv)

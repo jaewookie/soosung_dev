@@ -13,9 +13,17 @@
 #include <stdexcept>
 #include <string>
 
+#include <tf2/LinearMath/Quaternion.h>
+#include <tf2_ros/transform_broadcaster.h>
+#include <tf2_geometry_msgs/tf2_geometry_msgs.hpp>
+
 #include "rclcpp/rclcpp.hpp"
 #include "can_msgs/msg/frame.hpp"
 #include "geometry_msgs/msg/twist.hpp"
+#include "geometry_msgs/msg/pose2_d.hpp"
+#include "sensor_msgs/msg/imu.hpp"
+#include "sensor_msgs/msg/joint_state.hpp"
+#include "nav_msgs/msg/odometry.hpp"
 #include <agv_msgs/msg/fork_control.hpp>
 
 // CAN ID define
@@ -39,13 +47,23 @@ private:
   rclcpp::Subscription<can_msgs::msg::Frame>::SharedPtr subscription_;
   rclcpp::Publisher<can_msgs::msg::Frame>::SharedPtr publisher_;
 
+  rclcpp::Publisher<sensor_msgs::msg::JointState>::SharedPtr joint_state_pub_;
 
   rclcpp::Subscription<geometry_msgs::msg::Twist>::SharedPtr cmdvel_subscriber_;
+  rclcpp::Publisher<nav_msgs::msg::Odometry>::SharedPtr odom_pub_;
+
   rclcpp::Subscription<agv_msgs::msg::ForkControl>::SharedPtr mast_vel_sub_;
+  rclcpp::Subscription<sensor_msgs::msg::Imu>::SharedPtr imu_sub_;
 
-
+  geometry_msgs::msg::Twist cmd_;
+  sensor_msgs::msg::Imu imu_;
+  sensor_msgs::msg::JointState joint_state_;
   can_msgs::msg::Frame current_frame;
   can_msgs::msg::Frame write_frame;
+
+  // std::vector<std::string> joints_;
+
+  std::shared_ptr<tf2_ros::TransformBroadcaster> tf_broadcaster_;
 
   void CanReceiver(const can_msgs::msg::Frame::SharedPtr msg);
   void CanRead1(const can_msgs::msg::Frame msg);
@@ -58,9 +76,16 @@ private:
 
   void CmdVelCallback(const geometry_msgs::msg::Twist::SharedPtr msg);
   void MastVelCallback(const agv_msgs::msg::ForkControl::ConstSharedPtr msg);
+  void ImuCallback(const sensor_msgs::msg::Imu::SharedPtr msg);
   void CanSend(uint lowByte, uint highByte, uint canId);
   void AutoInterEn();
-  void CmdVelTrans();
+
+  void OnUpdate();
+
+  void PublishWheelJointState(const rclcpp::Time &current_time);
+  void MotorController();
+  void UpdateOdometryEncoder();
+  void PublishOdometryMsg(const rclcpp::Time &current_time);
   void MastTrans(double target_speed);
 
   int rad_to_dec(float rad_ang_);
@@ -139,7 +164,7 @@ private:
   uint16_t can_lift_encoder_byte;
 
   // byte transform
-  uint can_rpm;
+  int16_t can_rpm;
   int16_t can_steer_ang_test;
   int can_steer_ang;
   int can_drive_motor_temperature;
@@ -159,8 +184,6 @@ private:
   int can_lift_encoder;
 
   // vel 모터 제어를 위한 변수
-  float lin_vel_;
-  float ang_vel_;
   uint16_t drive_rpm_;
   int agv_direction_;
   double max_steering_speed_;
@@ -172,6 +195,10 @@ private:
   double mast_vel_;
   int hydraulic_direction_;
   u_char hyd_test;
+
+  double last_odom_update_;
+  geometry_msgs::msg::Pose2D pose_encoder_;
+  nav_msgs::msg::Odometry odom_;
 
   // can write
 

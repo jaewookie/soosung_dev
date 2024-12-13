@@ -33,6 +33,7 @@ find_package(std_msgs REQUIRED)
 rosidl_generate_interfaces(${PROJECT_NAME}
   "msg/ForkControl.msg"
   "msg/AgvDrive.msg"
+  "msg/AgvState.msg"
   DEPENDENCIES std_msgs
   ADD_LINTER_TESTS
 )

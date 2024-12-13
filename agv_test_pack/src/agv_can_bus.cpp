@@ -4,19 +4,20 @@
 
 // Import header file
 #include "agv_test_pack/agv_can_bus.hpp"
+
 #include <cstdio>
 #include <functional>
 #include <memory>
 #include <string>
 #include <utility>
 
+// 오도메트리용 속도 조정 필요
+
 AgvCanBus::AgvCanBus() : Node("AgvCanBus"),
-                         lin_vel_(0.0), // 초기 선형 속도는 0으로 설정
-                         ang_vel_(0.0),
                          drive_rpm_(0),
                          agv_direction_(1),
-                         max_steering_speed_(1),
-                         max_steering_angle_tol_(0.05),
+                         max_steering_speed_(100),
+                         max_steering_angle_tol_(5),
                          applied_steering_speed(0),
                          mast_vel_(0.0),
                          hydraulic_direction_(0)
@@ -37,10 +38,29 @@ AgvCanBus::AgvCanBus() : Node("AgvCanBus"),
   cmdvel_subscriber_ = this->create_subscription<geometry_msgs::msg::Twist>(
       "/cmd_vel", QOS_RKL10V, std::bind(&AgvCanBus::CmdVelCallback, this, std::placeholders::_1));
 
+  joint_state_pub_ = this->create_publisher<sensor_msgs::msg::JointState>("joint_states", QOS_RKL10V);
+
+  joint_state_.name.resize(2);
+  joint_state_.position.resize(2);
+  joint_state_.velocity.resize(2);
+  joint_state_.effort.resize(2);
+
+  joint_state_.name[0] = "drive_wheel_joint";
+  joint_state_.name[1] = "steering_joint";
+
+  odom_pub_ = this->create_publisher<nav_msgs::msg::Odometry>("/odom", QOS_RKL10V);
+
+  tf_broadcaster_ = std::make_shared<tf2_ros::TransformBroadcaster>(this);
+
   mast_vel_sub_ = this->create_subscription<agv_msgs::msg::ForkControl>(
       "/mast_vel", QOS_RKL10V, std::bind(&AgvCanBus::MastVelCallback, this, std::placeholders::_1));
 
-  AutoInterEn();
+  imu_sub_ = this->create_subscription<sensor_msgs::msg::Imu>(
+      "/imu_data", QOS_RKL10V, std::bind(&AgvCanBus::ImuCallback, this, std::placeholders::_1));
+
+  timer_ = this->create_wall_timer(
+      std::chrono::milliseconds(100),
+      std::bind(&AgvCanBus::OnUpdate, this));
 }
 
 AgvCanBus::~AgvCanBus()
@@ -93,7 +113,7 @@ void AgvCanBus::CanRead1(const can_msgs::msg::Frame msg)
   drive_motor_current_rpm_low_byte = msg.data[0];
   drive_motor_current_rpm_high_byte = msg.data[1];
   can_rpm_byte = combineBytes(drive_motor_current_rpm_low_byte, drive_motor_current_rpm_high_byte);
-  can_rpm = static_cast<uint>(can_rpm_byte);
+  can_rpm = static_cast<int16_t>(can_rpm_byte);
 
   steering_current_angle_low_byte = msg.data[2];
   steering_current_angle_high_byte = msg.data[3];
@@ -120,29 +140,29 @@ void AgvCanBus::CanRead1(const can_msgs::msg::Frame msg)
   can_steering_motor_temperature_byte = combineBytes(steering_motor_temperature_low_byte, steering_motor_temperature_high_byte);
   can_steering_motor_temperature = static_cast<int>(can_steering_motor_temperature_byte);
 
-  std::stringstream out;
-  out << std::string("-------------Read ID : ") << std::to_string(msg.id) << std::string("------------------") << std::endl;
-  out << std::string("drive_motor_current_rpm_low_byte : ") << std::to_string(drive_motor_current_rpm_low_byte) << std::endl;
-  out << std::string("drive_motor_current_rpm_high_byte : ") << std::to_string(drive_motor_current_rpm_high_byte) << std::endl;
-  out << std::string(" => drive_motor_current_rpm_byte : ") << std::to_string(can_rpm_byte) << std::endl;
-  out << std::string(" ==> drive_motor_current_rpm_value : ") << std::to_string(can_rpm) << std::endl;
+  // std::stringstream out;
+  // out << std::string("-------------Read ID : ") << std::to_string(msg.id) << std::string("------------------") << std::endl;
+  // out << std::string("drive_motor_current_rpm_low_byte : ") << std::to_string(drive_motor_current_rpm_low_byte) << std::endl;
+  // out << std::string("drive_motor_current_rpm_high_byte : ") << std::to_string(drive_motor_current_rpm_high_byte) << std::endl;
+  // out << std::string(" => drive_motor_current_rpm_byte : ") << std::to_string(can_rpm_byte) << std::endl;
+  // out << std::string(" ==> drive_motor_current_rpm_value : ") << std::to_string(can_rpm) << std::endl;
 
-  out << std::string("steering_current_angle_low_byte : ") << std::to_string(steering_current_angle_low_byte) << std::endl;
-  out << std::string("steering_current_angle_high_byte : ") << std::to_string(steering_current_angle_high_byte) << std::endl;
-  out << std::string(" => steering_current_angle_byte : ") << std::to_string(can_steer_ang_byte) << std::endl;
-  out << std::string(" ==> steering_current_angle_value : ") << std::to_string(can_steer_ang) << std::endl;
+  // out << std::string("steering_current_angle_low_byte : ") << std::to_string(steering_current_angle_low_byte) << std::endl;
+  // out << std::string("steering_current_angle_high_byte : ") << std::to_string(steering_current_angle_high_byte) << std::endl;
+  // out << std::string(" => steering_current_angle_byte : ") << std::to_string(can_steer_ang_byte) << std::endl;
+  // out << std::string(" ==> steering_current_angle_value : ") << std::to_string(can_steer_ang) << std::endl;
 
-  out << std::string("drive_motor_temperature_low_byte : ") << std::to_string(drive_motor_temperature_low_byte) << std::endl;
-  out << std::string("drive_motor_temperature_high_byte : ") << std::to_string(drive_motor_temperature_high_byte) << std::endl;
-  out << std::string(" => drive_motor_temperature_byte : ") << std::to_string(can_drive_motor_temperature_byte) << std::endl;
-  out << std::string(" ==> drive_motor_temperature_value : ") << std::to_string(can_drive_motor_temperature) << std::endl;
+  // out << std::string("drive_motor_temperature_low_byte : ") << std::to_string(drive_motor_temperature_low_byte) << std::endl;
+  // out << std::string("drive_motor_temperature_high_byte : ") << std::to_string(drive_motor_temperature_high_byte) << std::endl;
+  // out << std::string(" => drive_motor_temperature_byte : ") << std::to_string(can_drive_motor_temperature_byte) << std::endl;
+  // out << std::string(" ==> drive_motor_temperature_value : ") << std::to_string(can_drive_motor_temperature) << std::endl;
 
-  out << std::string("steering_motor_temperature_low_byte : ") << std::to_string(steering_motor_temperature_low_byte) << std::endl;
-  out << std::string("steering_motor_temperature_high_byte : ") << std::to_string(steering_motor_temperature_high_byte) << std::endl;
-  out << std::string(" => steering_motor_temperature_byte : ") << std::to_string(can_steering_motor_temperature_byte) << std::endl;
-  out << std::string(" ==> steering_motor_temperature_value : ") << std::to_string(can_steering_motor_temperature) << std::endl;
-  out << std::string("--------------------------------------") << std::endl;
-  RCLCPP_INFO(this->get_logger(), out.str().c_str());
+  // out << std::string("steering_motor_temperature_low_byte : ") << std::to_string(steering_motor_temperature_low_byte) << std::endl;
+  // out << std::string("steering_motor_temperature_high_byte : ") << std::to_string(steering_motor_temperature_high_byte) << std::endl;
+  // out << std::string(" => steering_motor_temperature_byte : ") << std::to_string(can_steering_motor_temperature_byte) << std::endl;
+  // out << std::string(" ==> steering_motor_temperature_value : ") << std::to_string(can_steering_motor_temperature) << std::endl;
+  // out << std::string("--------------------------------------") << std::endl;
+  // RCLCPP_INFO(this->get_logger(), out.str().c_str());
 }
 
 void AgvCanBus::CanRead2(const can_msgs::msg::Frame msg)
@@ -353,17 +373,86 @@ int16_t AgvCanBus::combineBytes(const uint8_t lowByte, const uint8_t highByte)
 // Can Data Write
 //
 // cmd_vel 구독
+void AgvCanBus::ImuCallback(const sensor_msgs::msg::Imu::SharedPtr msg)
+{
+  imu_.orientation.w = msg->orientation.w;
+  imu_.orientation.x = msg->orientation.x;
+  imu_.orientation.y = msg->orientation.y;
+  imu_.orientation.z = msg->orientation.z;
+
+  imu_.angular_velocity.x = msg->angular_velocity.x;
+  imu_.angular_velocity.y = msg->angular_velocity.y;
+  imu_.angular_velocity.z = msg->angular_velocity.z;
+
+  imu_.linear_acceleration.x = msg->linear_acceleration.x;
+  imu_.linear_acceleration.y = msg->linear_acceleration.y;
+  imu_.linear_acceleration.z = msg->linear_acceleration.z;
+
+  // std::stringstream out;
+  // out << std::string("--------------------------------------") << std::endl;
+  // out << std::string("Accel_x : ") << std::to_string(imu_.linear_acceleration.x) << std::endl;
+  // out << std::string("Accel_y : ") << std::to_string(imu_.linear_acceleration.y) << std::endl;
+  // out << std::string("Accel_z : ") << std::to_string(imu_.linear_acceleration.z) << std::endl;
+  // out << std::string("Gyro_x : ") << std::to_string(imu_.angular_velocity.x) << std::endl;
+  // out << std::string("Gyro_y : ") << std::to_string(imu_.angular_velocity.y) << std::endl;
+  // out << std::string("Gyro_z : ") << std::to_string(imu_.angular_velocity.z) << std::endl;
+  // out << std::string("Qaut_x : ") << std::to_string(imu_.orientation.x) << std::endl;
+  // out << std::string("Qaut_y : ") << std::to_string(imu_.orientation.y) << std::endl;
+  // out << std::string("Qaut_z : ") << std::to_string(imu_.orientation.z) << std::endl;
+  // out << std::string("Qaut_w : ") << std::to_string(imu_.orientation.w) << std::endl;
+  // out << std::string("--------------------------------------") << std::endl;
+  // RCLCPP_INFO(this->get_logger(), out.str().c_str());
+}
+
 void AgvCanBus::CmdVelCallback(const geometry_msgs::msg::Twist::SharedPtr msg)
 {
-  lin_vel_ = msg->linear.x;  // cmd_vel로부터 선형 속도를 갱신
-  ang_vel_ = msg->angular.z; // cmd_vel로부터 각속도를 갱신, 현재 사용하지 않음
+  cmd_.linear.x = msg->linear.x;   // cmd_vel로부터 선형 속도를 갱신
+  cmd_.angular.z = msg->angular.z; // cmd_vel로부터 각속도를 갱신, 현재 사용하지 않음
 
-  CmdVelTrans();
+  // OnUpdate();
 }
-// cnd_vel_lin -> rpm 변환
-void AgvCanBus::CmdVelTrans()
+
+void AgvCanBus::OnUpdate()
 {
+  auto current_time = this->now();
+  MotorController();
+  UpdateOdometryEncoder();
+  PublishOdometryMsg(current_time);
+  PublishWheelJointState(current_time);
+}
+
+void AgvCanBus::PublishWheelJointState(const rclcpp::Time &current_time)
+{
+  joint_state_.header.stamp = current_time;
+
+  double dt = (this->now().seconds()) - current_time.seconds();
+
+  static double wheel_pos = 0.0;
+  double wheel_vel = can_rpm * M_PI / (30 * 16.755);
+
+  wheel_pos += wheel_vel * dt;
+
+  joint_state_.position[0] = wheel_pos;
+  joint_state_.velocity[0] = wheel_vel;
+
+  joint_state_.position[1] = can_steer_ang / 100;
+  joint_state_.velocity[1] = 0.0;
+
   std::stringstream out;
+  out << std::string("joint_state_.position[0] : ") << std::to_string(joint_state_.position[0]) << std::endl;
+  out << std::string("joint_state_.position[1] : ") << std::to_string(joint_state_.position[1]) << std::endl;
+  out << std::string("joint_state_.velocity[0] : ") << std::to_string(joint_state_.velocity[0]) << std::endl;
+  out << std::string("joint_state_.velocity[1] : ") << std::to_string(joint_state_.velocity[1]) << std::endl;
+  out << std::string("--------------------------------------") << std::endl;
+  RCLCPP_INFO(this->get_logger(), out.str().c_str());
+
+  joint_state_pub_->publish(joint_state_);
+}
+
+// cnd_vel_lin -> rpm 변환
+void AgvCanBus::MotorController()
+{
+  // std::stringstream out;
 
   // rpm 전송 테스트 파일
   std::vector<uint8_t> rpm_result(2);
@@ -371,33 +460,37 @@ void AgvCanBus::CmdVelTrans()
 
   // lin_vel to RPM
 
-  if (lin_vel_ > 0)
+  if (cmd_.linear.x > 0)
   {
     agv_direction_ = 1;
   }
-  else if (lin_vel_ < 0)
+  else if (cmd_.linear.x < 0)
   {
     agv_direction_ = 0;
-    lin_vel_ = -lin_vel_;
+    cmd_.linear.x = -cmd_.linear.x;
   }
-  else if (lin_vel_ == 0.0)
+  else if (cmd_.linear.x == 0.0)
   {
     agv_direction_ = 2;
-    lin_vel_ = -lin_vel_;
+    cmd_.linear.x = -cmd_.linear.x;
   }
 
-
-  // (lin_vel_ * 60)[m/Min] / (0.32 * M_PI)       [Rev/Min]
-  drive_rpm_ = 16.755*(lin_vel_ * 60) / (0.32 * M_PI);
+  // (cmd_.linear.x * 60)[m/Min] / (0.32 * M_PI)       [Rev/Min]
+  drive_rpm_ = 16.755 * (cmd_.linear.x * 60) / (0.32 * M_PI);
   drive_rpm_ = (uint)drive_rpm_;
 
+  // out << std::string("drive_rpm_ : ") << std::to_string(drive_rpm_) << std::endl;
+
   // ang_vel to steering
-  int applied_angle = rad_to_dec(ang_vel_);
+  int applied_angle = rad_to_dec(cmd_.angular.z);
+  // out << std::string("applied_angle : ") << std::to_string(applied_angle) << std::endl;
   uint16_t applied_angle_byte;
   int16_t applied_angle_result;
 
-  int current_angle = can_steer_ang_test;
-  int diff_angle = current_angle - rad_to_dec(ang_vel_);
+  int current_angle = can_steer_ang;
+  // out << std::string("current_angle : ") << std::to_string(current_angle) << std::endl;
+  int diff_angle = current_angle - rad_to_dec(cmd_.angular.z);
+  // out << std::string("diff_angle : ") << std::to_string(diff_angle) << std::endl;
 
   auto start = std::chrono::high_resolution_clock::now();
 
@@ -407,6 +500,7 @@ void AgvCanBus::CmdVelTrans()
     // this means we will steer using steering speed
     if (fabs(diff_angle) < rad_to_dec(max_steering_angle_tol_))
     {
+      // out << std::string("max_steering_angle_tol_") << std::endl;
       // we're withing angle tolerance
       applied_steering_speed = 0;
     }
@@ -415,17 +509,24 @@ void AgvCanBus::CmdVelTrans()
       // steer toward target angle
       if (diff_angle > 0)
       {
+        // out << std::string("diff_angle > 0") << std::endl;
         applied_steering_speed = -max_steering_speed_;
       }
       else if (diff_angle < 0)
       {
+        // out << std::string("diff_angle < 0") << std::endl;
         applied_steering_speed = max_steering_speed_;
       }
       auto end = std::chrono::high_resolution_clock::now();
       auto dt = std::chrono::duration_cast<std::chrono::nanoseconds>(end - start);
       double seconds = std::chrono::duration<double>(dt).count();
 
-      applied_angle = current_angle + applied_steering_speed * seconds;
+      applied_angle = current_angle + (applied_steering_speed * seconds);
+
+      // out << std::string("--------------------------------------") << std::endl;
+      // out << std::string("current_angle : ") << std::to_string(current_angle) << std::endl;
+      // out << std::string("applied_steering_speed * seconds : ") << std::to_string(applied_steering_speed * seconds) << std::endl;
+      // out << std::string("applied_angle2 : ") << std::to_string(applied_angle) << std::endl;
     }
 
     // out << std::string("applied_angle : ") << std::to_string(applied_angle) << std::endl;
@@ -446,8 +547,10 @@ void AgvCanBus::CmdVelTrans()
 
     // out << std::string("applied_angle : ") << std::to_string(applied_angle) << std::endl;
     // out << std::string("applied_angle_result : ") << std::to_string(applied_angle_result) << std::endl;
-    out << std::string("applied_angle_byte : ") << std::to_string(applied_angle_byte) << std::endl;
+    // out << std::string("applied_angle_byte : ") << std::to_string(applied_angle_byte) << std::endl;
   }
+
+  // out << std::string("current_angle : ") << std::to_string(current_angle) << std::endl;
 
   ang_result[0] = (applied_angle_byte & 0xff);
   ang_result[1] = ((applied_angle_byte >> 8) & 0xff);
@@ -477,7 +580,14 @@ void AgvCanBus::CmdVelTrans()
   }
   else if (agv_direction_ == 2)
   {
-    write_frame.data[4] = 5;
+    if (applied_angle != 0x00)
+    {
+      write_frame.data[4] = 13;
+    }
+    else
+    {
+      write_frame.data[4] = 5;
+    }
   }
 
   // out << std::string("-------------Write ID : ") << std::to_string(write_frame.id) << std::string("------------------") << std::endl;
@@ -485,11 +595,141 @@ void AgvCanBus::CmdVelTrans()
   // out << std::string("driveHighByte : ") << std::to_string(write_frame.data[1]) << std::endl;
   // out << std::string("steerLowByte : ") << std::to_string(write_frame.data[2]) << std::endl;
   // out << std::string("steerHighByte : ") << std::to_string(write_frame.data[3]) << std::endl;
+  // out << std::string("=> value of steer : ") << std::to_string(applied_angle_byte) << std::endl;
+  // out << std::string("=> value2 of steer : ") << std::to_string((int16_t)applied_angle_byte) << std::endl;
   // out << std::string("forward : ") << std::to_string((write_frame.data[4] >> 3) & 0x01) << std::endl;
   // out << std::string("backward : ") << std::to_string((write_frame.data[4] >> 4) & 0x01) << std::endl;
   // out << std::string("--------------------------------------") << std::endl;
   // RCLCPP_INFO(this->get_logger(), out.str().c_str());
   publisher_->publish(write_frame);
+}
+
+void AgvCanBus::UpdateOdometryEncoder()
+{
+  // 마치 앞바퀴에 엔코더가 달려 해당 속도를 받아오는 것과 같이 속도를 읽어오는 부분
+
+  // std::stringstream out;
+  // out << std::string("--------------------------------------") << std::endl;
+  // out << std::string("Accel_x : ") << std::to_string(imu_.linear_acceleration.x) << std::endl;
+  // out << std::string("Accel_y : ") << std::to_string(imu_.linear_acceleration.y) << std::endl;
+  // out << std::string("Accel_z : ") << std::to_string(imu_.linear_acceleration.z) << std::endl;
+  // out << std::string("Gyro_x : ") << std::to_string(imu_.angular_velocity.x) << std::endl;
+  // out << std::string("Gyro_y : ") << std::to_string(imu_.angular_velocity.y) << std::endl;
+  // out << std::string("Gyro_z : ") << std::to_string(imu_.angular_velocity.z) << std::endl;
+  // out << std::string("Qaut_x : ") << std::to_string(imu_.orientation.x) << std::endl;
+  // out << std::string("Qaut_y : ") << std::to_string(imu_.orientation.y) << std::endl;
+  // out << std::string("Qaut_z : ") << std::to_string(imu_.orientation.z) << std::endl;
+  // out << std::string("Qaut_w : ") << std::to_string(imu_.orientation.w) << std::endl;
+
+  tf2::Quaternion quat(imu_.orientation.x, imu_.orientation.y, imu_.orientation.z, imu_.orientation.w);
+  tf2::Matrix3x3 mat(quat);
+  double roll, pitch, yaw;
+  mat.getRPY(roll, pitch, yaw);
+
+  // auto _current_time = std::chrono::high_resolution_clock::now();
+  double current_time = this->now().seconds();
+
+  auto dt = (current_time - last_odom_update_);
+  last_odom_update_ = current_time;
+  // out << std::string("dt : ") << std::to_string(dt) << std::endl;
+
+  double seconds_since_last_update = dt;
+  // out << std::string("seconds_since_last_update : ") << std::to_string(seconds_since_last_update) << std::endl;
+  static double last_theta = 0;
+  double theta = yaw;
+
+  // out << std::string("theta : ") << std::to_string(theta) << std::endl;
+
+  double dtheta = theta - last_theta;
+
+  // drive wheel 사용
+  // out << std::string("can_rpm : ") << std::to_string(can_rpm) << std::endl;
+  double vd = can_rpm * M_PI / (30 * 16.755);
+  // out << std::string("vd : ") << std::to_string(vd) << std::endl;
+  double sd = vd * (0.16) * seconds_since_last_update;
+  // out << std::string("sd : ") << std::to_string(sd) << std::endl;
+
+  double dx = sd * cos(theta);
+  double dy = sd * sin(theta);
+
+  // out << std::string("dx : ") << std::to_string(dx) << std::endl;
+  // out << std::string("dy : ") << std::to_string(dy) << std::endl;
+
+  pose_encoder_.x += dx;
+  pose_encoder_.y += dy;
+  // pose_encoder_.theta += dtheta;
+  pose_encoder_.theta = theta;
+
+  // out << std::string("pose_encoder_.x : ") << std::to_string(pose_encoder_.x) << std::endl;
+  // out << std::string("pose_encoder_.y : ") << std::to_string(pose_encoder_.y) << std::endl;
+  // out << std::string("pose_encoder_.theta : ") << std::to_string(pose_encoder_.theta) << std::endl;
+
+  // double w = dthetad / seconds_since_last_update;
+
+  tf2::Vector3 vt;
+  vt = tf2::Vector3(pose_encoder_.x, pose_encoder_.y, 0);
+
+  // out << std::string("vt.x : ") << std::to_string(vt.x()) << std::endl;
+  // out << std::string("vt.y : ") << std::to_string(vt.y()) << std::endl;
+
+  odom_.pose.pose.position.x = vt.x();
+  odom_.pose.pose.position.y = vt.y();
+  odom_.pose.pose.position.z = vt.z();
+
+  tf2::Quaternion qt;
+  qt.setRPY(0, 0, pose_encoder_.theta);
+  odom_.pose.pose.orientation = tf2::toMsg(qt);
+
+  odom_.twist.twist.angular.z = dtheta / seconds_since_last_update;
+  odom_.twist.twist.linear.x = sd / seconds_since_last_update;
+  odom_.twist.twist.linear.y = 0;
+
+  // // test_world_pose
+
+  // ignition::math::Pose3d pose = this->model_->WorldPose();
+
+  // // tf2::Quaternion q;
+  // // q.setRPY(0, 0, pose.Rot().Yaw());
+
+  // ignition::math::Vector3d linear_vel = this->model_->WorldLinearVel();
+  // ignition::math::Vector3d angular_vel = this->model_->WorldAngularVel();
+
+  // // Set the position
+  // odom_.pose.pose.position.x = pose.Pos().X();
+  // odom_.pose.pose.position.y = pose.Pos().Y();
+  // odom_.pose.pose.position.z = pose.Pos().Z();
+  // tf2::Quaternion qt;
+  // qt.setRPY(0, 0, pose_encoder_.theta);
+  // odom_.pose.pose.orientation = tf2::toMsg(qt);
+  // // odom_.pose.pose.orientation = tf2::toMsg(q);
+
+  // // Set the velocity
+  // odom_.twist.twist.linear.x = linear_vel.X();
+  // odom_.twist.twist.linear.y = linear_vel.Y();
+  // odom_.twist.twist.angular.z = angular_vel.Z();
+
+  last_theta = theta;
+  // out << std::string("--------------------------------------") << std::endl;
+  // RCLCPP_INFO(this->get_logger(), out.str().c_str());
+}
+
+void AgvCanBus::PublishOdometryMsg(const rclcpp::Time &current_time)
+{
+  geometry_msgs::msg::TransformStamped msg;
+  msg.header.stamp = current_time;
+  msg.header.frame_id = "odom";
+  msg.child_frame_id = "base_footprint";
+  msg.transform.translation.x = odom_.pose.pose.position.x;
+  msg.transform.translation.y = odom_.pose.pose.position.y;
+  msg.transform.translation.z = odom_.pose.pose.position.z;
+  msg.transform.rotation = odom_.pose.pose.orientation;
+
+  tf_broadcaster_->sendTransform(msg);
+
+  // set header stamp
+  odom_.header.stamp = current_time;
+
+  odom_pub_->publish(odom_);
 }
 
 void AgvCanBus::MastVelCallback(const agv_msgs::msg::ForkControl::ConstSharedPtr msg)
@@ -500,7 +740,7 @@ void AgvCanBus::MastVelCallback(const agv_msgs::msg::ForkControl::ConstSharedPtr
 
 void AgvCanBus::MastTrans(double target_speed)
 {
-  std::stringstream out;
+  // std::stringstream out;
 
   std::vector<uint8_t> mast_result(2);
 
@@ -578,82 +818,16 @@ void AgvCanBus::MastTrans(double target_speed)
   // out << std::string("hydraluic_propor_vel_char : ") << std::to_string(hyd_test) << std::endl;
   // out << std::string("--------------------------------------") << std::endl;
   // RCLCPP_INFO(this->get_logger(), out.str().c_str());
-  // publisher_->publish(write_frame);
+  publisher_->publish(write_frame);
 
   // RCLCPP_INFO(ros_node_->get_logger(), "[%f]", joints_[0]->Position(0));
 }
 
 int AgvCanBus::rad_to_dec(float rad_ang_)
 {
-  int angle = rad_ang_ * 18000 / M_1_PI;
+  int angle = rad_ang_ * 1800 / M_1_PI;
 
   return angle;
-}
-
-// 변환한 data를 Can 송신용 ros wrapper로 보내기 위한 topic 구성 및 발행
-void AgvCanBus::CanSend(uint lowByte, uint highByte, uint canId)
-{
-  write_frame.id = canId;
-
-  write_frame.dlc = 8;
-
-  write_frame.data[0] = lowByte;
-  write_frame.data[1] = highByte;
-
-  if (agv_direction_ == 1)
-  {
-    if (((write_frame.data[4] >> 3) & 0x01) != 0x01)
-    {
-      write_frame.data[4] = write_frame.data[4] ^ 24;
-    }
-  }
-  else if (agv_direction_ == 0)
-  {
-    if (((write_frame.data[4] >> 4) & 0x01) != 0x01)
-    {
-      write_frame.data[4] = write_frame.data[4] ^ 24;
-    }
-  }
-
-  // std::stringstream out;
-  // out << std::string("-------------Write ID : ") << std::to_string(write_frame.id) << std::string("------------------") << std::endl;
-  // out << std::string("driveLowByte : ") << std::to_string(write_frame.data[0]) << std::endl;
-  // out << std::string("driveHighByte : ") << std::to_string(write_frame.data[1]) << std::endl;
-  // out << std::string("forward : ") << std::to_string((write_frame.data[4] >> 3) & 0x01) << std::endl;
-  // out << std::string("backward : ") << std::to_string((write_frame.data[4] >> 4) & 0x01) << std::endl;
-  // out << std::string("--------------------------------------") << std::endl;
-  // RCLCPP_INFO(this->get_logger(), out.str().c_str());
-  publisher_->publish(write_frame);
-}
-
-void AgvCanBus::AutoInterEn()
-{
-  write_frame.id = PC_TO_DRIVER_CAN1;
-
-  write_frame.dlc = 8;
-
-  write_frame.data[4] = 5;
-
-  // std::stringstream out;
-  // out << std::string("-------------Write ID : ") << std::to_string(write_frame.id) << std::string("------------------") << std::endl;
-  // out << std::string("interlock : ") << std::to_string(write_frame.data[4] & 0x01) << std::endl;
-  // out << std::string("auto : ") << std::to_string((write_frame.data[4] >> 2) & 0x01) << std::endl;
-  // out << std::string("--------------------------------------") << std::endl;
-  // RCLCPP_INFO(this->get_logger(), out.str().c_str());
-  publisher_->publish(write_frame);
-
-  write_frame.id = PC_TO_DRIVER_CAN2;
-
-  write_frame.dlc = 8;
-
-  write_frame.data[2] = 5;
-
-  // out << std::string("-------------Write ID : ") << std::to_string(write_frame.id) << std::string("------------------") << std::endl;
-  // out << std::string("interlock : ") << std::to_string(write_frame.data[4] & 0x01) << std::endl;
-  // out << std::string("auto : ") << std::to_string((write_frame.data[4] >> 2) & 0x01) << std::endl;
-  // out << std::string("--------------------------------------") << std::endl;
-  // RCLCPP_INFO(this->get_logger(), out.str().c_str());
-  publisher_->publish(write_frame);
 }
 
 // Main method of the node
