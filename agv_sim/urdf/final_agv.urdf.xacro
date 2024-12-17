@@ -170,7 +170,8 @@
   <joint name="imu_joint" type="fixed">
     <parent link="base_link" />
     <child link="imu_link" />
-    <origin xyz="0 0 0" rpy="0 0 0" />
+    <!-- <origin 0.216 xyz="0.7 0 0.18" rpy="0 0 0" /> -->
+    <origin xyz="-0.5 0 0.82" rpy="0 0 0" />
   </joint>
 
   <link name="imu_link" />
@@ -178,7 +179,7 @@
   <joint name="slam_lidar_joint" type="fixed">
     <parent link="base_link" />
     <child link="slam_lidar" />
-    <origin xyz="0.2 0 2.277" rpy="0 0 0.785" />
+    <origin xyz="0.2 0 2.277" rpy="0 0 1.57" />
   </joint>
 
   <link name="slam_lidar">
@@ -251,7 +252,7 @@
     </visual>
   </link>
 
-  <joint name="bumper_r_joint" type="fixed">
+  <!-- <joint name="bumper_r_joint" type="fixed">
     <parent link="base_link" />
     <child link="bumper_r_link" />
     <origin xyz="-1.09 0.193 0.35" rpy="0 0 0" />
@@ -299,6 +300,6 @@
         <box size="0.01 0.04 0.12"/>
       </geometry>
     </collision>
-  </link>
+  </link> -->
 
 </robot>

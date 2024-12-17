@@ -80,11 +80,11 @@ def generate_launch_description():
         ]
     )
 
-    rviz2 = Node(
-        package='rviz2',
-        executable='rviz2',
-        arguments=['-d', rviz_display_config_file],
-        output='screen')
+    # rviz2 = Node(
+    #     package='rviz2',
+    #     executable='rviz2',
+    #     arguments=['-d', rviz_display_config_file],
+    #     output='screen')
 
     # world_tf_publisher = Node(
     #     package='tf2_ros',
@@ -105,7 +105,7 @@ def generate_launch_description():
     # Add nodes to LaunchDescription
     ld.add_action(robot_state_publisher)
     ld.add_action(joint_state_publisher)
-    ld.add_action(rviz2)
+    # ld.add_action(rviz2)
     # ld.add_action(agv_controller)
     # ld.add_action(world_tf_publisher)
 

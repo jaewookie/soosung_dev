@@ -83,10 +83,13 @@ private:
   void OnUpdate();
 
   void PublishWheelJointState(const rclcpp::Time &current_time);
+  void PublishWheelsTf(const rclcpp::Time &current_time);
   void MotorController();
   void UpdateOdometryEncoder();
   void PublishOdometryMsg(const rclcpp::Time &current_time);
   void MastTrans(double target_speed);
+
+  void DebugLog();
 
   int rad_to_dec(float rad_ang_);
 
@@ -190,6 +193,8 @@ private:
   double max_steering_angle_tol_;
   double applied_steering_speed;
   // false : 후진 true : 전진
+
+  double theta_;
 
   // mast 제어
   double mast_vel_;
